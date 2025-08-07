@@ -43,6 +43,9 @@ Block references
 
 [[../link-test/index.md#見出しへのリンク]]
 
+リンク切れ
+
+[[../not-exist/index.md]]
 
 ## Paragraph
 
@@ -55,12 +58,12 @@ Itatur? Quiatae cullecum rem ent aut odis in re eossequodi nonsequ idebis ne sap
 ### Syntax
 
 ```markdown
-!![[blog-placeholder-2.jpg]]
+![[blog-placeholder-2.jpg]]
 ```
 
 ### Output
 
-!![[blog-placeholder-2.jpg]]
+![[blog-placeholder-2.jpg]]
 
 ## Blockquotes
 
