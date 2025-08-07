@@ -1,8 +1,8 @@
 ---
-title: 'Markdown Style Guide'
-description: 'Here is a sample of some basic Markdown syntax that can be used when writing Markdown content in Astro.'
-pubDate: 'Jun 19 2024'
-heroImage: '../../assets/blog-placeholder-1.jpg'
+title: 'OFM Markdown Style Guide'
+description: 'Here is a sample of some basic Markdown syntax that can be used when writing Markdown content in This Project.'
+pubDate: '2025-08-07'
+heroImage: 'blog-placeholder-2.jpg'
 ---
 
 Here is a sample of some basic Markdown syntax that can be used when writing Markdown content in Astro.
@@ -23,6 +23,24 @@ The following HTML `<h1>`—`<h6>` elements represent six levels of section head
 
 ###### H6
 
+## link
+
+internal links
+
+[[../link-test/index.md]]
+
+internal links with name
+
+[[../link-test/index.md|good name]]
+
+
+Block references
+
+[[../link-test/index.md#link to heading]]
+
+[[../link-test/index.md#見出しへのリンク]]
+
+
 ## Paragraph
 
 Xerum, quo qui aut unt expliquam qui dolut labo. Aque venitatiusda cum, voluptionse latur sitiae dolessi aut parist aut dollo enim qui voluptate ma dolestendit peritin re plis aut quas inctum laceat est volestemque commosa as cus endigna tectur, offic to cor sequas etum rerum idem sintibus eiur? Quianimin porecus evelectur, cum que nis nust voloribus ratem aut omnimi, sitatur? Quiatem. Nam, omnis sum am facea corem alique molestrunt et eos evelece arcillit ut aut eos eos nus, sin conecerem erum fuga. Ri oditatquam, ad quibus unda veliamenimin cusam et facea ipsamus es exerum sitate dolores editium rerore eost, temped molorro ratiae volorro te reribus dolorer sperchicium faceata tiustia prat.
@@ -34,12 +52,12 @@ Itatur? Quiatae cullecum rem ent aut odis in re eossequodi nonsequ idebis ne sap
 ### Syntax
 
 ```markdown
-![Alt text](./full/or/relative/path/of/image)
+!![[blog-placeholder-2.jpg]]
 ```
 
 ### Output
 
-![blog placeholder](../../assets/blog-placeholder-about.jpg)
+!![[blog-placeholder-2.jpg]]
 
 ## Blockquotes
 
@@ -73,7 +91,7 @@ The blockquote element represents content that is quoted from another source, op
 > Don't communicate by sharing memory, share memory by communicating.<br>
 > — <cite>Rob Pike[^1]</cite>
 
-[^1]: The above quote is excerpted from Rob Pike's [talk](https://www.youtube.com/watch?v=PAAkCSZUG1c) during Gopherfest, November 18, 2015.
+[^1]: The above quote is excerpted from Rob Pike's [[https://www.youtube.com/watch?v=PAAkCSZUG1c|talk]] during Gopherfest, November 18, 2015.
 
 ## Tables
 
@@ -212,3 +230,14 @@ X<sup>n</sup> + Y<sup>n</sup> = Z<sup>n</sup>
 Press <kbd>CTRL</kbd> + <kbd>ALT</kbd> + <kbd>Delete</kbd> to end the session.
 
 Most <mark>salamanders</mark> are nocturnal, and hunt for insects, worms, and other small creatures.
+
+## call out
+
+> [!NOTE]
+> this is an important note
+
+> [!NOTE]+
+> this is a foldable note
+
+> [!NOTE]-
+> this is a folded note
