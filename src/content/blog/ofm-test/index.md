@@ -33,6 +33,9 @@ internal links with name
 
 [[../link-test/index.md|good name]]
 
+external links
+
+[Youtube](https://www.youtube.com/)
 
 Block references
 
