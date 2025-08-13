@@ -8,7 +8,11 @@
     "preview": "astro preview",
     "astro": "astro",
     "test:wikilink": "node test/wikilink-test.js",
-    "test": "npm run test:wikilink"
+    "test:image": "node --test test/image-wikilink-test.js",
+    "test:table": "node test/table-wikilink-test.js",
+    "test:debug": "node test/debug-test.js",
+    "test": "node test/test-runner.js",
+    "test:all": "npm run test:wikilink && npm run test:image && npm run test:table"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.3",

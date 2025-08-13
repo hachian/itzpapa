@@ -21,7 +21,7 @@ export default function remarkWikilink() {
 
       const text = node.value;
       // 画像とリンクの両方のパターンを処理（画像は!で始まる）
-      const wikilinkRegex = /(!?)\[\[([^\]]+?)(?:(?:\||<<<PIPE>>>)([^\]]+?))?\]\]/g;
+      const wikilinkRegex = /(!?)\[\[([^\]]+?)(?:(?:\\\||<<<PIPE>>>|\|)([^\]]+?))?\]\]/g;
       
       let match;
       const parts = [];
@@ -38,7 +38,8 @@ export default function remarkWikilink() {
 
         const isImage = match[1] === '!';
         const linkPath = match[2];
-        const altOrLinkText = match[3];
+        // エスケープされたパイプ文字を復元（\|を|に戻す）
+        const altOrLinkText = match[3] ? match[3].replace(/\\\|/g, '|') : match[3];
         
         if (isImage) {
           // 画像の処理
