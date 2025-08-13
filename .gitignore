@@ -25,3 +25,8 @@ pnpm-debug.log*
 
 # claude code settings
 .claude/
+
+# test reports
+test/test-report.txt
+test/test-report.json
+test/test-report.html

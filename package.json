@@ -6,7 +6,9 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test:wikilink": "node test/wikilink-test.js",
+    "test": "npm run test:wikilink"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.3",

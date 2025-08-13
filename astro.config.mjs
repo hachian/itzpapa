@@ -10,11 +10,20 @@ export default defineConfig({
 	site: 'https://example.com',
 	integrations: [
 		mdx({
-			remarkPlugins: [remarkWikilink]
+			remarkPlugins: [
+				// Wikilinkを最初に処理（GFMの前）
+				[remarkWikilink, { priority: 'high' }]
+			],
+			extendMarkdownConfig: false
 		}), 
 		sitemap()
 	],
 	markdown: {
-		remarkPlugins: [remarkWikilink]
+		remarkPlugins: [
+			// Wikilinkを最初に処理（GFMの前）
+			[remarkWikilink, { priority: 'high' }]
+		],
+		// GFMを明示的に設定して順序を制御
+		gfm: true
 	}
 });

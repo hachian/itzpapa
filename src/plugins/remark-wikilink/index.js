@@ -1,13 +1,27 @@
 import { visit } from 'unist-util-visit';
 
 export default function remarkWikilink() {
-  return function transformer(tree) {
+  // プラグインの実行順序を早めるために優先度を設定
+  const plugin = function transformer(tree, file) {
+    
+    // 第1パス: テーブル内のWikilinkパイプ文字を一時的に置換
+    visit(tree, 'text', (node) => {
+      // テーブル内の可能性があるテキストをチェック
+      if (node.value.includes('|') && node.value.includes('[[')) {
+        // Wikilinkのパイプ文字を一時的なマーカーに置換
+        node.value = node.value.replace(/\[\[([^\]]+)\|([^\]]+)\]\]/g, (match, path, alias) => {
+          return `[[${path}<<<PIPE>>>${alias}]]`;
+        });
+      }
+    });
 
+    // 第2パス: 通常のWikilink処理
     visit(tree, 'text', (node, index, parent) => {
       if (!parent || parent.type === 'link') return;
 
       const text = node.value;
-      const wikilinkRegex = /\[\[([^\]|]+)(\|([^\]]+))?\]\]/g;
+      // マーカーを含むパターンも処理
+      const wikilinkRegex = /\[\[([^\]]+?)(?:(?:\||<<<PIPE>>>)([^\]]+?))?\]\]/g;
       
       let match;
       const parts = [];
@@ -24,7 +38,7 @@ export default function remarkWikilink() {
 
         // Process the wikilink
         const linkPath = match[1];
-        const linkText = match[3] || getDisplayName(linkPath);
+        const linkText = match[2] || getDisplayName(linkPath);
         
         let url = linkPath;
         
@@ -86,6 +100,11 @@ export default function remarkWikilink() {
       }
     });
   };
+
+  // 優先度を高く設定してGFMより先に実行されるようにする
+  plugin.priority = 1000;
+  
+  return plugin;
 }
 
 function getDisplayName(path) {
