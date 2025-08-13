@@ -15,13 +15,13 @@ export default function remarkWikilink() {
       }
     });
 
-    // 第2パス: 通常のWikilink処理
+    // 第2パス: 画像とリンクのWikilink処理
     visit(tree, 'text', (node, index, parent) => {
       if (!parent || parent.type === 'link') return;
 
       const text = node.value;
-      // マーカーを含むパターンも処理
-      const wikilinkRegex = /\[\[([^\]]+?)(?:(?:\||<<<PIPE>>>)([^\]]+?))?\]\]/g;
+      // 画像とリンクの両方のパターンを処理（画像は!で始まる）
+      const wikilinkRegex = /(!?)\[\[([^\]]+?)(?:(?:\||<<<PIPE>>>)([^\]]+?))?\]\]/g;
       
       let match;
       const parts = [];
@@ -36,51 +36,80 @@ export default function remarkWikilink() {
           });
         }
 
-        // Process the wikilink
-        const linkPath = match[1];
-        const linkText = match[2] || getDisplayName(linkPath);
+        const isImage = match[1] === '!';
+        const linkPath = match[2];
+        const altOrLinkText = match[3];
         
-        let url = linkPath;
-        
-        // Handle internal links (starting with ../)
-        if (linkPath.startsWith('../')) {
-          // Split path and hash
-          const hashIndex = linkPath.indexOf('#');
-          let filePath = linkPath;
-          let hash = '';
+        if (isImage) {
+          // 画像の処理
+          const altText = altOrLinkText || getDisplayName(linkPath);
+          let imagePath = linkPath;
           
-          if (hashIndex !== -1) {
-            filePath = linkPath.slice(0, hashIndex);
-            hash = linkPath.slice(hashIndex);
-          }
-          
-          // Clean the file path
-          const cleanPath = filePath.replace(/^\.\.\//, '').replace(/\.md$/, '').replace(/\/index$/, '');
-          
-          // Convert hash to proper anchor format (spaces to hyphens, lowercase, etc.)
-          let cleanHash = hash;
-          if (hash) {
-            // Remove the # and convert to proper anchor format
-            const hashText = hash.slice(1);
-            cleanHash = '#' + hashText.toLowerCase()
-              .replace(/\s+/g, '-')
-              .replace(/[^\w\-\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/g, '');
-          }
-          
-          url = `/blog/${cleanPath}${cleanHash}`;
-        }
-
-        parts.push({
-          type: 'link',
-          url: url,
-          title: null,
-          children: [{ type: 'text', value: linkText }],
-          data: {
-            hProperties: {
-              className: ['wikilink-internal']
+          // パスの正規化
+          if (!linkPath.startsWith('http://') && !linkPath.startsWith('https://')) {
+            if (linkPath.startsWith('/')) {
+              // 絶対パスはそのまま
+              imagePath = linkPath;
+            } else if (linkPath.startsWith('../')) {
+              // 相対パスはそのまま保持
+              imagePath = linkPath;
+            } else {
+              // その他は./を付ける
+              imagePath = './' + linkPath;
             }
           }
-        });
+          
+          parts.push({
+            type: 'image',
+            url: imagePath,
+            alt: altText,
+            title: null
+          });
+        } else {
+          // 通常のリンクの処理
+          const linkText = altOrLinkText || getDisplayName(linkPath);
+          let url = linkPath;
+          
+          // Handle internal links (starting with ../)
+          if (linkPath.startsWith('../')) {
+            // Split path and hash
+            const hashIndex = linkPath.indexOf('#');
+            let filePath = linkPath;
+            let hash = '';
+            
+            if (hashIndex !== -1) {
+              filePath = linkPath.slice(0, hashIndex);
+              hash = linkPath.slice(hashIndex);
+            }
+            
+            // Clean the file path
+            const cleanPath = filePath.replace(/^\.\.\//, '').replace(/\.md$/, '').replace(/\/index$/, '');
+            
+            // Convert hash to proper anchor format (spaces to hyphens, lowercase, etc.)
+            let cleanHash = hash;
+            if (hash) {
+              // Remove the # and convert to proper anchor format
+              const hashText = hash.slice(1);
+              cleanHash = '#' + hashText.toLowerCase()
+                .replace(/\s+/g, '-')
+                .replace(/[^\w\-\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/g, '');
+            }
+            
+            url = `/blog/${cleanPath}${cleanHash}`;
+          }
+
+          parts.push({
+            type: 'link',
+            url: url,
+            title: null,
+            children: [{ type: 'text', value: linkText }],
+            data: {
+              hProperties: {
+                className: ['wikilink-internal']
+              }
+            }
+          });
+        }
 
         lastIndex = wikilinkRegex.lastIndex;
       }
@@ -108,7 +137,10 @@ export default function remarkWikilink() {
 }
 
 function getDisplayName(path) {
-  const cleanPath = path.replace(/\.(md|mdx)$/, '').replace(/\/index$/, '');
+  // 画像拡張子も含めて削除
+  const cleanPath = path
+    .replace(/\.(md|mdx|png|jpg|jpeg|gif|svg|webp)$/i, '')
+    .replace(/\/index$/, '');
   const parts = cleanPath.split('/');
   return parts[parts.length - 1];
 }
