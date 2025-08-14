@@ -22,7 +22,14 @@
     "sharp": "^0.34.2"
   },
   "devDependencies": {
+    "hast-util-is-element": "^3.0.0",
+    "hast-util-select": "^6.0.4",
+    "hast-util-to-string": "^3.0.1",
+    "rehype": "^13.0.2",
+    "rehype-stringify": "^10.0.1",
     "remark": "^15.0.1",
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.1.2",
     "unified": "^11.0.5",
     "unist-util-visit": "^5.0.0"
   }
