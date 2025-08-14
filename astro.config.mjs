@@ -19,7 +19,7 @@ export default defineConfig({
 				// Calloutを処理（remarkプラグインの後）
 				rehypeCallout
 			],
-			extendMarkdownConfig: false
+			extendMarkdownConfig: true
 		}), 
 		sitemap()
 	],
@@ -29,10 +29,10 @@ export default defineConfig({
 			[remarkWikilink, { priority: 'high' }]
 		],
 		rehypePlugins: [
-			// Calloutを処理（remarkプラグインの後）
+			// Calloutをrehypeステージで処理
 			rehypeCallout
 		],
-		// GFMを明示的に設定して順序を制御
+		// GFMを最後に処理して干渉を回避
 		gfm: true
 	}
 });

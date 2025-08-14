@@ -105,67 +105,43 @@ export default function rehypeCallout(options = {}) {
 
     // Determine title text (use cached capitalization)
     const titleText = customTitle || getCachedCapitalized(validType);
+    
+    // Determine title text (use cached capitalization)
+    const titleText = customTitle || getCachedCapitalized(validType);
 
-    // Process content from blockquote
+    // Process content: collect all blockquote children EXCEPT the callout declaration line
     const contentChildren = [];
     
-    // Handle remaining content from first paragraph
+    // Process the first paragraph to remove callout declaration and preserve remaining content
     const lines = firstParagraphText.split('\n');
-    if (lines.length > 1) {
-      // If there's content after the callout declaration line, we need to preserve
-      // the original HTML structure rather than converting to plain text
-      const remainingFirstPara = lines.slice(1).join('\n');
-      if (remainingFirstPara.trim()) {
-        // Clone the first paragraph and remove the callout declaration line
-        const clonedParagraph = JSON.parse(JSON.stringify(firstParagraph));
-        
-        // Recursively remove callout declaration from the node tree
-        function removeCalloutDeclaration(node) {
-          if (node.type === 'text' && node.value.includes('[!')) {
-            // Find the end of the callout declaration line
-            const declarationLineEnd = node.value.indexOf('\n');
-            if (declarationLineEnd !== -1) {
-              // Remove everything up to and including the newline
-              node.value = node.value.substring(declarationLineEnd + 1);
-            } else {
-              // No content after declaration, remove the entire text node
-              return null;
-            }
+    const remainingLines = lines.slice(1); // Remove first line (callout declaration)
+    
+    if (remainingLines.length > 0 && remainingLines.some(line => line.trim())) {
+      // Create a new paragraph with the remaining content from the first paragraph
+      const newParagraph = {
+        type: 'element',
+        tagName: 'p',
+        properties: {},
+        children: [
+          {
+            type: 'text',
+            value: remainingLines.join('\n')
           }
-          
-          // Recursively process children if they exist
-          if (node.children) {
-            node.children = node.children
-              .map(removeCalloutDeclaration)
-              .filter(Boolean);
-          }
-          
-          return node;
-        }
-        
-        const modifiedParagraph = removeCalloutDeclaration(clonedParagraph);
-        if (modifiedParagraph && modifiedParagraph.children && modifiedParagraph.children.length > 0) {
-          // Check if there's meaningful content left
-          const hasContent = modifiedParagraph.children.some(child => 
-            child.type !== 'text' || child.value.trim()
-          );
-          
-          if (hasContent) {
-            contentChildren.push(modifiedParagraph);
-          }
-        }
-      }
+        ]
+      };
+      contentChildren.push(newParagraph);
     }
     
-    // Process remaining children
+    // Process remaining children (skip the first paragraph as we already processed it)
     let foundFirst = false;
     for (const child of node.children) {
       if (isElement(child, 'p')) {
         if (!foundFirst) {
           foundFirst = true;
-          continue; // Skip the first paragraph we already processed
+          continue; // Skip the first paragraph we already processed above
         }
-        contentChildren.push(child);
+        // For other paragraphs, keep as-is
+        contentChildren.push(JSON.parse(JSON.stringify(child)));
       } else if (isElement(child, 'blockquote')) {
         // Recursively process nested blockquotes
         const nestedCallout = processBlockquote(child, nestLevel + 1);
@@ -173,11 +149,11 @@ export default function rehypeCallout(options = {}) {
           contentChildren.push(nestedCallout);
         } else {
           // If not a callout, keep as blockquote
-          contentChildren.push(child);
+          contentChildren.push(JSON.parse(JSON.stringify(child)));
         }
       } else if (child.type === 'element') {
         // Keep other elements as-is
-        contentChildren.push(child);
+        contentChildren.push(JSON.parse(JSON.stringify(child)));
       }
     }
 
