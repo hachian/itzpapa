@@ -5,6 +5,7 @@ import { isElement } from 'hast-util-is-element';
 /**
  * Rehype plugin for Obsidian-style callouts
  * Converts blockquotes with [!type] syntax into callout elements
+ * Supports nested callouts
  */
 export default function rehypeCallout(options = {}) {
   const config = {
@@ -17,101 +18,207 @@ export default function rehypeCallout(options = {}) {
 
   // Combine default and custom types
   const allTypes = [...config.types, ...config.customTypes];
+  
+  // Track nesting depth to prevent infinite recursion
+  let currentNestLevel = 0;
 
-  return function transformer(tree, file) {
-    // Visit all blockquote elements in the HTML AST
-    visit(tree, 'element', (node, index, parent) => {
-      if (!isElement(node, 'blockquote')) return;
+  /**
+   * Process a blockquote node and convert to callout if applicable
+   * @param {Object} node - The blockquote node
+   * @param {number} nestLevel - Current nesting level
+   * @returns {Object|null} - The converted callout node or null
+   */
+  function processBlockquote(node, nestLevel = 0) {
+    if (!isElement(node, 'blockquote')) return null;
+    
+    // Check max nesting level
+    if (nestLevel >= config.maxNestLevel) {
+      console.warn(`Max nesting level (${config.maxNestLevel}) exceeded`);
+      return null;
+    }
 
-      // Get the text content of the blockquote
-      const content = toString(node);
-      
-      // Check if this blockquote contains a callout pattern
-      const calloutMatch = content.match(/^\s*\[!(\w+)\]([+-]?)(\s+(.+))?\s*\n?(.*)/s);
-      
-      if (!calloutMatch) return; // Not a callout, skip
+    // Get the first paragraph to check for callout syntax
+    let firstParagraph = null;
+    for (const child of node.children) {
+      if (isElement(child, 'p')) {
+        firstParagraph = child;
+        break;
+      }
+    }
+    
+    if (!firstParagraph) return null;
+    
+    // Get text content of the first paragraph
+    const firstParagraphText = toString(firstParagraph);
+    
+    // Check if this blockquote contains a callout pattern
+    const firstLine = firstParagraphText.split('\n')[0];
+    const calloutMatch = firstLine.match(/^\[!(\w+)\]([+-]?)(?:\s+(.+))?$/);
+    
+    if (!calloutMatch) return null; // Not a callout
+    
+    const [, rawType, foldIndicator, customTitle] = calloutMatch;
+    
+    // Validate callout type
+    const type = rawType.toLowerCase();
+    const validType = allTypes.includes(type) ? type : 'note';
+    
+    // Determine if this is foldable
+    const isFoldable = Boolean(foldIndicator);
+    const isInitiallyFolded = foldIndicator === '-';
+    
+    // Create the callout structure
+    const calloutNode = {
+      type: 'element',
+      tagName: 'div',
+      properties: {
+        className: [
+          'callout',
+          `callout-${validType}`,
+          ...(isFoldable ? ['callout-foldable'] : []),
+          ...(isInitiallyFolded ? ['callout-folded'] : [])
+        ],
+        'data-nest-level': nestLevel.toString()
+      },
+      children: []
+    };
 
-      const [, rawType, foldIndicator, , customTitle, bodyContent] = calloutMatch;
-      
-      // Validate callout type (case-insensitive)
-      const type = rawType.toLowerCase();
-      const validType = allTypes.includes(type) ? type : 'note';
-      
-      // Determine if this is foldable and initial state
-      const isFoldable = Boolean(foldIndicator);
-      const isInitiallyFolded = foldIndicator === '-';
-      
-      // Create the callout structure
-      const calloutNode = {
+    // Determine title text
+    const titleText = customTitle || capitalizeFirst(validType);
+
+    // Process content from blockquote
+    const contentChildren = [];
+    
+    // Get content after the callout declaration line
+    const lines = firstParagraphText.split('\n');
+    const remainingFirstPara = lines.slice(1).join('\n');
+    
+    // Add remaining content from first paragraph if any
+    if (remainingFirstPara && remainingFirstPara.trim()) {
+      contentChildren.push({
         type: 'element',
-        tagName: 'div',
-        properties: {
-          className: [
-            'callout',
-            `callout-${validType}`,
-            ...(isFoldable ? ['callout-foldable'] : []),
-            ...(isInitiallyFolded ? ['callout-folded'] : [])
-          ]
-        },
-        children: []
-      };
+        tagName: 'p',
+        properties: {},
+        children: [
+          {
+            type: 'text',
+            value: remainingFirstPara.trim()
+          }
+        ]
+      });
+    }
+    
+    // Process remaining children
+    let foundFirst = false;
+    for (const child of node.children) {
+      if (isElement(child, 'p')) {
+        if (!foundFirst) {
+          foundFirst = true;
+          continue; // Skip the first paragraph we already processed
+        }
+        contentChildren.push(child);
+      } else if (isElement(child, 'blockquote')) {
+        // Recursively process nested blockquotes
+        const nestedCallout = processBlockquote(child, nestLevel + 1);
+        if (nestedCallout) {
+          contentChildren.push(nestedCallout);
+        } else {
+          // If not a callout, keep as blockquote
+          contentChildren.push(child);
+        }
+      } else if (child.type === 'element') {
+        // Keep other elements as-is
+        contentChildren.push(child);
+      }
+    }
 
-      // Create title element
-      const titleText = customTitle || capitalizeFirst(validType);
-      const titleElement = {
+    // Create content element
+    const contentElement = {
+      type: 'element',
+      tagName: 'div',
+      properties: {
+        className: ['callout-content']
+      },
+      children: contentChildren
+    };
+
+    // Create title/summary structure based on foldable state
+    if (isFoldable) {
+      // For foldable callouts, use details/summary
+      const detailsNode = {
         type: 'element',
-        tagName: isFoldable ? 'details' : 'div',
-        properties: {
-          className: ['callout-title'],
-          ...(isFoldable && isInitiallyFolded ? {} : { open: true })
-        },
+        tagName: 'details',
+        properties: isInitiallyFolded ? {} : { open: true },
         children: [
           {
             type: 'element',
-            tagName: isFoldable ? 'summary' : 'span',
-            properties: {},
+            tagName: 'summary',
+            properties: {
+              className: ['callout-title']
+            },
             children: [
               {
                 type: 'text',
                 value: titleText
               }
             ]
-          }
+          },
+          contentElement
         ]
       };
-
-      // Create content element
-      const contentElement = {
+      calloutNode.children = [detailsNode];
+    } else {
+      // For non-foldable callouts, use div structure
+      const titleElement = {
         type: 'element',
         tagName: 'div',
         properties: {
-          className: ['callout-content']
+          className: ['callout-title']
         },
-        children: bodyContent.trim() ? [
+        children: [
           {
-            type: 'element',
-            tagName: 'p',
-            properties: {},
-            children: [
-              {
-                type: 'text',
-                value: bodyContent.trim()
-              }
-            ]
+            type: 'text',
+            value: titleText
           }
-        ] : []
+        ]
       };
+      calloutNode.children = [titleElement, contentElement];
+    }
 
-      // For foldable callouts, wrap content in details
-      if (isFoldable) {
-        titleElement.children.push(contentElement);
-        calloutNode.children = [titleElement];
-      } else {
-        calloutNode.children = [titleElement, contentElement];
+    return calloutNode;
+  }
+
+  return function transformer(tree) {
+    // Process all blockquotes, handling nesting properly
+    visit(tree, 'element', (node, index, parent) => {
+      if (!isElement(node, 'blockquote')) return;
+      
+      // Only process top-level blockquotes in the visit
+      // Nested ones will be handled recursively
+      const calloutNode = processBlockquote(node, 0);
+      
+      if (calloutNode) {
+        // Replace the blockquote with the callout
+        parent.children[index] = calloutNode;
       }
-
-      // Replace the blockquote with the callout
-      parent.children[index] = calloutNode;
+    });
+    
+    // Also process nested blockquotes within callouts
+    visit(tree, 'element', (node) => {
+      if (node.properties && node.properties.className && 
+          node.properties.className.includes('callout-content')) {
+        // Process children for nested blockquotes
+        for (let i = 0; i < node.children.length; i++) {
+          const child = node.children[i];
+          if (isElement(child, 'blockquote')) {
+            const nestLevel = parseInt(node.parent?.properties?.['data-nest-level'] || '0') + 1;
+            const nestedCallout = processBlockquote(child, nestLevel);
+            if (nestedCallout) {
+              node.children[i] = nestedCallout;
+            }
+          }
+        }
+      }
     });
   };
 }
