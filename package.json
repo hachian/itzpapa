@@ -10,9 +10,15 @@
     "test:wikilink": "node test/wikilink-test.js",
     "test:image": "node --test test/image-wikilink-test.js",
     "test:table": "node test/table-wikilink-test.js",
+    "test:callout": "node test/callout-test.js",
+    "test:callout-markdown": "node test/callout-markdown-test.js",
+    "test:nested-callout": "node test/nested-callout-test.js",
+    "test:callout-edge-cases": "node test/callout-edge-cases-test.js",
+    "test:callout-security": "node test/callout-security-test.js",
+    "test:callout-integration": "node test/callout-integration-test.js",
     "test:debug": "node test/debug-test.js",
     "test": "node test/test-runner.js",
-    "test:all": "npm run test:wikilink && npm run test:image && npm run test:table"
+    "test:all": "npm run test:wikilink && npm run test:image && npm run test:table && npm run test:callout && npm run test:callout-markdown && npm run test:nested-callout && npm run test:callout-edge-cases && npm run test:callout-security && npm run test:callout-integration"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.3",

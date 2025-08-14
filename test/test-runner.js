@@ -33,6 +33,42 @@ const testSuites = [
     command: 'npm',
     args: ['run', 'test:table'],
     timeout: 30000
+  },
+  {
+    name: 'Callout Core Tests',
+    command: 'npm',
+    args: ['run', 'test:callout'],
+    timeout: 30000
+  },
+  {
+    name: 'Callout Markdown Tests',
+    command: 'npm',
+    args: ['run', 'test:callout-markdown'],
+    timeout: 30000
+  },
+  {
+    name: 'Nested Callout Tests',
+    command: 'npm',
+    args: ['run', 'test:nested-callout'],
+    timeout: 30000
+  },
+  {
+    name: 'Callout Edge Cases Tests',
+    command: 'npm',
+    args: ['run', 'test:callout-edge-cases'],
+    timeout: 45000
+  },
+  {
+    name: 'Callout Security Tests',
+    command: 'npm',
+    args: ['run', 'test:callout-security'],
+    timeout: 30000
+  },
+  {
+    name: 'Callout Integration Tests',
+    command: 'npm',
+    args: ['run', 'test:callout-integration'],
+    timeout: 60000
   }
 ];
 
@@ -99,8 +135,8 @@ function runTestSuite(testSuite) {
 
 // メイン実行関数
 async function runAllTests() {
-  console.log(colors.bold('\n🧪 Wikilink Plugin Test Suite'));
-  console.log(colors.dim('Running all test suites...\n'));
+  console.log(colors.bold('\n🧪 Comprehensive Plugin Test Suite'));
+  console.log(colors.dim('Running all test suites (wikilinks + callouts)...\n'));
   console.log('='.repeat(60));
   
   const startTime = Date.now();
