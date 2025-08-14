@@ -89,23 +89,52 @@ export default function rehypeCallout(options = {}) {
     // Process content from blockquote
     const contentChildren = [];
     
-    // Get content after the callout declaration line
+    // Handle remaining content from first paragraph
     const lines = firstParagraphText.split('\n');
-    const remainingFirstPara = lines.slice(1).join('\n');
-    
-    // Add remaining content from first paragraph if any
-    if (remainingFirstPara && remainingFirstPara.trim()) {
-      contentChildren.push({
-        type: 'element',
-        tagName: 'p',
-        properties: {},
-        children: [
-          {
-            type: 'text',
-            value: remainingFirstPara.trim()
+    if (lines.length > 1) {
+      // If there's content after the callout declaration line, we need to preserve
+      // the original HTML structure rather than converting to plain text
+      const remainingFirstPara = lines.slice(1).join('\n');
+      if (remainingFirstPara.trim()) {
+        // Clone the first paragraph and remove the callout declaration line
+        const clonedParagraph = JSON.parse(JSON.stringify(firstParagraph));
+        
+        // Recursively remove callout declaration from the node tree
+        function removeCalloutDeclaration(node) {
+          if (node.type === 'text' && node.value.includes('[!')) {
+            // Find the end of the callout declaration line
+            const declarationLineEnd = node.value.indexOf('\n');
+            if (declarationLineEnd !== -1) {
+              // Remove everything up to and including the newline
+              node.value = node.value.substring(declarationLineEnd + 1);
+            } else {
+              // No content after declaration, remove the entire text node
+              return null;
+            }
           }
-        ]
-      });
+          
+          // Recursively process children if they exist
+          if (node.children) {
+            node.children = node.children
+              .map(removeCalloutDeclaration)
+              .filter(Boolean);
+          }
+          
+          return node;
+        }
+        
+        const modifiedParagraph = removeCalloutDeclaration(clonedParagraph);
+        if (modifiedParagraph && modifiedParagraph.children && modifiedParagraph.children.length > 0) {
+          // Check if there's meaningful content left
+          const hasContent = modifiedParagraph.children.some(child => 
+            child.type !== 'text' || child.value.trim()
+          );
+          
+          if (hasContent) {
+            contentChildren.push(modifiedParagraph);
+          }
+        }
+      }
     }
     
     // Process remaining children

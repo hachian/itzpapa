@@ -51,6 +51,25 @@ pubDate: 'Jan 14 2025'
 > [!note]
 > Check out the [[wikilink-test-suite/index|wikilink test]] for more examples.
 
+## Inline Markdown Elements
+
+> [!note] **Bold Text Test**
+> This callout contains **bold text**, *italic text*, `inline code`, and [external links](https://example.com).
+
+> [!tip] Mixed Content
+> First line with **bold** content.
+> 
+> Second paragraph with *italic* and `code` elements.
+
+> [!warning] Code Example
+> Use `console.log("Hello World")` for debugging.
+> 
+> ```javascript
+> function greet(name) {
+>   return `Hello, ${name}!`;
+> }
+> ```
+
 ## Nested Callouts
 
 > [!warning] Parent Warning
