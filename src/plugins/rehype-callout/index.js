@@ -16,11 +16,31 @@ export default function rehypeCallout(options = {}) {
     ...options
   };
 
-  // Combine default and custom types
-  const allTypes = [...config.types, ...config.customTypes];
+  // Combine default and custom types into Set for O(1) lookup
+  const allTypes = new Set([...config.types, ...config.customTypes]);
+  
+  // Pre-compile regex for better performance
+  const calloutRegex = /^\[!(\w+)\]([+-]?)(?:\s+(.+))?$/;
+  
+  // Cache for capitalized type names
+  const capitalizedCache = new Map();
   
   // Track nesting depth to prevent infinite recursion
   let currentNestLevel = 0;
+
+  /**
+   * Get cached capitalized version of a string
+   * @param {string} str - Input string
+   * @returns {string} Cached capitalized string
+   */
+  function getCachedCapitalized(str) {
+    if (capitalizedCache.has(str)) {
+      return capitalizedCache.get(str);
+    }
+    const capitalized = str.charAt(0).toUpperCase() + str.slice(1);
+    capitalizedCache.set(str, capitalized);
+    return capitalized;
+  }
 
   /**
    * Process a blockquote node and convert to callout if applicable
@@ -51,17 +71,17 @@ export default function rehypeCallout(options = {}) {
     // Get text content of the first paragraph
     const firstParagraphText = toString(firstParagraph);
     
-    // Check if this blockquote contains a callout pattern
+    // Check if this blockquote contains a callout pattern (use pre-compiled regex)
     const firstLine = firstParagraphText.split('\n')[0];
-    const calloutMatch = firstLine.match(/^\[!(\w+)\]([+-]?)(?:\s+(.+))?$/);
+    const calloutMatch = firstLine.match(calloutRegex);
     
     if (!calloutMatch) return null; // Not a callout
     
     const [, rawType, foldIndicator, customTitle] = calloutMatch;
     
-    // Validate callout type
+    // Validate callout type (use Set for O(1) lookup)
     const type = rawType.toLowerCase();
-    const validType = allTypes.includes(type) ? type : 'note';
+    const validType = allTypes.has(type) ? type : 'note';
     
     // Determine if this is foldable
     const isFoldable = Boolean(foldIndicator);
@@ -83,8 +103,8 @@ export default function rehypeCallout(options = {}) {
       children: []
     };
 
-    // Determine title text
-    const titleText = customTitle || capitalizeFirst(validType);
+    // Determine title text (use cached capitalization)
+    const titleText = customTitle || getCachedCapitalized(validType);
 
     // Process content from blockquote
     const contentChildren = [];

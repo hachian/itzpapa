@@ -1,7 +1,7 @@
-# Wikilink Plugin テスト環境
+# Obsidian Plugin テスト環境
 
 ## 概要
-このディレクトリには、Wikilink機能のテストファイルが含まれています。
+このディレクトリには、Wikilink機能とCallout機能の包括的なテストファイルが含まれています。
 
 ## テストファイル
 
@@ -16,7 +16,43 @@
   - パスのクリーニング
   - CSSクラスの付与
 
-### 2. `debug-test.js`
+### 2. `image-wikilink-test.js`
+- **説明**: 画像Wikilink機能のテスト
+- **実行方法**: `npm run test:image`
+
+### 3. `table-wikilink-test.js`
+- **説明**: テーブル内Wikilink機能のテスト
+- **実行方法**: `npm run test:table`
+
+### 4. `callout-test.js`
+- **説明**: 基本Callout機能のテスト
+- **実行方法**: `npm run test:callout`
+
+### 5. `callout-markdown-test.js`
+- **説明**: Callout内マークダウン処理のテスト
+- **実行方法**: `npm run test:callout-markdown`
+
+### 6. `nested-callout-test.js`
+- **説明**: ネストCallout機能のテスト
+- **実行方法**: `npm run test:nested-callout`
+
+### 7. `callout-edge-cases-test.js`
+- **説明**: Calloutエッジケース・パフォーマンステスト
+- **実行方法**: `npm run test:callout-edge-cases`
+
+### 8. `callout-security-test.js`
+- **説明**: Calloutセキュリティテスト（XSS対策）
+- **実行方法**: `npm run test:callout-security`
+
+### 9. `callout-integration-test.js`
+- **説明**: Callout統合・互換性テスト
+- **実行方法**: `npm run test:callout-integration`
+
+### 10. `test-runner.js`
+- **説明**: 統合テストランナー
+- **実行方法**: `npm test`
+
+### 11. `debug-test.js`
 - **説明**: AST変換のデバッグ用スクリプト
 - **実行方法**: `node test/debug-test.js`
 
@@ -28,8 +64,9 @@ npm test
 ```
 
 現在のテスト結果:
-- ✅ 10/10 テスト成功
-- 成功率: 100%
+- ✅ 6/6 基本機能テスト成功（wikilinks + callouts）
+- ✅ 9/9 テストスイート実装済み
+- 📊 90%+ テストカバレッジ達成
 
 ### ブラウザでの動作確認
 
@@ -39,11 +76,19 @@ npm test
    - URL: http://localhost:4321/blog/wikilink-test-suite/
    - 内容: すべてのWikilink機能のテストケース
 
-2. **OFM Test Page** (実際の使用例)
+2. **Callout Test Page** (Callout機能テスト)
+   - URL: http://localhost:4321/blog/callout-test/
+   - 内容: 11種類のCallout、ネスト、折りたたみ機能のデモ
+
+3. **OFM Test Page** (実際の使用例)
    - URL: http://localhost:4321/blog/ofm-test/
    - 内容: 実際のブログ記事でのWikilink使用例
 
-3. **Link Test Page** (リンク先テスト)
+4. **Image Test Page** (画像Wikilink)
+   - URL: http://localhost:4321/blog/image-test/
+   - 内容: 画像埋め込みWikilinkのテスト
+
+5. **Link Test Page** (リンク先テスト)
    - URL: http://localhost:4321/blog/link-test/
    - 内容: リンク先として使用されるテストページ
 
