@@ -9,7 +9,7 @@ import { isElement } from 'hast-util-is-element';
  */
 export default function rehypeCallout(options = {}) {
   const config = {
-    types: ['note', 'tip', 'info', 'warning', 'danger', 'success', 'question', 'failure', 'bug', 'example', 'quote'],
+    types: ['note', 'tip', 'info', 'warning', 'danger', 'error', 'success', 'question', 'failure', 'bug', 'example', 'quote', 'important', 'research'],
     maxNestLevel: 20,
     enableFolding: true,
     customTypes: [],

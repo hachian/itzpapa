@@ -28,23 +28,44 @@ pubDate: 'Jan 14 2025'
 
 ## All Callout Types
 
+> [!note]
+> Lorem ipsum dolor sit amet
+
+> [!abstract]
+> Lorem ipsum dolor sit amet
+
+> [!info]
+> Lorem ipsum dolor sit amet
+
+> [!todo]
+> Lorem ipsum dolor sit amet
+
+> [!tip]
+> Lorem ipsum dolor sit amet
+
 > [!success]
-> Operation completed successfully!
+> Lorem ipsum dolor sit amet
 
 > [!question]
-> Have you considered all options?
+> Lorem ipsum dolor sit amet
+
+> [!warning]
+> Lorem ipsum dolor sit amet
 
 > [!failure]
-> The operation failed.
+> Lorem ipsum dolor sit amet
+
+> [!danger]
+> Lorem ipsum dolor sit amet
 
 > [!bug]
-> Known issue with workaround.
+> Lorem ipsum dolor sit amet
 
 > [!example]
-> Here's a practical example.
+> Lorem ipsum dolor sit amet
 
 > [!quote]
-> "The only way to do great work is to love what you do." - Steve Jobs
+> Lorem ipsum dolor sit amet
 
 ## With Wikilinks
 

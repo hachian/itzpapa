@@ -1,0 +1,429 @@
+/* Minimalist Obsidian-style Callouts */
+
+/* Base callout styles */
+.callout {
+  margin: 1.5em 0;
+  padding: 1.2em 1.5em;
+  border-radius: 4px;
+  font-size: 0.95em;
+  position: relative;
+  border-left: 3px solid;
+  transition: all 0.2s ease;
+}
+
+/* Callout title styles */
+.callout-title {
+  font-weight: 600;
+  margin-bottom: 0.5em;
+  font-size: 1.05em;
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+}
+
+/* Callout content styles */
+.callout-content {
+  margin: 0;
+  color: inherit;
+}
+
+.callout-content > *:first-child {
+  margin-top: 0;
+}
+
+.callout-content > *:last-child {
+  margin-bottom: 0;
+}
+
+.callout-content p {
+  margin-bottom: 0.8em;
+}
+
+.callout-content p:last-child {
+  margin-bottom: 0;
+}
+
+/* Note (情報) */
+.callout-note {
+  background-color: #f7fafc;
+  border-left-color: #4299e1;
+  color: #2b6cb0;
+}
+
+.callout-note .callout-title {
+  color: #2b6cb0;
+}
+
+/* Tip (ヒント) */
+.callout-tip {
+  background-color: #f0fff4;
+  border-left-color: #48bb78;
+  color: #276749;
+}
+
+.callout-tip .callout-title {
+  color: #276749;
+}
+
+/* Info (情報) */
+.callout-info {
+  background-color: #e0f2fe;
+  border-left-color: #0ea5e9;
+  color: #075985;
+}
+
+.callout-info .callout-title {
+  color: #075985;
+}
+
+/* Warning (警告) */
+.callout-warning {
+  background-color: #fef5e7;
+  border-left-color: #f59e0b;
+  color: #92400e;
+}
+
+.callout-warning .callout-title {
+  color: #92400e;
+}
+
+/* Danger/Error (危険・エラー) */
+.callout-danger,
+.callout-error {
+  background-color: #fef2f2;
+  border-left-color: #ef4444;
+  color: #991b1b;
+}
+
+.callout-danger .callout-title,
+.callout-error .callout-title {
+  color: #991b1b;
+}
+
+/* Success (成功) */
+.callout-success {
+  background-color: #ecfdf5;
+  border-left-color: #10b981;
+  color: #065f46;
+}
+
+.callout-success .callout-title {
+  color: #065f46;
+}
+
+/* Question (質問) */
+.callout-question {
+  background-color: #f3f0ff;
+  border-left-color: #8b5cf6;
+  color: #5b21b6;
+}
+
+.callout-question .callout-title {
+  color: #5b21b6;
+}
+
+/* Failure (失敗) */
+.callout-failure {
+  background-color: #fef2f2;
+  border-left-color: #f87171;
+  color: #b91c1c;
+}
+
+.callout-failure .callout-title {
+  color: #b91c1c;
+}
+
+/* Bug (バグ) */
+.callout-bug {
+  background-color: #fdf4ff;
+  border-left-color: #e879f9;
+  color: #a21caf;
+}
+
+.callout-bug .callout-title {
+  color: #a21caf;
+}
+
+/* Example (例) */
+.callout-example {
+  background-color: #f0f9ff;
+  border-left-color: #3b82f6;
+  color: #1e40af;
+}
+
+.callout-example .callout-title {
+  color: #1e40af;
+}
+
+/* Quote (引用) */
+.callout-quote {
+  background-color: #f9fafb;
+  border-left-color: #9ca3af;
+  color: #374151;
+  font-style: italic;
+}
+
+.callout-quote .callout-title {
+  color: #374151;
+  font-style: normal;
+}
+
+/* Foldable callouts */
+.callout-foldable details {
+  margin: -1.2em -1.5em;
+}
+
+.callout-foldable summary {
+  padding: 1.2em 1.5em;
+  cursor: pointer;
+  list-style: none;
+  position: relative;
+  transition: background-color 0.2s ease;
+  font-weight: 600;
+  font-size: 1.05em;
+  user-select: none;
+}
+
+.callout-foldable summary::-webkit-details-marker {
+  display: none;
+}
+
+.callout-foldable summary::before {
+  content: "▶";
+  position: absolute;
+  right: 1.5rem;
+  font-size: 0.8em;
+  transition: transform 0.2s ease;
+  opacity: 0.7;
+}
+
+.callout-foldable details[open] summary::before {
+  transform: rotate(90deg);
+}
+
+.callout-foldable summary:hover {
+  opacity: 0.9;
+}
+
+.callout-foldable .callout-content {
+  padding: 0 1.5em 1.2em 1.5em;
+  margin-top: -0.5em;
+}
+
+/* Nested callouts */
+.callout .callout {
+  margin: 0.8em 0;
+  font-size: 0.98em;
+}
+
+.callout[data-nest-level="1"] {
+  margin-left: 0.5rem;
+}
+
+.callout[data-nest-level="2"] {
+  margin-left: 1rem;
+}
+
+.callout[data-nest-level="3"],
+.callout[data-nest-level="4"],
+.callout[data-nest-level="5"] {
+  margin-left: 1.5rem;
+}
+
+/* List styles inside callouts */
+.callout-content ul,
+.callout-content ol {
+  margin: 0.5em 0;
+  padding-left: 1.5em;
+}
+
+.callout-content li {
+  margin: 0.25em 0;
+}
+
+/* Code blocks inside callouts */
+.callout-content pre {
+  background-color: rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  margin: 0.8em 0;
+}
+
+.callout-content code {
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 0.15em 0.3em;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+/* Responsive design */
+@media (max-width: 720px) {
+  .callout {
+    margin: 1em 0;
+    padding: 1em 1.2em;
+    font-size: 0.93em;
+  }
+  
+  .callout-title {
+    font-size: 1.02em;
+    margin-bottom: 0.4em;
+  }
+  
+  .callout[data-nest-level="1"],
+  .callout[data-nest-level="2"],
+  .callout[data-nest-level="3"],
+  .callout[data-nest-level="4"],
+  .callout[data-nest-level="5"] {
+    margin-left: 0.5rem;
+  }
+  
+  .callout-foldable summary::before {
+    right: 1.2rem;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  /* Note */
+  .callout-note {
+    background-color: rgba(66, 153, 225, 0.1);
+    border-left-color: #63b3ed;
+    color: #90cdf4;
+  }
+  
+  .callout-note .callout-title {
+    color: #90cdf4;
+  }
+  
+  /* Important */
+  .callout-important {
+    background-color: rgba(237, 137, 54, 0.1);
+    border-left-color: #f6ad55;
+    color: #fbd38d;
+  }
+  
+  .callout-important .callout-title {
+    color: #fbd38d;
+  }
+  
+  /* Tip */
+  .callout-tip {
+    background-color: rgba(72, 187, 120, 0.1);
+    border-left-color: #68d391;
+    color: #9ae6b4;
+  }
+  
+  .callout-tip .callout-title {
+    color: #9ae6b4;
+  }
+  
+  /* Info */
+  .callout-info {
+    background-color: rgba(14, 165, 233, 0.1);
+    border-left-color: #38bdf8;
+    color: #7dd3fc;
+  }
+  
+  .callout-info .callout-title {
+    color: #7dd3fc;
+  }
+  
+  /* Warning */
+  .callout-warning {
+    background-color: rgba(245, 158, 11, 0.1);
+    border-left-color: #fbbf24;
+    color: #fde68a;
+  }
+  
+  .callout-warning .callout-title {
+    color: #fde68a;
+  }
+  
+  /* Danger/Error */
+  .callout-danger,
+  .callout-error {
+    background-color: rgba(239, 68, 68, 0.1);
+    border-left-color: #f87171;
+    color: #fca5a5;
+  }
+  
+  .callout-danger .callout-title,
+  .callout-error .callout-title {
+    color: #fca5a5;
+  }
+  
+  /* Success */
+  .callout-success {
+    background-color: rgba(16, 185, 129, 0.1);
+    border-left-color: #34d399;
+    color: #6ee7b7;
+  }
+  
+  .callout-success .callout-title {
+    color: #6ee7b7;
+  }
+  
+  /* Question */
+  .callout-question {
+    background-color: rgba(139, 92, 246, 0.1);
+    border-left-color: #a78bfa;
+    color: #c4b5fd;
+  }
+  
+  .callout-question .callout-title {
+    color: #c4b5fd;
+  }
+  
+  /* Failure */
+  .callout-failure {
+    background-color: rgba(248, 113, 113, 0.1);
+    border-left-color: #fca5a5;
+    color: #fecaca;
+  }
+  
+  .callout-failure .callout-title {
+    color: #fecaca;
+  }
+  
+  /* Bug */
+  .callout-bug {
+    background-color: rgba(232, 121, 249, 0.1);
+    border-left-color: #f0abfc;
+    color: #f5d0fe;
+  }
+  
+  .callout-bug .callout-title {
+    color: #f5d0fe;
+  }
+  
+  /* Example */
+  .callout-example {
+    background-color: rgba(59, 130, 246, 0.1);
+    border-left-color: #60a5fa;
+    color: #93bbfc;
+  }
+  
+  .callout-example .callout-title {
+    color: #93bbfc;
+  }
+  
+  /* Quote */
+  .callout-quote {
+    background-color: rgba(156, 163, 175, 0.1);
+    border-left-color: #9ca3af;
+    color: #d1d5db;
+  }
+  
+  .callout-quote .callout-title {
+    color: #d1d5db;
+  }
+  
+  /* Code blocks in dark mode */
+  .callout-content pre {
+    background-color: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .callout-content code {
+    background-color: rgba(255, 255, 255, 0.08);
+  }
+}
