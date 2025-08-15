@@ -105,9 +105,6 @@ export default function rehypeCallout(options = {}) {
 
     // Determine title text (use cached capitalization)
     const titleText = customTitle || getCachedCapitalized(validType);
-    
-    // Determine title text (use cached capitalization)
-    const titleText = customTitle || getCachedCapitalized(validType);
 
     // Process content: collect all blockquote children EXCEPT the callout declaration line
     const contentChildren = [];
