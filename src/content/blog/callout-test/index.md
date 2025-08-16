@@ -2,6 +2,7 @@
 title: 'Callout機能テスト'
 description: 'Obsidianスタイルのcallout機能をテストします'
 pubDate: '2025-01-15'
+heroImage: './itzpapa2.jpg'
 ---
 
 # Callout機能テスト

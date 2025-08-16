@@ -2,6 +2,7 @@
 title: 'Callout エッジケース・エラーハンドリングテスト'
 description: 'callout機能のエラーハンドリングとエッジケースをテストします'
 pubDate: '2025-01-15'
+heroImage: './itzpapa4.jpg'
 ---
 
 # Callout エッジケース・エラーハンドリングテスト
