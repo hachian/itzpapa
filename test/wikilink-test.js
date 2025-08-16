@@ -125,6 +125,31 @@ const testCases = [
       return link && link.url === '/blog/page-name' && 
              link.children[0].value === 'Display Name';
     }
+  },
+  {
+    name: 'Trim leading and trailing spaces - basic',
+    input: '[[  ../page name/index.md  ]]',
+    check: (ast) => {
+      const link = findNode(ast, 'link');
+      return link && link.url === '/blog/page-name';
+    }
+  },
+  {
+    name: 'Trim with alias - preserve alias spaces',
+    input: '[[  ../page name/index.md  |  Display Name  ]]',
+    check: (ast) => {
+      const link = findNode(ast, 'link');
+      return link && link.url === '/blog/page-name' && 
+             link.children[0].value === '  Display Name  ';
+    }
+  },
+  {
+    name: 'Trim boundary test - tabs and mixed whitespace',
+    input: '[[\t ../page name/index.md \t]]',
+    check: (ast) => {
+      const link = findNode(ast, 'link');
+      return link && link.url === '/blog/page-name';
+    }
   }
 ];
 

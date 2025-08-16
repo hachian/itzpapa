@@ -201,6 +201,29 @@ tags:
 [[../my test page/index.md#Another Multi Word Heading|複数単語見出しへのリンク]]
 [[../test page/index.md#日本語 見出し|日本語スペース見出し]]
 
+## 10.5. 先頭・末尾空白の自動除去テスト (TASK-002)
+
+#### Syntax
+
+```markdown
+[[  ../test page/index.md  |通常エイリアス]]
+[[  ../my test page/index.md  |タブ文字テスト]]
+[[  ../test page/index.md  |  前後に空白のエイリアス  ]]
+[[   ../test page/index.md#Heading with Spaces   |   空白除去+見出し   ]]
+```
+
+#### Output
+
+[[  ../test page/index.md  |通常エイリアス]]
+[[  ../my test page/index.md  |タブ文字テスト]]
+[[  ../test page/index.md  |  前後に空白のエイリアス  ]]
+[[   ../test page/index.md#Heading with Spaces   |   空白除去+見出し   ]]
+
+**期待される動作**:
+- パス部分の先頭・末尾空白は自動除去される
+- エイリアス部分の空白は保持される
+- タブ文字や混合空白文字も適切に処理される
+
 ## 11. 通常のMarkdownリンクとの混在
 
 #### Syntax

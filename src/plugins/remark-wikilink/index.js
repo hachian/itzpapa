@@ -37,8 +37,8 @@ export default function remarkWikilink() {
         }
 
         const isImage = match[1] === '!';
-        const linkPath = match[2];
-        // エスケープされたパイプ文字を復元（\|を|に戻す）
+        const linkPath = match[2].trim();  // Remove leading/trailing whitespace from path
+        // エスケープされたパイプ文字を復元（\|を|に戻す）エイリアス部分は空白保持
         const altOrLinkText = match[3] ? match[3].replace(/\\\|/g, '|') : match[3];
         
         if (isImage) {
@@ -69,7 +69,7 @@ export default function remarkWikilink() {
         } else {
           // 通常のリンクの処理
           const linkText = altOrLinkText || getDisplayName(linkPath);
-          let url = linkPath;
+          let url = linkPath;  // Will be updated below if internal link
           
           // Handle internal links (starting with ../)
           if (linkPath.startsWith('../')) {
@@ -102,6 +102,9 @@ export default function remarkWikilink() {
             }
             
             url = `/blog/${cleanPath}${cleanHash}`;
+          } else {
+            // For non-relative paths, use the trimmed linkPath
+            url = linkPath;
           }
 
           parts.push({
