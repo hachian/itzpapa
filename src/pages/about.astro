@@ -1,63 +1,77 @@
 ---
-import AboutHeroImage from '../assets/blog-placeholder-about.jpg';
+import itzpapaImage from '../assets/banner.png';
 import Layout from '../layouts/BlogPost.astro';
 ---
 
 <Layout
-	title="About Me"
-	description="Lorem ipsum dolor sit amet"
-	pubDate={new Date('August 08 2021')}
-	heroImage={AboutHeroImage}
+	title="About itzpapa"
+	description="ObsidianとAstroで構築されたデジタルガーデンプラットフォーム"
+	pubDate={new Date('2025-01-15')}
+	heroImage={itzpapaImage}
 >
+	<h2>itzpapaとは</h2>
 	<p>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-		labore et dolore magna aliqua. Vitae ultricies leo integer malesuada nunc vel risus commodo
-		viverra. Adipiscing enim eu turpis egestas pretium. Euismod elementum nisi quis eleifend quam
-		adipiscing. In hac habitasse platea dictumst vestibulum. Sagittis purus sit amet volutpat. Netus
-		et malesuada fames ac turpis egestas. Eget magna fermentum iaculis eu non diam phasellus
-		vestibulum lorem. Varius sit amet mattis vulputate enim. Habitasse platea dictumst quisque
-		sagittis. Integer quis auctor elit sed vulputate mi. Dictumst quisque sagittis purus sit amet.
+		<strong>itzpapa</strong>は、ObsidianユーザーがシームレスにWebサイトを公開できるよう設計された、モダンなブログソリューションです。
+		あなたの知識管理システムを、美しいデジタルガーデンへと変換します。
 	</p>
 
+	<h2>✨ 主な特徴</h2>
+	<ul>
+		<li><strong>📝 Obsidianネイティブ</strong>: 使い慣れたマークダウン環境で執筆し、そのまま公開</li>
+		<li><strong>⚡ 超高速</strong>: Astroの静的サイト生成により、爆速な表示速度を実現</li>
+		<li><strong>🔗 Wikilink対応</strong>: Obsidianの内部リンク（[[記事名]]）を自動的にWebリンクへ変換</li>
+		<li><strong>📦 Callout対応</strong>: Obsidianのcallout記法をそのまま美しく表示</li>
+		<li><strong>🎨 美しいデザイン</strong>: レスポンシブ対応、アクセシビリティ配慮済みのモダンなテーマ</li>
+		<li><strong>🚀 簡単デプロイ</strong>: GitHub PagesやNetlifyへワンクリックでデプロイ可能</li>
+	</ul>
+
+	<h2>🛠️ 技術スタック</h2>
 	<p>
-		Morbi tristique senectus et netus. Id semper risus in hendrerit gravida rutrum quisque non
-		tellus. Habitasse platea dictumst quisque sagittis purus sit amet. Tellus molestie nunc non
-		blandit massa. Cursus vitae congue mauris rhoncus. Accumsan tortor posuere ac ut. Fringilla urna
-		porttitor rhoncus dolor. Elit ullamcorper dignissim cras tincidunt lobortis. In cursus turpis
-		massa tincidunt dui ut ornare lectus. Integer feugiat scelerisque varius morbi enim nunc.
-		Bibendum neque egestas congue quisque egestas diam. Cras ornare arcu dui vivamus arcu felis
-		bibendum. Dignissim suspendisse in est ante in nibh mauris. Sed tempus urna et pharetra pharetra
-		massa massa ultricies mi.
+		itzpapaは最新のWeb技術を活用して構築されています：
+	</p>
+	<ul>
+		<li><strong>Astro</strong> - 高速な静的サイト生成フレームワーク</li>
+		<li><strong>TypeScript</strong> - 型安全な開発環境</li>
+		<li><strong>MDX</strong> - マークダウンの拡張記法に対応</li>
+		<li><strong>rehype-callouts</strong> - Obsidian互換のcallout表示</li>
+		<li><strong>カスタムWikilinkパーサー</strong> - Obsidianの内部リンクを自動変換</li>
+	</ul>
+
+	<h2>🎯 こんな方におすすめ</h2>
+	<ul>
+		<li>Obsidianで知識管理をしている方</li>
+		<li>マークダウンでブログを書きたい方</li>
+		<li>知識をデジタルガーデンとして公開したい方</li>
+		<li>高速で美しいブログサイトを構築したい方</li>
+		<li>技術的な知識なしでブログを始めたい方</li>
+	</ul>
+
+	<h2>🚀 はじめ方</h2>
+	<p>
+		itzpapaを使い始めるのは簡単です：
+	</p>
+	<ol>
+		<li>このリポジトリをクローンまたはフォーク</li>
+		<li>Obsidianで記事を書く（<code>src/content/blog/</code>フォルダに配置）</li>
+		<li><code>npm run build</code>でサイトをビルド</li>
+		<li>お好みのホスティングサービスにデプロイ</li>
+	</ol>
+
+	<h2>📚 ドキュメント</h2>
+	<p>
+		詳しい使い方やカスタマイズ方法については、
+		<a href="https://github.com/yourusername/itzpapa">GitHubリポジトリ</a>
+		のREADMEをご覧ください。
 	</p>
 
+	<h2>🤝 コントリビューション</h2>
 	<p>
-		Mollis nunc sed id semper risus in. Convallis a cras semper auctor neque. Diam sit amet nisl
-		suscipit. Lacus viverra vitae congue eu consequat ac felis donec. Egestas integer eget aliquet
-		nibh praesent tristique magna sit amet. Eget magna fermentum iaculis eu non diam. In vitae
-		turpis massa sed elementum. Tristique et egestas quis ipsum suspendisse ultrices. Eget lorem
-		dolor sed viverra ipsum. Vel turpis nunc eget lorem dolor sed viverra. Posuere ac ut consequat
-		semper viverra nam. Laoreet suspendisse interdum consectetur libero id faucibus. Diam phasellus
-		vestibulum lorem sed risus ultricies tristique. Rhoncus dolor purus non enim praesent elementum
-		facilisis. Ultrices tincidunt arcu non sodales neque. Tempus egestas sed sed risus pretium quam
-		vulputate. Viverra suspendisse potenti nullam ac tortor vitae purus faucibus ornare. Fringilla
-		urna porttitor rhoncus dolor purus non. Amet dictum sit amet justo donec enim.
+		itzpapaはオープンソースプロジェクトです。
+		バグ報告、機能リクエスト、プルリクエストを歓迎します！
 	</p>
 
+	<h2>📄 ライセンス</h2>
 	<p>
-		Mattis ullamcorper velit sed ullamcorper morbi tincidunt. Tortor posuere ac ut consequat semper
-		viverra. Tellus mauris a diam maecenas sed enim ut sem viverra. Venenatis urna cursus eget nunc
-		scelerisque viverra mauris in. Arcu ac tortor dignissim convallis aenean et tortor at. Curabitur
-		gravida arcu ac tortor dignissim convallis aenean et tortor. Egestas tellus rutrum tellus
-		pellentesque eu. Fusce ut placerat orci nulla pellentesque dignissim enim sit amet. Ut enim
-		blandit volutpat maecenas volutpat blandit aliquam etiam. Id donec ultrices tincidunt arcu. Id
-		cursus metus aliquam eleifend mi.
-	</p>
-
-	<p>
-		Tempus quam pellentesque nec nam aliquam sem. Risus at ultrices mi tempus imperdiet. Id porta
-		nibh venenatis cras sed felis eget velit. Ipsum a arcu cursus vitae. Facilisis magna etiam
-		tempor orci eu lobortis elementum. Tincidunt dui ut ornare lectus sit. Quisque non tellus orci
-		ac. Blandit libero volutpat sed cras. Nec tincidunt praesent semper feugiat nibh sed pulvinar
-		proin gravida. Egestas integer eget aliquet nibh praesent tristique magna.
+		MIT License - 自由にお使いください。
 	</p>
 </Layout>
