@@ -264,6 +264,48 @@ const testCases = [
       const link = findNode(ast, 'link');
       return link && link.url === '/blog/page#multiple-spaces-test';
     }
+  },
+  // TASK-006: 日本語文字セット対応強化
+  {
+    name: 'Japanese path with full-width space',
+    input: '[[../ページ　名前/index.md]]',
+    check: (ast) => {
+      const link = findNode(ast, 'link');
+      return link && link.url === '/blog/ページ-名前';
+    }
+  },
+  {
+    name: 'Mixed charset - English and Japanese with spaces',
+    input: '[[../test　テスト page/index.md]]',
+    check: (ast) => {
+      const link = findNode(ast, 'link');
+      return link && link.url === '/blog/test-テスト-page';
+    }
+  },
+  {
+    name: 'Japanese path with alias - preserve Japanese',
+    input: '[[../日本語ページ/index.md|日本語表示名]]',
+    check: (ast) => {
+      const link = findNode(ast, 'link');
+      return link && link.url === '/blog/日本語ページ' && 
+             link.children[0].value === '日本語表示名';
+    }
+  },
+  {
+    name: 'Mixed full-width and half-width spaces',
+    input: '[[../English　日本語 Mixed/index.md]]',
+    check: (ast) => {
+      const link = findNode(ast, 'link');
+      return link && link.url === '/blog/english-日本語-mixed';
+    }
+  },
+  {
+    name: 'Japanese heading with full-width space',
+    input: '[[../page/index.md#日本語　見出し]]',
+    check: (ast) => {
+      const link = findNode(ast, 'link');
+      return link && link.url === '/blog/page#日本語-見出し';
+    }
   }
 ];
 
