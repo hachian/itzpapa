@@ -4,6 +4,7 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import { defineConfig } from 'astro/config';
 import remarkWikilink from './src/plugins/remark-wikilink/index.js';
+import remarkMarkHighlight from './src/plugins/remark-mark-highlight/index.js';
 import rehypeCallouts from 'rehype-callouts';
 
 // https://astro.build/config
@@ -13,7 +14,9 @@ export default defineConfig({
 		mdx({
 			remarkPlugins: [
 				// Wikilinkを最初に処理（GFMの前）
-				[remarkWikilink, { priority: 'high' }]
+				[remarkWikilink, { priority: 'high' }],
+				// マークハイライトをwikilinkの後に処理
+				remarkMarkHighlight
 			],
 			rehypePlugins: [
 				// Callouts処理（remarkの後でHTMLを処理）
@@ -26,7 +29,9 @@ export default defineConfig({
 	markdown: {
 		remarkPlugins: [
 			// Wikilinkを最初に処理（GFMの前）
-			[remarkWikilink, { priority: 'high' }]
+			[remarkWikilink, { priority: 'high' }],
+			// マークハイライトをwikilinkの後に処理
+			remarkMarkHighlight
 		],
 		rehypePlugins: [
 			// Callouts処理（remarkの後でHTMLを処理）
