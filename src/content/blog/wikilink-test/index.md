@@ -49,33 +49,47 @@ tags:
 
 ## 3. 見出しへのリンク
 
+### Test Heading with Spaces
+
+このセクションは、スペースを含む見出しへのリンクをテストするためのものです。
+
+#### 同じページ内のリンクテスト
+
+```markdown
+1. [[#Test Heading with Spaces]]
+2. [[#1. 基本的なWikiLink]] <!-- test -->
+```
+
+1. [[#Test Heading with Spaces]]
+2. [[#1. 基本的なWikiLink]]
+
+## 3.1. 他ページの見出しへのリンク
+
 #### Syntax
 
 ```markdown
 1. [[../markdown-basic-test/index.md#10. テーブル]]
 2. [[../callout-comprehensive-test/index.md#1. 基本的なCalloutタイプ]]
-3. [[#1. 基本的なWikiLink]]
 ```
 
 #### Output
 
 1. [[../markdown-basic-test/index.md#10. テーブル]]
 2. [[../callout-comprehensive-test/index.md#1. 基本的なCalloutタイプ]]
-3. [[#1. 基本的なWikiLink]]
 
 ## 4. エイリアスと見出しの組み合わせ
 
 #### Syntax
 
 ```markdown
-1. [[../markdown-basic-test/index.md#コードブロック|コードの例を見る]]
-2. [[../callout-comprehensive-test/index.md#折りたたみ機能|折りたたみ機能について]]
+1. [[../markdown-basic-test/index.md#8. コードブロック|コードの例を見る]]
+2. [[../callout-comprehensive-test/index.md#3. 折りたたみ機能|折りたたみ機能について]]
 ```
 
 #### Output
 
-1. [[../markdown-basic-test/index.md#コードブロック|コードの例を見る]]
-2. [[../callout-comprehensive-test/index.md#折りたたみ機能|折りたたみ機能について]]
+1. [[../markdown-basic-test/index.md#8. コードブロック|コードの例を見る]]
+2. [[../callout-comprehensive-test/index.md#3. 折りたたみ機能|折りたたみ機能について]]
 
 ## 5. インライン記法との組み合わせ
 
@@ -143,7 +157,7 @@ tags:
 | カラム1 | カラム2 | カラム3 |
 |---------|---------|---------|
 | [[../markdown-basic-test/index.md\|リンク1]] | 通常テキスト | [[../callout-comprehensive-test/index.md\|リンク2]] |
-| テキスト | [[../math-test/index.md\|表示名]] | [[../mermaid-test/index.md#フローチャート|見出しリンク]] |
+| テキスト | [[../math-test/index.md\|表示名]] | [[../mermaid-test/index.md#1. フローチャート|見出しリンク]] |
 ```
 
 #### Output
@@ -151,7 +165,7 @@ tags:
 | カラム1 | カラム2 | カラム3 |
 |---------|---------|---------|
 | [[../markdown-basic-test/index.md\|リンク1]] | 通常テキスト | [[../callout-comprehensive-test/index.md\|リンク2]] |
-| テキスト | [[../math-test/index.md\|表示名]] | [[../mermaid-test/index.md#フローチャート\|見出しリンク]] |
+| テキスト | [[../math-test/index.md\|表示名]] | [[../mermaid-test/index.md#1. フローチャート\|見出しリンク]] |
 | [[../test page/index.md\|スペース含有ページ]] | [[../my test page/index.md\|複数単語ページ]] | [[../test page/index.md#Test Heading\|スペース含有見出し]] |
 
 ## 9. 特殊文字を含むWikiLink

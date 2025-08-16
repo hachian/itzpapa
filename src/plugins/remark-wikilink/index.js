@@ -113,13 +113,25 @@ export default function remarkWikilink() {
               // Remove the # and convert to proper anchor format
               const hashText = hash.slice(1);
               cleanHash = '#' + hashText.toLowerCase()
-                .replace(/\s+/g, '-')
+                .replace(/\./g, '')       // Remove dots first
+                .replace(/\s+/g, '-')     // Then replace spaces with hyphens
                 .replace(/[^\w\-\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/g, '');
             }
             
             url = `/blog/${cleanPath}${cleanHash}`;
+          } else if (linkPath.startsWith('#')) {
+            // Handle same-page anchor links
+            // Convert hash to proper anchor format (spaces to hyphens, lowercase, etc.)
+            const hashText = linkPath.slice(1);
+            // Convert to lowercase and replace spaces/dots with hyphens
+            const cleanHash = '#' + hashText
+              .toLowerCase()
+              .replace(/\./g, '')       // Remove dots first
+              .replace(/\s+/g, '-')     // Then replace spaces with hyphens
+              .replace(/[^\w\-\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF\u3005\u3006\u3007\u30FC]/g, '');
+            url = cleanHash;
           } else {
-            // For non-relative paths, use the trimmed linkPath
+            // For other paths, use the trimmed linkPath
             url = linkPath;
           }
 
