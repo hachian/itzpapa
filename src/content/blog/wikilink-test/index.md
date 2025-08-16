@@ -253,6 +253,32 @@ tags:
 - 日本語文字は保持される
 - 連続スペースは一つのハイフンになる
 
+## 10.7. 連続スペース正規化テスト (TASK-005)
+
+#### Syntax
+
+```markdown
+[[../page   name/index.md|連続スペース基本]]
+[[../page     with     many     spaces/index.md|極端な例]]
+[[../page		  	 name/index.md|タブと混合]]
+[[../page　　name/index.md|全角スペース]]
+[[../page/index.md#Multiple     Spaces     Test|連続スペース見出し]]
+```
+
+#### Output
+
+[[../page   name/index.md|連続スペース基本]]
+[[../page     with     many     spaces/index.md|極端な例]]
+[[../page		  	 name/index.md|タブと混合]]
+[[../page　　name/index.md|全角スペース]]
+[[../page/index.md#Multiple     Spaces     Test|連続スペース見出し]]
+
+**期待される動作**:
+- 連続する空白文字は単一のハイフンに正規化される
+- タブ文字と通常スペースの混合も適切に処理される
+- Unicode空白文字（全角スペースなど）も正規化される
+- 見出しアンカー内でも連続スペースが正規化される
+
 ## 11. 通常のMarkdownリンクとの混在
 
 #### Syntax

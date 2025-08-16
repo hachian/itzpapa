@@ -223,6 +223,47 @@ const testCases = [
       return link && link.url === '/blog/page-name#test-heading' && 
              link.children[0].value === '見出しリンク';
     }
+  },
+  // TASK-005: 連続スペース正規化
+  {
+    name: 'Multiple consecutive spaces - basic',
+    input: '[[../page   name/index.md]]',
+    check: (ast) => {
+      const link = findNode(ast, 'link');
+      return link && link.url === '/blog/page-name';
+    }
+  },
+  {
+    name: 'Multiple consecutive spaces - extreme case',
+    input: '[[../page     with     many     spaces/index.md]]',
+    check: (ast) => {
+      const link = findNode(ast, 'link');
+      return link && link.url === '/blog/page-with-many-spaces';
+    }
+  },
+  {
+    name: 'Mixed whitespace characters - tabs and spaces',
+    input: '[[../page\t\t  \t name/index.md]]',
+    check: (ast) => {
+      const link = findNode(ast, 'link');
+      return link && link.url === '/blog/page-name';
+    }
+  },
+  {
+    name: 'Unicode whitespace - full-width spaces',
+    input: '[[../page　　name/index.md]]',
+    check: (ast) => {
+      const link = findNode(ast, 'link');
+      return link && link.url === '/blog/page-name';
+    }
+  },
+  {
+    name: 'Consecutive spaces in heading anchor',
+    input: '[[../page/index.md#Multiple     Spaces     Test]]',
+    check: (ast) => {
+      const link = findNode(ast, 'link');
+      return link && link.url === '/blog/page#multiple-spaces-test';
+    }
   }
 ];
 
