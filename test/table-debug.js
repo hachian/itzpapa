@@ -6,7 +6,7 @@ import { inspect } from 'util';
 const tableInput = `| タイプ | リンク | 説明 |
 |------|-------|-----|
 | Wikilink | [[../ofm-test/index.md]] | 内部リンク |
-| エイリアス付き | [[../link-test/index.md|テスト]] | カスタム表示名 |`;
+| エイリアス付き | [[../wikilink-test/index.md|テスト]] | カスタム表示名 |`;
 
 async function debugTable() {
   console.log('Input:');

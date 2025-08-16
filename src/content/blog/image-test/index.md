@@ -30,6 +30,6 @@ This is a regular markdown image:
 
 ## Wikilink images with different paths
 
-![[../link-test/blog-placeholder-3.jpg]]
+![[../wikilink-test/itzpapa2.jpg]]
 
 ![[blog-placeholder-3.jpg|Placeholder image]]

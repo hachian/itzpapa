@@ -106,7 +106,7 @@ tags:
   - 通常のテキストと[[../mermaid-test/index.md|混在]]も可能
 
 1. [[../image-test/index.md|番号付きリスト1]]
-2. [[../link-test/index.md|番号付きリスト2]]
+2. [[../markdown-basic-test/index.md|番号付きリスト2]]
 ```
 
 #### Output
@@ -117,7 +117,7 @@ tags:
   - 通常のテキストと[[../mermaid-test/index.md|混在]]も可能
 
 1. [[../image-test/index.md|番号付きリスト1]]
-2. [[../link-test/index.md|番号付きリスト2]]
+2. [[../markdown-basic-test/index.md|番号付きリスト2]]
 
 ## 7. 引用内のWikiLink
 

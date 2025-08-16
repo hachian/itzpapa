@@ -17,19 +17,19 @@ Astroプロジェクトにおいて、Obsidian Flavored Markdown (OFM) のWikili
 #### 2.1.1 基本的な内部リンク
 - **記法**: `[[path/to/file.md]]`
 - **表示**: ファイル名（拡張子除く）をリンクテキストとして表示
-- **例**: `[[../link-test/index.md]]` → "index" として表示
+- **例**: `[[../wikilink-test/index.md]]` → "index" として表示
 
 #### 2.1.2 エイリアス付き内部リンク
 - **記法**: `[[path/to/file.md|表示名]]`
 - **表示**: 指定された表示名をリンクテキストとして表示
-- **例**: `[[../link-test/index.md|good name]]` → "good name" として表示
+- **例**: `[[../wikilink-test/index.md|good name]]` → "good name" として表示
 
 #### 2.1.3 見出しへのリンク（ブロック参照）
 - **記法**: `[[path/to/file.md#heading-id]]`
 - **表示**: ファイル名と見出しを組み合わせて表示
 - **例**: 
-  - `[[../link-test/index.md#link to heading]]`
-  - `[[../link-test/index.md#見出しへのリンク]]`
+  - `[[../wikilink-test/index.md#link to heading]]`
+  - `[[../wikilink-test/index.md#見出しへのリンク]]`
 
 #### 2.1.4 リンク切れ処理
 - 存在しないファイルへのリンクは特別なスタイルで表示

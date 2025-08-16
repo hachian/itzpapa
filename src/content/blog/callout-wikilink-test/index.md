@@ -12,7 +12,7 @@ heroImage: './itzpapa3.jpg'
 > [!note] ページリンクテスト
 > 他のページへのリンク：[[../image-test/index.md]]
 >
-> カスタム名付きリンク：[[../link-test/index.md|リンクテストページ]]
+> カスタム名付きリンク：[[../wikilink-test/index.md|リンクテストページ]]
 
 ## callout内でのwikilink画像表示
 
@@ -33,7 +33,7 @@ heroImage: './itzpapa3.jpg'
 ### 相対パス画像wikilink
 
 > [!warning] 相対パス画像
-> 相対パスでの画像：![[../link-test/blog-placeholder-3.jpg]]
+> 相対パスでの画像：![[../wikilink-test/itzpapa2.jpg]]
 >
 > 異なるディレクトリの画像も正しく表示されるはずです。
 
@@ -55,7 +55,7 @@ heroImage: './itzpapa3.jpg'
 >
 > - テキストリンク：[[../wikilink-test-suite/index.md|Wikilink テストスイート]]
 > - 画像：![[../image-test/test-image.png]]
-> - 別の画像：![[../link-test/blog-placeholder-3.jpg|プレースホルダー画像]]
+> - 別の画像：![[../wikilink-test/itzpapa2.jpg|プレースホルダー画像]]
 >
 > すべての要素が正しく動作するはずです。
 

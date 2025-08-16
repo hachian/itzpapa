@@ -43,8 +43,8 @@ npm test
    - URL: http://localhost:4321/blog/ofm-test/
    - 内容: 実際のブログ記事でのWikilink使用例
 
-3. **Link Test Page** (リンク先テスト)
-   - URL: http://localhost:4321/blog/link-test/
+3. **Wikilink Test Page** (リンク先テスト)
+   - URL: http://localhost:4321/blog/wikilink-test/
    - 内容: リンク先として使用されるテストページ
 
 ## テストチェックリスト

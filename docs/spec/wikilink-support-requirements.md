@@ -101,9 +101,9 @@ Astroプロジェクトにおいて、Obsidian Flavored Markdown (OFM) のWikili
 
 ### 6.2 統合テスト ✅
 - ✅ Astroビルドプロセスとの統合確認
-- ✅ 基本Wikilink記法の動作確認：`[[../link-test/index.md]]`
-- ✅ エイリアス付きリンクの動作確認：`[[../link-test/index.md|表示名]]`
-- ✅ 見出しリンクの動作確認：`[[../link-test/index.md#heading]]`
+- ✅ 基本Wikilink記法の動作確認：`[[../wikilink-test/index.md]]`
+- ✅ エイリアス付きリンクの動作確認：`[[../wikilink-test/index.md|表示名]]`
+- ✅ 見出しリンクの動作確認：`[[../wikilink-test/index.md#heading]]`
 
 ### 6.3 受け入れテスト ✅
 - ✅ `/src/content/blog/ofm-test/index.md` のWikilinkが正しく動作
