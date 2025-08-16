@@ -152,6 +152,7 @@ tags:
 |---------|---------|---------|
 | [[../markdown-basic-test/index.md\|リンク1]] | 通常テキスト | [[../callout-comprehensive-test/index.md\|リンク2]] |
 | テキスト | [[../math-test/index.md\|表示名]] | [[../mermaid-test/index.md#フローチャート\|見出しリンク]] |
+| [[../test page/index.md\|スペース含有ページ]] | [[../my test page/index.md\|複数単語ページ]] | [[../test page/index.md#Test Heading\|スペース含有見出し]] |
 
 ## 9. 特殊文字を含むWikiLink
 

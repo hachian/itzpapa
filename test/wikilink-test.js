@@ -192,6 +192,37 @@ const testCases = [
       const link = findNode(ast, 'link');
       return link && link.url === '/blog/page#multiple-spaces-test';
     }
+  },
+  // TASK-004: テーブル内パイプ文字競合回避（スペース含有パス）
+  {
+    name: 'Table with spaced path wikilink - escaped pipe',
+    input: '| [[../page name/index.md\\|表示名]] | セル2 |',
+    check: (ast) => {
+      const link = findNode(ast, 'link');
+      return link && link.url === '/blog/page-name' && 
+             link.children[0].value === '表示名';
+    }
+  },
+  {
+    name: 'Table with multiple spaced wikilinks',
+    input: '| [[../page name/index.md\\|リンク1]] | [[../other page/index.md\\|リンク2]] |',
+    check: (ast) => {
+      const links = findAllNodes(ast, 'link');
+      return links.length === 2 && 
+             links[0].url === '/blog/page-name' && 
+             links[1].url === '/blog/other-page' &&
+             links[0].children[0].value === 'リンク1' &&
+             links[1].children[0].value === 'リンク2';
+    }
+  },
+  {
+    name: 'Table with spaced heading anchor wikilink',
+    input: '| [[../page name/index.md#Test Heading\\|見出しリンク]] | セル2 |',
+    check: (ast) => {
+      const link = findNode(ast, 'link');
+      return link && link.url === '/blog/page-name#test-heading' && 
+             link.children[0].value === '見出しリンク';
+    }
   }
 ];
 
