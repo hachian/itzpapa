@@ -1,0 +1,43 @@
+{
+  "timestamp": "2025-08-16T06:12:00.038Z",
+  "testResults": [
+    {
+      "success": true,
+      "duration": 5.146044000000003,
+      "linkCount": 10,
+      "memoryUsed": 1.0700000000000012,
+      "wikilinkCount": 10
+    },
+    {
+      "success": true,
+      "duration": 7.6682500000000005,
+      "linkCount": 100,
+      "memoryUsed": 1.7100000000000009,
+      "wikilinkCount": 100
+    },
+    {
+      "success": true,
+      "duration": 48.72771899999999,
+      "linkCount": 1000,
+      "memoryUsed": 19.950000000000003,
+      "wikilinkCount": 1000
+    },
+    {
+      "success": true,
+      "duration": 176.817108,
+      "linkCount": 5000,
+      "memoryUsed": 61.28,
+      "wikilinkCount": 5000
+    }
+  ],
+  "benchmark": {
+    "basicDuration": 1.4996353,
+    "pluginDuration": 1.2177806000000033,
+    "performanceImpact": -18.794882995885512
+  },
+  "analysis": {
+    "requirementsMet": true,
+    "avgMemoryUsage": 21.0025,
+    "avgThroughput": 15946.008034175204
+  }
+}

@@ -11,6 +11,7 @@
     "test:image": "node --test test/image-wikilink-test.js",
     "test:table": "node test/table-wikilink-test.js",
     "test:debug": "node test/debug-test.js",
+    "test:performance": "node test/performance-test.js",
     "test": "node test/test-runner.js",
     "test:all": "npm run test:wikilink && npm run test:image && npm run test:table"
   },

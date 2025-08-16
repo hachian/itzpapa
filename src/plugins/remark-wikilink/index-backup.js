@@ -4,29 +4,24 @@ export default function remarkWikilink() {
   // プラグインの実行順序を早めるために優先度を設定
   const plugin = function transformer(tree, file) {
     
-    // 最適化: 単一パスでテーブル処理とWikilink変換を同時実行
-    visit(tree, 'text', (node, index, parent) => {
-      if (!parent || parent.type === 'link') return;
-
-      let text = node.value;
-      
-      // テーブル内のWikilinkパイプ文字を一時的に置換（必要な場合のみ）
-      if (text.includes('|') && text.includes('[[')) {
-        text = text.replace(/\[\[([^\]]+)\|([^\]]+)\]\]/g, (match, path, alias) => {
+    // 第1パス: テーブル内のWikilinkパイプ文字を一時的に置換
+    visit(tree, 'text', (node) => {
+      // テーブル内の可能性があるテキストをチェック
+      if (node.value.includes('|') && node.value.includes('[[')) {
+        // Wikilinkのパイプ文字を一時的なマーカーに置換
+        node.value = node.value.replace(/\[\[([^\]]+)\|([^\]]+)\]\]/g, (match, path, alias) => {
           return `[[${path}<<<PIPE>>>${alias}]]`;
         });
       }
-      
+    });
+
+    // 第2パス: 画像とリンクのWikilink処理
+    visit(tree, 'text', (node, index, parent) => {
+      if (!parent || parent.type === 'link') return;
+
+      const text = node.value;
       // 画像とリンクの両方のパターンを処理（画像は!で始まる）
       const wikilinkRegex = /(!?)\[\[([^\]]+?)(?:(?:\\\||<<<PIPE>>>|\|)([^\]]+?))?\]\]/g;
-      
-      // 最適化: Wikilinkが含まれていない場合は早期リターン
-      if (!wikilinkRegex.test(text)) {
-        return;
-      }
-      
-      // regexをリセット
-      wikilinkRegex.lastIndex = 0;
       
       let match;
       const parts = [];

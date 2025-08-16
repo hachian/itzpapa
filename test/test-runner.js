@@ -33,6 +33,12 @@ const testSuites = [
     command: 'npm',
     args: ['run', 'test:table'],
     timeout: 30000
+  },
+  {
+    name: 'Performance Tests',
+    command: 'npm',
+    args: ['run', 'test:performance'],
+    timeout: 60000
   }
 ];
 

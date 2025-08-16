@@ -306,6 +306,52 @@ const testCases = [
       const link = findNode(ast, 'link');
       return link && link.url === '/blog/page#日本語-見出し';
     }
+  },
+  // TASK-007: 基本的なエラーハンドリング
+  {
+    name: 'Empty whitespace only path - should be ignored',
+    input: '[[   ]]',
+    check: (ast) => {
+      const link = findNode(ast, 'link');
+      // 空白のみのパスはリンクに変換されない（無効として扱われる）
+      return !link;
+    }
+  },
+  {
+    name: 'Whitespace only path with tabs - should be ignored',
+    input: '[[\t\t\t]]',
+    check: (ast) => {
+      const link = findNode(ast, 'link');
+      // タブのみのパスもリンクに変換されない
+      return !link;
+    }
+  },
+  {
+    name: 'Path with control characters - should be processed gracefully',
+    input: '[[../page\x00name/index.md]]',
+    check: (ast) => {
+      const link = findNode(ast, 'link');
+      // 制御文字は除去またはエスケープされて処理される
+      return link && link.url.includes('page') && link.url.includes('name');
+    }
+  },
+  {
+    name: 'Empty path with alias - should be ignored',
+    input: '[[  |エイリアス]]',
+    check: (ast) => {
+      const link = findNode(ast, 'link');
+      // パス部分が空の場合はリンクに変換されない
+      return !link;
+    }
+  },
+  {
+    name: 'Valid path after trim - should work',
+    input: '[[  ../valid/path  ]]',
+    check: (ast) => {
+      const link = findNode(ast, 'link');
+      // トリム後に有効なパスになる場合は処理される
+      return link && link.url === '/blog/valid/path';
+    }
   }
 ];
 
