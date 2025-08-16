@@ -150,6 +150,48 @@ const testCases = [
       const link = findNode(ast, 'link');
       return link && link.url === '/blog/page-name';
     }
+  },
+  // TASK-003: 見出しアンカーのスペース処理改善
+  {
+    name: 'Heading anchor space to hyphen - English',
+    input: '[[../page/index.md#Test Heading]]',
+    check: (ast) => {
+      const link = findNode(ast, 'link');
+      return link && link.url === '/blog/page#test-heading';
+    }
+  },
+  {
+    name: 'Heading anchor space to hyphen - Japanese',
+    input: '[[../page/index.md#日本語 見出し]]',
+    check: (ast) => {
+      const link = findNode(ast, 'link');
+      return link && link.url === '/blog/page#日本語-見出し';
+    }
+  },
+  {
+    name: 'Heading anchor with alias - preserve alias',
+    input: '[[../page/index.md#Test Heading|カスタム表示名]]',
+    check: (ast) => {
+      const link = findNode(ast, 'link');
+      return link && link.url === '/blog/page#test-heading' && 
+             link.children[0].value === 'カスタム表示名';
+    }
+  },
+  {
+    name: 'Complex heading anchor - mixed languages and spaces',
+    input: '[[../page/index.md#English and 日本語 Mixed]]',
+    check: (ast) => {
+      const link = findNode(ast, 'link');
+      return link && link.url === '/blog/page#english-and-日本語-mixed';
+    }
+  },
+  {
+    name: 'Multiple spaces in heading',
+    input: '[[../page/index.md#Multiple   Spaces   Test]]',
+    check: (ast) => {
+      const link = findNode(ast, 'link');
+      return link && link.url === '/blog/page#multiple-spaces-test';
+    }
   }
 ];
 

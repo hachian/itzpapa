@@ -224,6 +224,34 @@ tags:
 - エイリアス部分の空白は保持される
 - タブ文字や混合空白文字も適切に処理される
 
+## 10.6. 見出しアンカーのスペース処理テスト (TASK-003)
+
+#### Syntax
+
+```markdown
+[[../test page/index.md#Test Heading]]
+[[../test page/index.md#日本語 見出し]]
+[[../test page/index.md#Test Heading|カスタム表示名]]
+[[../test page/index.md#English and 日本語 Mixed]]
+[[../test page/index.md#Multiple   Spaces   Test]]
+[[../my test page/index.md#Another Multi Word Heading]]
+```
+
+#### Output
+
+[[../test page/index.md#Test Heading]]
+[[../test page/index.md#日本語 見出し]]
+[[../test page/index.md#Test Heading|カスタム表示名]]
+[[../test page/index.md#English and 日本語 Mixed]]
+[[../test page/index.md#Multiple   Spaces   Test]]
+[[../my test page/index.md#Another Multi Word Heading]]
+
+**期待される動作**:
+- 見出しのスペースは自動的にハイフンに変換される
+- 英字は小文字化される
+- 日本語文字は保持される
+- 連続スペースは一つのハイフンになる
+
 ## 11. 通常のMarkdownリンクとの混在
 
 #### Syntax
