@@ -142,16 +142,16 @@ tags:
 ```markdown
 | カラム1 | カラム2 | カラム3 |
 |---------|---------|---------|
-| [[../markdown-basic-test/index.md|リンク1]] | 通常テキスト | [[../callout-comprehensive-test/index.md|リンク2]] |
-| テキスト | [[../math-test/index.md|表示名]] | [[../mermaid-test/index.md#フローチャート|見出しリンク]] |
+| [[../markdown-basic-test/index.md\|リンク1]] | 通常テキスト | [[../callout-comprehensive-test/index.md\|リンク2]] |
+| テキスト | [[../math-test/index.md\|表示名]] | [[../mermaid-test/index.md#フローチャート|見出しリンク]] |
 ```
 
 #### Output
 
 | カラム1 | カラム2 | カラム3 |
 |---------|---------|---------|
-| [[../markdown-basic-test/index.md|リンク1]] | 通常テキスト | [[../callout-comprehensive-test/index.md|リンク2]] |
-| テキスト | [[../math-test/index.md|表示名]] | [[../mermaid-test/index.md#フローチャート|見出しリンク]] |
+| [[../markdown-basic-test/index.md\|リンク1]] | 通常テキスト | [[../callout-comprehensive-test/index.md\|リンク2]] |
+| テキスト | [[../math-test/index.md\|表示名]] | [[../mermaid-test/index.md#フローチャート\|見出しリンク]] |
 
 ## 9. 特殊文字を含むWikiLink
 
@@ -183,6 +183,11 @@ tags:
 [[ページ 名前]]
 [[複数 の 空白]]
 [[  前後に空白  ]]
+[[../test page/index.md|実際のスペース含有ページ]]
+[[../my test page/index.md|複数単語のテストページ]]
+[[../test page/index.md#Heading with Spaces|スペース含有見出しへのリンク]]
+[[../my test page/index.md#Another Multi Word Heading|複数単語見出しへのリンク]]
+[[../test page/index.md#日本語 見出し|日本語スペース見出し]]
 ```
 
 #### Output
@@ -190,6 +195,11 @@ tags:
 [[ページ 名前]]
 [[複数 の 空白]]
 [[  前後に空白  ]]
+[[../test page/index.md|実際のスペース含有ページ]]
+[[../my test page/index.md|複数単語のテストページ]]
+[[../test page/index.md#Heading with Spaces|スペース含有見出しへのリンク]]
+[[../my test page/index.md#Another Multi Word Heading|複数単語見出しへのリンク]]
+[[../test page/index.md#日本語 見出し|日本語スペース見出し]]
 
 ## 11. 通常のMarkdownリンクとの混在
 

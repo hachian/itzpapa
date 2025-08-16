@@ -100,6 +100,31 @@ const testCases = [
       const link = findNode(ast, 'link');
       return link && link.url === '/blog/test';
     }
+  },
+  {
+    name: 'Space to hyphen conversion - basic',
+    input: '[[../page name/index.md]]',
+    check: (ast) => {
+      const link = findNode(ast, 'link');
+      return link && link.url === '/blog/page-name';
+    }
+  },
+  {
+    name: 'Space to hyphen conversion - multiple words',
+    input: '[[../My Page Name/index.md]]',
+    check: (ast) => {
+      const link = findNode(ast, 'link');
+      return link && link.url === '/blog/my-page-name';
+    }
+  },
+  {
+    name: 'Space to hyphen conversion - with alias',
+    input: '[[../page name/index.md|Display Name]]',
+    check: (ast) => {
+      const link = findNode(ast, 'link');
+      return link && link.url === '/blog/page-name' && 
+             link.children[0].value === 'Display Name';
+    }
   }
 ];
 

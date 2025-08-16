@@ -83,8 +83,13 @@ export default function remarkWikilink() {
               hash = linkPath.slice(hashIndex);
             }
             
-            // Clean the file path
-            const cleanPath = filePath.replace(/^\.\.\//, '').replace(/\.md$/, '').replace(/\/index$/, '');
+            // Clean the file path and normalize for URL
+            const cleanPath = filePath
+              .replace(/^\.\.\//, '')
+              .replace(/\.md$/, '')
+              .replace(/\/index$/, '')
+              .replace(/\s+/g, '-')  // Convert spaces to hyphens
+              .toLowerCase();        // Lowercase for URL consistency
             
             // Convert hash to proper anchor format (spaces to hyphens, lowercase, etc.)
             let cleanHash = hash;
