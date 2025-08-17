@@ -1,0 +1,533 @@
+---
+/**
+ * タグツリービューコンポーネント
+ * 階層構造を持つタグを視覚的に表示
+ */
+
+import type { TagHierarchy } from '../types/tag';
+import TagBadge from './TagBadge.astro';
+
+interface Props {
+  /** タグ階層データ */
+  hierarchy: TagHierarchy;
+  /** ベースURL（デフォルト: /tags/） */
+  baseUrl?: string;
+  /** 使用回数を表示するか */
+  showCount?: boolean;
+  /** 初期状態で展開するか */
+  expandAll?: boolean;
+  /** 最大表示レベル */
+  maxLevel?: number;
+  /** 追加のCSSクラス */
+  className?: string;
+}
+
+const { 
+  hierarchy, 
+  baseUrl = '/tags/',
+  showCount = true,
+  expandAll = false,
+  maxLevel = 5,
+  className = ''
+} = Astro.props;
+
+// 階層構造をフラット化して表示用データを作成
+function flattenHierarchy(
+  node: TagHierarchy, 
+  level = 0,
+  parentPath = ''
+): Array<{
+  tag: any;
+  level: number;
+  hasChildren: boolean;
+  path: string;
+  parentPath: string;
+}> {
+  const result: any[] = [];
+  
+  if (level > maxLevel) return result;
+  
+  Object.entries(node).forEach(([tagName, { tag, children }]) => {
+    const currentPath = parentPath ? `${parentPath}/${tagName}` : tagName;
+    const hasChildren = children && Object.keys(children).length > 0;
+    
+    result.push({
+      tag,
+      level,
+      hasChildren,
+      path: currentPath,
+      parentPath
+    });
+    
+    // 子階層を再帰的に処理
+    if (hasChildren && level < maxLevel) {
+      result.push(...flattenHierarchy(children, level + 1, currentPath));
+    }
+  });
+  
+  return result;
+}
+
+const flatHierarchy = flattenHierarchy(hierarchy);
+
+// TreeのCSVクラスを構築
+const treeClasses = [
+  'tag-tree',
+  className
+].filter(Boolean).join(' ');
+---
+
+<div class={treeClasses} role="tree" aria-label="タグ階層ツリー">
+  {flatHierarchy.map((item, index) => {
+    const nodeId = `tree-node-${item.tag.slug}`;
+    const isExpanded = expandAll;
+    const indentLevel = item.level;
+    
+    return (
+      <div 
+        class={`tree-node tree-level-${indentLevel} ${item.hasChildren ? 'has-children' : 'leaf-node'}`}
+        role="treeitem"
+        aria-level={indentLevel + 1}
+        aria-expanded={item.hasChildren ? isExpanded : undefined}
+        id={nodeId}
+        data-tag-path={item.path}
+        data-level={indentLevel}
+        data-has-children={item.hasChildren}
+      >
+        <div class="tree-node-content">
+          <!-- インデント用のスペーサー -->
+          <div class="tree-indent" style={`width: ${indentLevel * 1.5}rem`}>
+            {Array.from({ length: indentLevel }, (_, i) => (
+              <div class="indent-guide" key={i}></div>
+            ))}
+          </div>
+          
+          <!-- 展開/折りたたみボタン -->
+          {item.hasChildren && (
+            <button 
+              class="tree-toggle"
+              aria-label={`${item.tag.name}の子タグを表示/非表示`}
+              data-toggle-target={nodeId}
+            >
+              <svg 
+                class="toggle-icon" 
+                width="12" 
+                height="12" 
+                viewBox="0 0 12 12"
+                aria-hidden="true"
+              >
+                <path 
+                  d="M4.5 3L7.5 6L4.5 9" 
+                  stroke="currentColor" 
+                  stroke-width="1.5" 
+                  fill="none"
+                  stroke-linecap="round" 
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
+          )}
+          
+          <!-- フォルダ/ファイルアイコン -->
+          <div class="tree-icon" aria-hidden="true">
+            {item.hasChildren ? (
+              <!-- フォルダアイコン -->
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M1.75 2.5a.75.75 0 0 0-.75.75v9.5c0 .414.336.75.75.75h12.5a.75.75 0 0 0 .75-.75v-7.5a.75.75 0 0 0-.75-.75H8.56L7.06 3.25a.75.75 0 0 0-.53-.22H1.75z"/>
+              </svg>
+            ) : (
+              <!-- ファイルアイコン -->
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"/>
+              </svg>
+            )}
+          </div>
+          
+          <!-- タグバッジ -->
+          <div class="tree-tag">
+            <TagBadge
+              tag={item.tag.name}
+              href={`${baseUrl}${item.tag.slug}`}
+              count={showCount ? item.tag.count : undefined}
+              isHierarchical={item.level > 0}
+              className="tree-tag-badge"
+            />
+          </div>
+        </div>
+      </div>
+    );
+  })}
+  
+  {flatHierarchy.length === 0 && (
+    <div class="tree-empty" role="treeitem">
+      <div class="tree-empty-message">
+        階層タグがありません
+      </div>
+    </div>
+  )}
+</div>
+
+<style>
+  .tag-tree {
+    font-family: var(--font-mono, 'Monaco', 'Consolas', monospace);
+    font-size: 0.9rem;
+    line-height: 1.4;
+    background: white;
+    border: 1px solid rgb(var(--gray-light));
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem 0;
+  }
+  
+  .tree-node {
+    display: block;
+    margin: 0;
+    position: relative;
+  }
+  
+  .tree-node.has-children {
+    margin-bottom: 0.25rem;
+  }
+  
+  .tree-node.leaf-node {
+    margin-bottom: 0.125rem;
+  }
+  
+  .tree-node-content {
+    display: flex;
+    align-items: center;
+    padding: 0.25rem 0;
+    border-radius: 4px;
+    transition: background-color 0.15s ease;
+    min-height: 2rem;
+  }
+  
+  .tree-node-content:hover {
+    background-color: rgb(var(--gray-light), 0.3);
+  }
+  
+  .tree-indent {
+    display: flex;
+    flex-shrink: 0;
+    position: relative;
+  }
+  
+  .indent-guide {
+    width: 1.5rem;
+    height: 100%;
+    position: relative;
+  }
+  
+  .indent-guide::before {
+    content: '';
+    position: absolute;
+    left: 0.75rem;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background-color: rgb(var(--gray-light));
+  }
+  
+  .tree-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: none;
+    background: none;
+    color: rgb(var(--gray));
+    cursor: pointer;
+    border-radius: 3px;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+    margin-right: 0.25rem;
+  }
+  
+  .tree-toggle:hover {
+    background-color: rgb(var(--gray-light), 0.5);
+    color: rgb(var(--gray-dark));
+  }
+  
+  .tree-toggle:focus {
+    outline: 2px solid rgb(var(--accent));
+    outline-offset: 1px;
+  }
+  
+  .toggle-icon {
+    transition: transform 0.15s ease;
+  }
+  
+  .tree-node[aria-expanded="true"] .toggle-icon {
+    transform: rotate(90deg);
+  }
+  
+  .tree-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    color: rgb(var(--gray));
+    flex-shrink: 0;
+    margin-right: 0.5rem;
+  }
+  
+  .tree-node.has-children .tree-icon {
+    color: rgb(var(--accent));
+  }
+  
+  .tree-tag {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .tree-tag :global(.tree-tag-badge) {
+    font-size: 0.85rem;
+    padding: 0.15rem 0.5rem;
+    margin: 0;
+  }
+  
+  /* 階層レベル別のスタイリング */
+  .tree-level-0 .tree-node-content {
+    font-weight: 600;
+  }
+  
+  .tree-level-1 .tree-tag :global(.tree-tag-badge) {
+    font-size: 0.8rem;
+  }
+  
+  .tree-level-2 .tree-tag :global(.tree-tag-badge) {
+    font-size: 0.75rem;
+    opacity: 0.9;
+  }
+  
+  .tree-level-3 .tree-tag :global(.tree-tag-badge) {
+    font-size: 0.7rem;
+    opacity: 0.8;
+  }
+  
+  .tree-level-4 .tree-tag :global(.tree-tag-badge) {
+    font-size: 0.65rem;
+    opacity: 0.7;
+  }
+  
+  .tree-empty {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: rgb(var(--gray));
+    font-style: italic;
+  }
+  
+  .tree-empty-message {
+    font-size: 0.9rem;
+  }
+  
+  /* 折りたたみ状態の制御 */
+  .tree-node[aria-expanded="false"] ~ .tree-node[data-level] {
+    display: none;
+  }
+  
+  /* ダークモード対応 */
+  html.dark .tag-tree {
+    background: rgb(var(--gray-dark));
+    border-color: rgb(var(--gray));
+  }
+  
+  html.dark .tree-node-content:hover {
+    background-color: rgb(var(--gray), 0.2);
+  }
+  
+  html.dark .tree-toggle:hover {
+    background-color: rgb(var(--gray), 0.3);
+  }
+  
+  html.dark .indent-guide::before {
+    background-color: rgb(var(--gray));
+  }
+  
+  /* アニメーション */
+  @media (prefers-reduced-motion: no-preference) {
+    .tree-node {
+      animation: fadeIn 0.2s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-4px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  }
+  
+  /* レスポンシブ対応 */
+  @media (max-width: 640px) {
+    .tag-tree {
+      font-size: 0.8rem;
+      padding: 0.75rem;
+    }
+    
+    .tree-toggle,
+    .tree-icon {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+    
+    .tree-indent {
+      margin-right: 0.125rem;
+    }
+    
+    .indent-guide {
+      width: 1.25rem;
+    }
+    
+    .tree-tag :global(.tree-tag-badge) {
+      font-size: 0.75rem !important;
+      padding: 0.1rem 0.4rem;
+    }
+  }
+</style>
+
+<script>
+  // タグツリーの展開/折りたたみ機能
+  document.addEventListener('DOMContentLoaded', () => {
+    const trees = document.querySelectorAll('.tag-tree');
+    
+    trees.forEach(tree => {
+      tree.addEventListener('click', (event) => {
+        const button = event.target.closest('.tree-toggle');
+        if (!button) return;
+        
+        const nodeId = button.dataset.toggleTarget;
+        const node = document.getElementById(nodeId);
+        if (!node) return;
+        
+        const isExpanded = node.getAttribute('aria-expanded') === 'true';
+        const newExpanded = !isExpanded;
+        
+        // 展開状態を更新
+        node.setAttribute('aria-expanded', newExpanded.toString());
+        
+        // 子ノードの表示/非表示
+        const currentLevel = parseInt(node.dataset.level || '0');
+        const tagPath = node.dataset.tagPath;
+        
+        let nextNode = node.nextElementSibling;
+        while (nextNode && nextNode.classList.contains('tree-node')) {
+          const nextLevel = parseInt(nextNode.dataset.level || '0');
+          const nextPath = nextNode.dataset.tagPath;
+          
+          // 直接の子かどうかチェック
+          if (nextLevel <= currentLevel) {
+            break; // 同レベルまたは上のレベルに到達
+          }
+          
+          // このノードの子孫かどうかチェック
+          if (nextPath && nextPath.startsWith(tagPath + '/')) {
+            if (newExpanded) {
+              // 展開：直接の子のみ表示
+              if (nextLevel === currentLevel + 1) {
+                nextNode.style.display = 'block';
+              }
+            } else {
+              // 折りたたみ：全ての子孫を非表示
+              nextNode.style.display = 'none';
+              nextNode.setAttribute('aria-expanded', 'false');
+            }
+          }
+          
+          nextNode = nextNode.nextElementSibling;
+        }
+        
+        // アクセシビリティ用のアナウンス
+        const tagName = node.querySelector('.tree-tag-badge')?.textContent?.trim();
+        const action = newExpanded ? '展開' : '折りたたみ';
+        
+        // スクリーンリーダー用の一時的な通知
+        const announcement = document.createElement('div');
+        announcement.setAttribute('aria-live', 'polite');
+        announcement.setAttribute('aria-atomic', 'true');
+        announcement.style.position = 'absolute';
+        announcement.style.left = '-10000px';
+        announcement.textContent = `${tagName}の子タグを${action}しました`;
+        
+        document.body.appendChild(announcement);
+        setTimeout(() => {
+          document.body.removeChild(announcement);
+        }, 1000);
+      });
+    });
+    
+    // キーボードナビゲーション
+    trees.forEach(tree => {
+      tree.addEventListener('keydown', (event) => {
+        const currentNode = event.target.closest('.tree-node');
+        if (!currentNode) return;
+        
+        switch (event.key) {
+          case 'ArrowRight':
+            event.preventDefault();
+            if (currentNode.dataset.hasChildren === 'true') {
+              const button = currentNode.querySelector('.tree-toggle');
+              if (button && currentNode.getAttribute('aria-expanded') !== 'true') {
+                button.click();
+              }
+            }
+            break;
+            
+          case 'ArrowLeft':
+            event.preventDefault();
+            if (currentNode.getAttribute('aria-expanded') === 'true') {
+              const button = currentNode.querySelector('.tree-toggle');
+              if (button) {
+                button.click();
+              }
+            }
+            break;
+            
+          case 'ArrowDown':
+            event.preventDefault();
+            const nextVisibleNode = getNextVisibleNode(currentNode);
+            if (nextVisibleNode) {
+              nextVisibleNode.focus();
+            }
+            break;
+            
+          case 'ArrowUp':
+            event.preventDefault();
+            const prevVisibleNode = getPrevVisibleNode(currentNode);
+            if (prevVisibleNode) {
+              prevVisibleNode.focus();
+            }
+            break;
+        }
+      });
+    });
+  });
+  
+  function getNextVisibleNode(currentNode) {
+    let next = currentNode.nextElementSibling;
+    while (next && next.classList.contains('tree-node')) {
+      if (next.style.display !== 'none') {
+        return next;
+      }
+      next = next.nextElementSibling;
+    }
+    return null;
+  }
+  
+  function getPrevVisibleNode(currentNode) {
+    let prev = currentNode.previousElementSibling;
+    while (prev && prev.classList.contains('tree-node')) {
+      if (prev.style.display !== 'none') {
+        return prev;
+      }
+      prev = prev.previousElementSibling;
+    }
+    return null;
+  }
+</script>

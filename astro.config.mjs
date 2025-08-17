@@ -19,7 +19,7 @@ export default defineConfig({
 				// Wikilinkを次に処理（GFMの前）
 				[remarkWikilink, { priority: 'high' }],
 				// タグ処理プラグイン
-				[remarkTags, { convertToLinks: false }]
+				[remarkTags, { convertToLinks: true }]
 			],
 			rehypePlugins: [
 				// Callouts処理（remarkの後でHTMLを処理）
@@ -36,7 +36,7 @@ export default defineConfig({
 			// Wikilinkを次に処理（GFMの前）
 			[remarkWikilink, { priority: 'high' }],
 			// タグ処理プラグイン
-			[remarkTags, { convertToLinks: false }]
+			[remarkTags, { convertToLinks: true }]
 		],
 		rehypePlugins: [
 			// Callouts処理（remarkの後でHTMLを処理）

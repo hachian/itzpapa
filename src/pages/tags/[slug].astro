@@ -1,0 +1,460 @@
+---
+/**
+ * タグ詳細ページ
+ * 特定のタグを持つ記事一覧を表示
+ * 親タグの場合は子タグの記事も含む
+ */
+
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import TagBadge from '../../components/TagBadge.astro';
+import { TagService } from '../../utils/tag/service';
+import { slugToTag, isDescendantTag } from '../../utils/tag/validation';
+
+export async function getStaticPaths() {
+  // 全ブログ記事を取得
+  const posts = await getCollection('blog');
+  
+  // タグサービスを使ってタグ情報を収集
+  const tagService = new TagService();
+  
+  posts.forEach(post => {
+    const frontmatterTags = post.data.tags || [];
+    tagService.addPostTags(post.id, frontmatterTags, []);
+  });
+  
+  // 全タグのスラッグを生成
+  const allTags = tagService.getAllTags();
+  
+  return allTags.map(tag => ({
+    params: { 
+      slug: tag.slug 
+    },
+    props: { 
+      tag,
+      posts,
+      tagService
+    }
+  }));
+}
+
+const { tag, posts, tagService } = Astro.props;
+const { slug } = Astro.params;
+
+// スラッグからタグ名を復元
+const tagName = slugToTag(slug);
+
+// このタグとその子孫タグを取得
+const hierarchy = tagService.getTagHierarchy();
+const relatedTags = tagService.getTagWithAllDescendants(tagName);
+const relatedTagNames = relatedTags.map(t => t.name);
+
+// タグに関連する記事をフィルタリング
+const relatedPosts = posts.filter(post => {
+  const postTags = post.data.tags || [];
+  
+  // frontmatterにこのタグまたは子孫タグが含まれているかチェック
+  return postTags.some(postTag => {
+    return relatedTagNames.includes(postTag) || 
+           postTag === tagName ||
+           isDescendantTag(postTag, tagName);
+  });
+});
+
+// 記事を日付順でソート（新しい順）
+const sortedPosts = relatedPosts.sort((a, b) => 
+  new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+);
+
+// パンくずリスト用の親タグパス
+function getTagBreadcrumbs(tagName: string) {
+  const parts = tagName.split('/');
+  const breadcrumbs = [];
+  
+  for (let i = 0; i < parts.length; i++) {
+    const partialTag = parts.slice(0, i + 1).join('/');
+    const tagObj = tagService.getTag(partialTag);
+    if (tagObj) {
+      breadcrumbs.push({
+        name: parts[i],
+        fullName: partialTag,
+        slug: tagObj.slug,
+        isLast: i === parts.length - 1
+      });
+    }
+  }
+  
+  return breadcrumbs;
+}
+
+const breadcrumbs = getTagBreadcrumbs(tagName);
+const isHierarchical = tagName.includes('/');
+
+// 関連する子タグを取得
+const childTags = tagService.getAllTags().filter(t => 
+  t.parent === tagName && t.name !== tagName
+);
+
+// ページメタデータ
+const pageTitle = `${tagName} のタグ記事`;
+const pageDescription = `${tagName}タグが付けられた${sortedPosts.length}件の記事一覧`;
+---
+
+<html lang="ja">
+  <head>
+    <BaseHead title={pageTitle} description={pageDescription} />
+    <style>
+      .tag-page-container {
+        width: 720px;
+        max-width: calc(100% - 2em);
+        margin: 2em auto;
+        padding: 1em;
+      }
+      
+      .page-header {
+        margin-bottom: 2em;
+        padding-bottom: 1em;
+        border-bottom: 2px solid rgb(var(--gray-light));
+      }
+      
+      .breadcrumbs {
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+        margin-bottom: 1em;
+        font-size: 0.9rem;
+        color: rgb(var(--gray));
+      }
+      
+      .breadcrumb-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+      }
+      
+      .breadcrumb-link {
+        color: rgb(var(--accent));
+        text-decoration: none;
+        padding: 0.2em 0.4em;
+        border-radius: 4px;
+        transition: background-color 0.2s ease;
+      }
+      
+      .breadcrumb-link:hover {
+        background-color: rgb(var(--gray-light), 0.5);
+      }
+      
+      .breadcrumb-separator {
+        color: rgb(var(--gray));
+        font-weight: bold;
+      }
+      
+      .page-title {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: rgb(var(--gray-dark));
+        margin: 0 0 0.5em 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+      }
+      
+      .tag-icon {
+        font-size: 2rem;
+        color: rgb(var(--accent));
+      }
+      
+      .page-meta {
+        display: flex;
+        gap: 2em;
+        margin-bottom: 1em;
+        font-size: 0.9rem;
+        color: rgb(var(--gray));
+      }
+      
+      .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.3em;
+      }
+      
+      .child-tags {
+        margin-bottom: 2em;
+      }
+      
+      .child-tags h2 {
+        font-size: 1.2rem;
+        margin-bottom: 0.5em;
+        color: rgb(var(--gray-dark));
+      }
+      
+      .child-tags-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5em;
+      }
+      
+      .posts-section h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1em;
+        color: rgb(var(--gray-dark));
+        border-bottom: 1px solid rgb(var(--gray-light));
+        padding-bottom: 0.5em;
+      }
+      
+      .posts-grid {
+        display: grid;
+        gap: 1.5em;
+        margin: 1em 0;
+      }
+      
+      .post-card {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 1em;
+        padding: 1.5em;
+        background: white;
+        border: 1px solid rgb(var(--gray-light));
+        border-radius: 8px;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        color: inherit;
+      }
+      
+      .post-card:hover {
+        border-color: rgb(var(--accent));
+        box-shadow: 0 4px 12px rgba(var(--gray), 0.15);
+        transform: translateY(-2px);
+      }
+      
+      .post-date {
+        color: rgb(var(--gray));
+        font-size: 0.85rem;
+        white-space: nowrap;
+        padding-top: 0.2em;
+      }
+      
+      .post-content {
+        min-width: 0;
+      }
+      
+      .post-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: rgb(var(--gray-dark));
+        margin: 0 0 0.5em 0;
+        line-height: 1.3;
+      }
+      
+      .post-description {
+        color: rgb(var(--gray));
+        font-size: 0.9rem;
+        line-height: 1.5;
+        margin-bottom: 0.75em;
+      }
+      
+      .post-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.3em;
+      }
+      
+      .empty-state {
+        text-align: center;
+        padding: 3em 1em;
+        color: rgb(var(--gray));
+      }
+      
+      .empty-state h2 {
+        font-size: 1.5rem;
+        margin-bottom: 0.5em;
+        color: rgb(var(--gray-dark));
+      }
+      
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5em;
+        color: rgb(var(--accent));
+        text-decoration: none;
+        padding: 0.5em 0;
+        margin-bottom: 1em;
+        transition: color 0.2s ease;
+      }
+      
+      .back-link:hover {
+        color: rgb(var(--accent-dark));
+      }
+      
+      /* レスポンシブ対応 */
+      @media (max-width: 768px) {
+        .tag-page-container {
+          margin: 1em auto;
+          padding: 0.5em;
+        }
+        
+        .page-title {
+          font-size: 2rem;
+          flex-direction: column;
+          text-align: center;
+        }
+        
+        .page-meta {
+          flex-direction: column;
+          gap: 0.5em;
+        }
+        
+        .post-card {
+          grid-template-columns: 1fr;
+          gap: 0.75em;
+          padding: 1em;
+        }
+        
+        .post-date {
+          order: -1;
+          white-space: normal;
+        }
+        
+        .breadcrumbs {
+          flex-wrap: wrap;
+        }
+      }
+      
+      /* ダークモード対応 */
+      html.dark .post-card {
+        background: rgb(var(--gray-dark));
+        border-color: rgb(var(--gray));
+        color: rgb(var(--gray-light));
+      }
+      
+      html.dark .post-card:hover {
+        border-color: rgb(var(--accent-dark));
+        background: rgb(var(--gray-dark), 0.8);
+      }
+      
+      html.dark .post-title {
+        color: rgb(var(--gray-light));
+      }
+      
+      html.dark .breadcrumb-link {
+        color: rgb(var(--accent-dark));
+      }
+      
+      html.dark .breadcrumb-link:hover {
+        background-color: rgb(var(--gray), 0.3);
+      }
+    </style>
+  </head>
+
+  <body>
+    <Header />
+    <main>
+      <div class="tag-page-container">
+        <!-- 戻るリンク -->
+        <a href="/tags" class="back-link">
+          ← タグ一覧に戻る
+        </a>
+
+        <!-- パンくずナビゲーション -->
+        {isHierarchical && breadcrumbs.length > 1 && (
+          <nav class="breadcrumbs" aria-label="パンくずナビゲーション">
+            {breadcrumbs.map((crumb, index) => (
+              <div class="breadcrumb-item">
+                {index > 0 && <span class="breadcrumb-separator">/</span>}
+                {crumb.isLast ? (
+                  <span>{crumb.name}</span>
+                ) : (
+                  <a href={`/tags/${crumb.slug}`} class="breadcrumb-link">
+                    {crumb.name}
+                  </a>
+                )}
+              </div>
+            ))}
+          </nav>
+        )}
+
+        <!-- ページヘッダー -->
+        <header class="page-header">
+          <h1 class="page-title">
+            <span class="tag-icon">#</span>
+            {tagName}
+          </h1>
+          
+          <div class="page-meta">
+            <div class="meta-item">
+              <strong>{sortedPosts.length}</strong> 件の記事
+            </div>
+            {isHierarchical && (
+              <div class="meta-item">
+                階層タグ（レベル {tag.level + 1}）
+              </div>
+            )}
+            {relatedTags.length > 1 && (
+              <div class="meta-item">
+                関連タグ {relatedTags.length} 個を含む
+              </div>
+            )}
+          </div>
+        </header>
+
+        <!-- 子タグ一覧 -->
+        {childTags.length > 0 && (
+          <section class="child-tags">
+            <h2>サブタグ</h2>
+            <div class="child-tags-list">
+              {childTags.map(childTag => (
+                <TagBadge
+                  tag={childTag.name}
+                  href={`/tags/${childTag.slug}`}
+                  count={childTag.count}
+                  isHierarchical={true}
+                />
+              ))}
+            </div>
+          </section>
+        )}
+
+        <!-- 記事一覧 -->
+        <section class="posts-section">
+          <h2>記事一覧</h2>
+          
+          {sortedPosts.length > 0 ? (
+            <div class="posts-grid">
+              {sortedPosts.map((post) => (
+                <a href={`/blog/${post.id}`} class="post-card">
+                  <div class="post-date">
+                    <FormattedDate date={post.data.pubDate} />
+                  </div>
+                  <div class="post-content">
+                    <h3 class="post-title">{post.data.title}</h3>
+                    <p class="post-description">{post.data.description}</p>
+                    {post.data.tags && post.data.tags.length > 0 && (
+                      <div class="post-tags">
+                        {post.data.tags.map(postTag => (
+                          <TagBadge
+                            tag={postTag}
+                            href={`/tags/${encodeURIComponent(postTag.replace(/\//g, '-').toLowerCase())}`}
+                            isHierarchical={postTag.includes('/')}
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </a>
+              ))}
+            </div>
+          ) : (
+            <div class="empty-state">
+              <h2>記事が見つかりません</h2>
+              <p>このタグが付けられた記事はまだありません。</p>
+            </div>
+          )}
+        </section>
+      </div>
+    </main>
+    <Footer />
+  </body>
+</html>
