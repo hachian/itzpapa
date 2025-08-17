@@ -2,7 +2,7 @@
 title: "My Test Page Example"
 pubDate: 2025-08-12
 description: "複数の単語を含むページ名のテスト"
-heroImage: "../image-test/itzpapa1.jpg"
+heroImage: "./itzpapa6.jpg"
 categories:
   - test
   - example

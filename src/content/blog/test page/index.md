@@ -2,7 +2,7 @@
 title: "Test Page with Spaces"
 pubDate: 2025-08-11
 description: "スペースを含むページ名のテスト用ページです"
-heroImage: "../wikilink-test/itzpapa2.jpg"
+heroImage: "./itzpapa7.jpg"
 categories:
   - test
 tags:
