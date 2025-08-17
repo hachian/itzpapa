@@ -158,3 +158,83 @@ hr {
 	/* added line to stop words getting smushed together (as they go onto separate lines and some screen readers do not understand line feeds as a space */
 	white-space: nowrap;
 }
+
+/* Mark Highlight Styles */
+mark {
+	/* Base styling */
+	background-color: rgba(255, 235, 59, 0.6); /* Material Design Yellow 300 with transparency */
+	color: rgb(var(--gray-dark)); /* Maintain text color consistency */
+	padding: 0.2em 0.1em;
+	border-radius: 3px;
+	box-decoration-break: clone;
+	-webkit-box-decoration-break: clone;
+	
+	/* Typography inheritance */
+	font-family: inherit;
+	font-size: inherit;
+	font-weight: inherit;
+	line-height: inherit;
+	
+	/* Transition for smooth hover effects */
+	transition: background-color 0.2s ease-in-out;
+}
+
+/* Hover effect for better interactivity */
+mark:hover {
+	background-color: rgba(255, 235, 59, 0.8);
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+	mark {
+		background-color: rgba(255, 235, 59, 0.9);
+		border: 1px solid rgb(var(--gray-dark));
+	}
+}
+
+/* Dark mode support (if implemented) */
+@media (prefers-color-scheme: dark) {
+	mark {
+		background-color: rgba(255, 193, 7, 0.4); /* Darker yellow for dark mode */
+		color: rgba(255, 255, 255, 0.9);
+	}
+	
+	mark:hover {
+		background-color: rgba(255, 193, 7, 0.6);
+	}
+}
+
+/* Reduce motion support */
+@media (prefers-reduced-motion: reduce) {
+	mark {
+		transition: none;
+	}
+}
+
+/* Print styles */
+@media print {
+	mark {
+		background-color: rgba(255, 235, 59, 0.3);
+		color: black;
+		box-shadow: none;
+	}
+}
+
+/* Nested element support */
+mark strong,
+mark em,
+mark code {
+	background: transparent;
+}
+
+mark code {
+	padding: 0.1em 0.3em;
+	background-color: rgba(var(--gray-light), 0.8);
+	border-radius: 2px;
+}
+
+/* Focus support for accessibility */
+mark:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 2px;
+}

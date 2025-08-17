@@ -13,10 +13,10 @@ export default defineConfig({
 	integrations: [
 		mdx({
 			remarkPlugins: [
-				// Wikilinkを最初に処理（GFMの前）
-				[remarkWikilink, { priority: 'high' }],
-				// マークハイライトをwikilinkの後に処理
-				remarkMarkHighlight
+				// マークハイライトを最初に処理（最優先）
+				remarkMarkHighlight,
+				// Wikilinkを次に処理（GFMの前）
+				[remarkWikilink, { priority: 'high' }]
 			],
 			rehypePlugins: [
 				// Callouts処理（remarkの後でHTMLを処理）
@@ -28,10 +28,10 @@ export default defineConfig({
 	],
 	markdown: {
 		remarkPlugins: [
-			// Wikilinkを最初に処理（GFMの前）
-			[remarkWikilink, { priority: 'high' }],
-			// マークハイライトをwikilinkの後に処理
-			remarkMarkHighlight
+			// マークハイライトを最初に処理（最優先）
+			remarkMarkHighlight,
+			// Wikilinkを次に処理（GFMの前）
+			[remarkWikilink, { priority: 'high' }]
 		],
 		rehypePlugins: [
 			// Callouts処理（remarkの後でHTMLを処理）
