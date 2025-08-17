@@ -7,6 +7,9 @@
 /* Import rehype-callouts Obsidian theme */
 @import 'rehype-callouts/theme/obsidian';
 
+/* Import tag styles */
+@import './tag.css';
+
 :root {
 	--accent: #2337ff;
 	--accent-dark: #000d8a;

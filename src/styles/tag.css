@@ -1,0 +1,94 @@
+/* タグのスタイル定義 */
+
+/* 基本的なタグスタイル */
+.tag {
+  display: inline-block;
+  padding: 0.2em 0.5em;
+  margin: 0 0.2em;
+  background-color: var(--tag-bg, #e1e4e8);
+  color: var(--tag-color, #0969da);
+  border-radius: 0.25em;
+  font-size: 0.9em;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  white-space: nowrap;
+}
+
+/* 階層タグの追加スタイル */
+.tag-hierarchical {
+  background-color: var(--tag-hierarchical-bg, #fff3cd);
+  color: var(--tag-hierarchical-color, #856404);
+  border: 1px solid var(--tag-hierarchical-border, #ffeaa7);
+}
+
+/* ホバー効果 */
+.tag:hover {
+  background-color: var(--tag-hover-bg, #0969da);
+  color: var(--tag-hover-color, #ffffff);
+  transform: translateY(-1px);
+  cursor: pointer;
+}
+
+.tag-hierarchical:hover {
+  background-color: var(--tag-hierarchical-hover-bg, #856404);
+  color: var(--tag-hierarchical-hover-color, #ffffff);
+  border-color: var(--tag-hierarchical-hover-border, #856404);
+}
+
+/* ダークモード対応 */
+html.dark .tag {
+  background-color: #30363d;
+  color: #58a6ff;
+}
+
+html.dark .tag-hierarchical {
+  background-color: #3a3200;
+  color: #ffd700;
+  border-color: #5a4a00;
+}
+
+html.dark .tag:hover {
+  background-color: #58a6ff;
+  color: #0d1117;
+}
+
+html.dark .tag-hierarchical:hover {
+  background-color: #ffd700;
+  color: #0d1117;
+  border-color: #ffd700;
+}
+
+/* タグが文中にある場合の調整 */
+p .tag,
+li .tag {
+  margin: 0 0.1em;
+  vertical-align: baseline;
+}
+
+/* タグリスト表示用 */
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  margin: 1em 0;
+}
+
+.tag-list .tag {
+  margin: 0;
+}
+
+/* タグクラウド用（将来の実装用） */
+.tag-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  justify-content: center;
+  padding: 1em;
+}
+
+.tag-cloud .tag-size-1 { font-size: 0.8em; }
+.tag-cloud .tag-size-2 { font-size: 1.0em; }
+.tag-cloud .tag-size-3 { font-size: 1.2em; }
+.tag-cloud .tag-size-4 { font-size: 1.4em; }
+.tag-cloud .tag-size-5 { font-size: 1.6em; font-weight: bold; }
