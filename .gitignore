@@ -29,5 +29,11 @@ pnpm-debug.log*
 test/test-report.txt
 test/test-report.json
 test/test-report.html
+test/reports/
+test/performance-report.json
+test/performance-test-results.json
+
+# playwright temporary files
+.playwright-mcp/
 
 .private/

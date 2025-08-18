@@ -13,7 +13,8 @@
     "test:debug": "node test/debug-test.js",
     "test:performance": "node test/performance-test.js",
     "test": "node test/test-runner.js",
-    "test:all": "npm run test:wikilink && npm run test:image && npm run test:table"
+    "test:all": "npm run test:wikilink && npm run test:image && npm run test:table",
+    "test:mark-highlight": "node test/mark-highlight-test-suite.js"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.3",
