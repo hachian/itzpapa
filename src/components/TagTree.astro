@@ -18,6 +18,8 @@ interface Props {
   expandAll?: boolean;
   /** 最大表示レベル */
   maxLevel?: number;
+  /** 初期表示レベル（デフォルト: 1 - ルートと第1レベルを表示） */
+  initialDisplayLevel?: number;
   /** 追加のCSSクラス */
   className?: string;
 }
@@ -28,6 +30,7 @@ const {
   showCount = true,
   expandAll = false,
   maxLevel = 5,
+  initialDisplayLevel = 1,
   className = ''
 } = Astro.props;
 
@@ -42,26 +45,37 @@ function flattenHierarchy(
   hasChildren: boolean;
   path: string;
   parentPath: string;
+  isInitiallyVisible: boolean;
 }> {
   const result: any[] = [];
   
   if (level > maxLevel) return result;
   
   Object.entries(node).forEach(([tagName, { tag, children }]) => {
-    const currentPath = parentPath ? `${parentPath}/${tagName}` : tagName;
+    // tagNameはすでに完全なタグパスを表している
+    const currentPath = tagName;
     const hasChildren = children && Object.keys(children).length > 0;
+    
+    // 親パスを正しく計算（最後のスラッシュ以前の部分）
+    const actualParentPath = tagName.includes('/') 
+      ? tagName.substring(0, tagName.lastIndexOf('/')) 
+      : '';
+    
+    // 初期表示レベル以下は表示、それより深い階層は非表示
+    const isInitiallyVisible = level <= initialDisplayLevel;
     
     result.push({
       tag,
       level,
       hasChildren,
       path: currentPath,
-      parentPath
+      parentPath: actualParentPath,
+      isInitiallyVisible
     });
     
     // 子階層を再帰的に処理
     if (hasChildren && level < maxLevel) {
-      result.push(...flattenHierarchy(children, level + 1, currentPath));
+      result.push(...flattenHierarchy(children, level + 1, ''));
     }
   });
   
@@ -80,19 +94,24 @@ const treeClasses = [
 <div class={treeClasses} role="tree" aria-label="タグ階層ツリー">
   {flatHierarchy.map((item, index) => {
     const nodeId = `tree-node-${item.tag.slug}`;
-    const isExpanded = expandAll;
     const indentLevel = item.level;
+    const isVisible = item.isInitiallyVisible;
+    const hasChildren = item.hasChildren;
+    // 第1レベルまではデフォルトで展開、それ以上は折りたたみ
+    const shouldExpand = hasChildren && (indentLevel < 2);
+    const isExpanded = expandAll || shouldExpand;
     
     return (
       <div 
-        class={`tree-node tree-level-${indentLevel} ${item.hasChildren ? 'has-children' : 'leaf-node'}`}
+        class={`tree-node tree-level-${indentLevel} ${hasChildren ? 'has-children' : 'leaf-node'} ${!isVisible ? 'initially-hidden' : ''}`}
         role="treeitem"
         aria-level={indentLevel + 1}
-        aria-expanded={item.hasChildren ? isExpanded : undefined}
+        aria-expanded={hasChildren ? isExpanded : undefined}
         id={nodeId}
         data-tag-path={item.path}
         data-level={indentLevel}
-        data-has-children={item.hasChildren}
+        data-has-children={hasChildren}
+        style={!isVisible ? 'display: none;' : ''}
       >
         <div class="tree-node-content">
           <!-- インデント用のスペーサー -->
@@ -323,8 +342,10 @@ const treeClasses = [
     font-size: 0.9rem;
   }
   
-  /* 折りたたみ状態の制御 */
-  .tree-node[aria-expanded="false"] ~ .tree-node[data-level] {
+  /* 折りたたみ状態の制御はJavaScriptで行う */
+  
+  /* 初期非表示状態 */
+  .tree-node.initially-hidden {
     display: none;
   }
   
@@ -397,6 +418,26 @@ const treeClasses = [
   document.addEventListener('DOMContentLoaded', () => {
     const trees = document.querySelectorAll('.tag-tree');
     
+    // 初期状態で折りたたみ状態を設定
+    trees.forEach(tree => {
+      const nodes = tree.querySelectorAll('.tree-node');
+      nodes.forEach(node => {
+        const level = parseInt(node.dataset.level || '0');
+        const hasChildren = node.dataset.hasChildren === 'true';
+        
+        if (hasChildren) {
+          // 第1レベルまではデフォルトで展開、それ以上は折りたたみ
+          const isExpanded = level <= 1; // initialDisplayLevelと一致
+          node.setAttribute('aria-expanded', isExpanded.toString());
+          
+          if (!isExpanded) {
+            // 折りたたみ状態の場合、子タグを非表示
+            hideChildrenNodes(node);
+          }
+        }
+      });
+    });
+    
     trees.forEach(tree => {
       tree.addEventListener('click', (event) => {
         const button = event.target.closest('.tree-toggle');
@@ -412,35 +453,12 @@ const treeClasses = [
         // 展開状態を更新
         node.setAttribute('aria-expanded', newExpanded.toString());
         
-        // 子ノードの表示/非表示
-        const currentLevel = parseInt(node.dataset.level || '0');
-        const tagPath = node.dataset.tagPath;
-        
-        let nextNode = node.nextElementSibling;
-        while (nextNode && nextNode.classList.contains('tree-node')) {
-          const nextLevel = parseInt(nextNode.dataset.level || '0');
-          const nextPath = nextNode.dataset.tagPath;
-          
-          // 直接の子かどうかチェック
-          if (nextLevel <= currentLevel) {
-            break; // 同レベルまたは上のレベルに到達
-          }
-          
-          // このノードの子孫かどうかチェック
-          if (nextPath && nextPath.startsWith(tagPath + '/')) {
-            if (newExpanded) {
-              // 展開：直接の子のみ表示
-              if (nextLevel === currentLevel + 1) {
-                nextNode.style.display = 'block';
-              }
-            } else {
-              // 折りたたみ：全ての子孫を非表示
-              nextNode.style.display = 'none';
-              nextNode.setAttribute('aria-expanded', 'false');
-            }
-          }
-          
-          nextNode = nextNode.nextElementSibling;
+        if (newExpanded) {
+          // 展開：直接の子タグのみ表示
+          showDirectChildren(node);
+        } else {
+          // 折りたたみ：全ての子孫タグを非表示
+          hideChildrenNodes(node);
         }
         
         // アクセシビリティ用のアナウンス
@@ -461,6 +479,66 @@ const treeClasses = [
         }, 1000);
       });
     });
+    
+    // 直接の子タグのみ表示する関数
+    function showDirectChildren(parentNode) {
+      const parentLevel = parseInt(parentNode.dataset.level || '0');
+      const parentPath = parentNode.dataset.tagPath;
+      const targetLevel = parentLevel + 1;
+      
+      let nextNode = parentNode.nextElementSibling;
+      while (nextNode && nextNode.classList.contains('tree-node')) {
+        const nextLevel = parseInt(nextNode.dataset.level || '0');
+        const nextPath = nextNode.dataset.tagPath;
+        
+        // 同レベルまたは上のレベルに到達したら終了
+        if (nextLevel <= parentLevel) {
+          break;
+        }
+        
+        // 直接の子かどうかチェック
+        if (nextLevel === targetLevel && nextPath && nextPath.startsWith(parentPath + '/')) {
+          // 親のパス + "/" + 子の名前 の形式かどうかチェック
+          const childPart = nextPath.substring(parentPath.length + 1);
+          if (!childPart.includes('/')) {
+            // 直接の子（中間にスラッシュがない）
+            nextNode.style.display = 'block';
+            nextNode.classList.remove('initially-hidden');
+          }
+        }
+        
+        nextNode = nextNode.nextElementSibling;
+      }
+    }
+    
+    // 子孫タグを全て非表示する関数
+    function hideChildrenNodes(parentNode) {
+      const parentLevel = parseInt(parentNode.dataset.level || '0');
+      const parentPath = parentNode.dataset.tagPath;
+      
+      let nextNode = parentNode.nextElementSibling;
+      while (nextNode && nextNode.classList.contains('tree-node')) {
+        const nextLevel = parseInt(nextNode.dataset.level || '0');
+        const nextPath = nextNode.dataset.tagPath;
+        
+        // 同レベルまたは上のレベルに到達したら終了
+        if (nextLevel <= parentLevel) {
+          break;
+        }
+        
+        // このノードの子孫かどうかチェック
+        if (nextPath && nextPath.startsWith(parentPath + '/')) {
+          nextNode.style.display = 'none';
+          nextNode.classList.add('initially-hidden');
+          // 子ノードも折りたたみ状態に
+          if (nextNode.dataset.hasChildren === 'true') {
+            nextNode.setAttribute('aria-expanded', 'false');
+          }
+        }
+        
+        nextNode = nextNode.nextElementSibling;
+      }
+    }
     
     // キーボードナビゲーション
     trees.forEach(tree => {
@@ -507,27 +585,27 @@ const treeClasses = [
         }
       });
     });
+    
+    function getNextVisibleNode(currentNode) {
+      let next = currentNode.nextElementSibling;
+      while (next && next.classList.contains('tree-node')) {
+        if (next.style.display !== 'none' && !next.classList.contains('initially-hidden')) {
+          return next;
+        }
+        next = next.nextElementSibling;
+      }
+      return null;
+    }
+    
+    function getPrevVisibleNode(currentNode) {
+      let prev = currentNode.previousElementSibling;
+      while (prev && prev.classList.contains('tree-node')) {
+        if (prev.style.display !== 'none' && !prev.classList.contains('initially-hidden')) {
+          return prev;
+        }
+        prev = prev.previousElementSibling;
+      }
+      return null;
+    }
   });
-  
-  function getNextVisibleNode(currentNode) {
-    let next = currentNode.nextElementSibling;
-    while (next && next.classList.contains('tree-node')) {
-      if (next.style.display !== 'none') {
-        return next;
-      }
-      next = next.nextElementSibling;
-    }
-    return null;
-  }
-  
-  function getPrevVisibleNode(currentNode) {
-    let prev = currentNode.previousElementSibling;
-    while (prev && prev.classList.contains('tree-node')) {
-      if (prev.style.display !== 'none') {
-        return prev;
-      }
-      prev = prev.previousElementSibling;
-    }
-    return null;
-  }
 </script>
