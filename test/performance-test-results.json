@@ -1,0 +1,137 @@
+{
+  "timestamp": "2025-08-18T12:09:10.410Z",
+  "tests": [
+    {
+      "name": "PT-001: 小規模テキスト（100文字、2ハイライト）",
+      "timing": {
+        "min": 0.23,
+        "max": 1.06,
+        "avg": 0.57,
+        "median": 0.66
+      },
+      "memoryDelta": 0.49,
+      "memoryBefore": {
+        "heapUsed": 7.82,
+        "heapTotal": 11.06,
+        "external": 1.87,
+        "rss": 59.37
+      },
+      "memoryAfter": {
+        "heapUsed": 8.31,
+        "heapTotal": 16.31,
+        "external": 1.87,
+        "rss": 60.24
+      },
+      "success": true,
+      "expectedTime": 10,
+      "textLength": 55,
+      "highlightCount": 2
+    },
+    {
+      "name": "PT-002: 中規模テキスト（1000文字、10ハイライト）",
+      "timing": {
+        "min": 0.34,
+        "max": 0.6,
+        "avg": 0.49,
+        "median": 0.5
+      },
+      "memoryDelta": 1.95,
+      "memoryBefore": {
+        "heapUsed": 8.36,
+        "heapTotal": 16.31,
+        "external": 1.87,
+        "rss": 60.24
+      },
+      "memoryAfter": {
+        "heapUsed": 10.31,
+        "heapTotal": 16.31,
+        "external": 1.87,
+        "rss": 61.58
+      },
+      "success": true,
+      "expectedTime": 100,
+      "textLength": 632,
+      "highlightCount": 10
+    },
+    {
+      "name": "PT-003: 大規模テキスト（10000文字、50ハイライト）",
+      "timing": {
+        "min": 3.48,
+        "max": 5.88,
+        "avg": 4.24,
+        "median": 4.07
+      },
+      "memoryDelta": 3.59,
+      "memoryBefore": {
+        "heapUsed": 10.33,
+        "heapTotal": 16.31,
+        "external": 1.87,
+        "rss": 61.83
+      },
+      "memoryAfter": {
+        "heapUsed": 13.92,
+        "heapTotal": 25.06,
+        "external": 1.81,
+        "rss": 74.43
+      },
+      "success": true,
+      "expectedTime": 1000,
+      "textLength": 5832,
+      "highlightCount": 50
+    },
+    {
+      "name": "PT-004: 複雑なパターン",
+      "timing": {
+        "min": 0.63,
+        "max": 1.44,
+        "avg": 0.8,
+        "median": 0.74
+      },
+      "memoryDelta": -1.78,
+      "memoryBefore": {
+        "heapUsed": 13.93,
+        "heapTotal": 25.06,
+        "external": 1.81,
+        "rss": 74.55
+      },
+      "memoryAfter": {
+        "heapUsed": 12.15,
+        "heapTotal": 25.81,
+        "external": 1.81,
+        "rss": 74.85
+      },
+      "success": true,
+      "expectedTime": 200,
+      "textLength": 358,
+      "highlightCount": 10
+    },
+    {
+      "name": "MT-002: メモリリーク検証",
+      "iterations": 100,
+      "initialMemory": 12.17,
+      "finalMemory": 14.73,
+      "totalDelta": 2.5600000000000005,
+      "leakRatio": 13.473684210526354,
+      "success": false
+    }
+  ],
+  "baseline": {
+    "withDebug": {
+      "min": 0.07,
+      "max": 0.16,
+      "avg": 0.1,
+      "median": 0.07
+    }
+  },
+  "optimized": {
+    "withoutDebug": {
+      "min": 0.04,
+      "max": 0.05,
+      "avg": 0.04,
+      "median": 0.04
+    }
+  },
+  "improvement": {
+    "debugLogRemoval": 60
+  }
+}

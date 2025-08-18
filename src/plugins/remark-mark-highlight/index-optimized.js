@@ -236,10 +236,10 @@ function isValidMarkHighlightText(text) {
     return false;
   }
   
-  // 改行を含む記法は無効（メモリリーク修正：新しい正規表現を使用）
-  const tempRegex = /==([^=\n]+?)==/g;
-  const matches = text.match(tempRegex);
+  // 改行を含む記法は無効
+  const matches = text.match(MARK_HIGHLIGHT_REGEX);
   if (matches) {
+    MARK_HIGHLIGHT_REGEX.lastIndex = 0; // リセット
     for (const match of matches) {
       if (match.includes('\n')) {
         return false;
