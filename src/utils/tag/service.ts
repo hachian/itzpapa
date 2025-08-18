@@ -92,12 +92,36 @@ export class TagService {
    */
   private rebuildHierarchy(): void {
     const tagNames = Array.from(this.tags.keys());
-    this.hierarchy = buildTagHierarchy(tagNames, this.options);
+    this.hierarchy = this.buildTagHierarchyWithCounts(tagNames);
     
     // 子タグ情報を更新
     this.tags.forEach((tag, tagName) => {
       tag.children = this.getDirectChildren(tagName);
     });
+  }
+
+  /**
+   * カウント情報を保持した階層構造を構築
+   */
+  private buildTagHierarchyWithCounts(tagNames: string[]): TagHierarchy {
+    // 基本的な階層構造を構築
+    const hierarchy = buildTagHierarchy(tagNames, this.options);
+    
+    // 既存のタグカウント情報を階層構造に反映
+    const updateCounts = (node: TagHierarchy) => {
+      Object.values(node).forEach(({ tag, children }) => {
+        const existingTag = this.tags.get(tag.name);
+        if (existingTag) {
+          tag.count = existingTag.count;
+        }
+        if (children && Object.keys(children).length > 0) {
+          updateCounts(children);
+        }
+      });
+    };
+    
+    updateCounts(hierarchy);
+    return hierarchy;
   }
   
   /**
