@@ -97,9 +97,8 @@ const treeClasses = [
     const indentLevel = item.level;
     const isVisible = item.isInitiallyVisible;
     const hasChildren = item.hasChildren;
-    // 第1レベルまではデフォルトで展開、それ以上は折りたたみ
-    const shouldExpand = hasChildren && (indentLevel < 2);
-    const isExpanded = expandAll || shouldExpand;
+    // デフォルトで全て折りたたみ
+    const isExpanded = expandAll;
     
     return (
       <div 
@@ -425,8 +424,8 @@ const treeClasses = [
         const hasChildren = node.dataset.hasChildren === 'true';
         
         if (hasChildren) {
-          // 第1レベルまではデフォルトで展開、それ以上は折りたたみ
-          const isExpanded = level <= 1; // initialDisplayLevelと一致
+          // デフォルトで全て折りたたみ
+          const isExpanded = false;
           node.setAttribute('aria-expanded', isExpanded.toString());
           
           if (!isExpanded) {

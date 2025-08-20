@@ -98,48 +98,6 @@ const pageDescription = `${tagStatistics.totalTags}個のタグで記事を分�
         margin-top: 0.2em;
       }
       
-      .tags-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 1em;
-        margin: 2em 0;
-      }
-      
-      .tag-item {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0.75em 1em;
-        background: white;
-        border: 1px solid rgb(var(--gray-light));
-        border-radius: 8px;
-        transition: all 0.2s ease;
-        text-decoration: none;
-        color: inherit;
-      }
-      
-      .tag-item:hover {
-        border-color: rgb(var(--accent));
-        box-shadow: 0 2px 8px rgba(var(--gray), 0.2);
-        transform: translateY(-2px);
-      }
-      
-      .tag-name {
-        font-weight: 500;
-        color: rgb(var(--gray-dark));
-      }
-      
-      .tag-count {
-        background-color: rgb(var(--accent));
-        color: white;
-        padding: 0.2em 0.6em;
-        border-radius: 12px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        min-width: 1.5em;
-        text-align: center;
-      }
-      
       .empty-state {
         text-align: center;
         padding: 3em 1em;
@@ -149,38 +107,6 @@ const pageDescription = `${tagStatistics.totalTags}個のタグで記事を分�
       .empty-state h2 {
         font-size: 1.5rem;
         margin-bottom: 0.5em;
-      }
-      
-      .sort-controls {
-        display: flex;
-        gap: 1em;
-        margin-bottom: 1.5em;
-        flex-wrap: wrap;
-        align-items: center;
-      }
-      
-      .sort-label {
-        font-weight: 500;
-        color: rgb(var(--gray-dark));
-      }
-      
-      .sort-button {
-        padding: 0.5em 1em;
-        border: 1px solid rgb(var(--gray-light));
-        background: white;
-        color: rgb(var(--gray-dark));
-        border-radius: 4px;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        text-decoration: none;
-        font-size: 0.9rem;
-      }
-      
-      .sort-button:hover,
-      .sort-button.active {
-        background-color: rgb(var(--accent));
-        color: white;
-        border-color: rgb(var(--accent));
       }
       
       .tree-section {
@@ -211,11 +137,6 @@ const pageDescription = `${tagStatistics.totalTags}個のタグで記事を分�
           font-size: 2rem;
         }
         
-        .tags-grid {
-          grid-template-columns: 1fr;
-          gap: 0.5em;
-        }
-        
         .tags-stats {
           grid-template-columns: repeat(2, 1fr);
           gap: 0.5em;
@@ -225,40 +146,9 @@ const pageDescription = `${tagStatistics.totalTags}個のタグで記事を分�
         .stat-number {
           font-size: 1.5rem;
         }
-        
-        .sort-controls {
-          justify-content: center;
-        }
       }
       
       /* ダークモード対応 */
-      html.dark .tag-item {
-        background: rgb(var(--gray-dark));
-        border-color: rgb(var(--gray));
-        color: rgb(var(--gray-light));
-      }
-      
-      html.dark .tag-item:hover {
-        border-color: rgb(var(--accent-dark));
-        background: rgb(var(--gray-dark), 0.8);
-      }
-      
-      html.dark .tag-name {
-        color: rgb(var(--gray-light));
-      }
-      
-      html.dark .sort-button {
-        background: rgb(var(--gray-dark));
-        border-color: rgb(var(--gray));
-        color: rgb(var(--gray-light));
-      }
-      
-      html.dark .sort-button:hover,
-      html.dark .sort-button.active {
-        background-color: rgb(var(--accent-dark));
-        border-color: rgb(var(--accent-dark));
-      }
-      
       html.dark .tree-section {
         background: rgb(var(--gray-dark), 0.3);
         border-color: rgb(var(--gray));
@@ -304,32 +194,11 @@ const pageDescription = `${tagStatistics.totalTags}個のタグで記事を分�
                 hierarchy={tagService.getTagHierarchy()}
                 showCount={true}
                 expandAll={false}
+                initialDisplayLevel={0}
                 className="tags-tree"
               />
             </section>
 
-            <!-- ソート機能（将来の実装用） -->
-            <section class="sort-controls" aria-label="タグの並び順">
-              <span class="sort-label">並び順:</span>
-              <button class="sort-button active" data-sort="count">使用回数順</button>
-              <button class="sort-button" data-sort="name">名前順</button>
-              <button class="sort-button" data-sort="recent">最新順</button>
-            </section>
-
-            <!-- タグ一覧 -->
-            <section class="tags-grid" role="list" aria-label="タグ一覧">
-              {allTags.map((tag) => (
-                <a 
-                  href={`/tags/${tag.slug}`}
-                  class="tag-item"
-                  role="listitem"
-                  aria-label={`${tag.name}タグの記事（${tag.count}件）を表示`}
-                >
-                  <span class="tag-name">#{tag.name}</span>
-                  <span class="tag-count" aria-hidden="true">{tag.count}</span>
-                </a>
-              ))}
-            </section>
           </>
         ) : (
           <!-- 空の状態 -->
@@ -342,22 +211,5 @@ const pageDescription = `${tagStatistics.totalTags}個のタグで記事を分�
     </main>
     <Footer />
 
-    <!-- ソート機能のスクリプト（将来の実装用） -->
-    <script>
-      // 将来的にソート機能を実装する際のプレースホルダー
-      document.addEventListener('DOMContentLoaded', () => {
-        const sortButtons = document.querySelectorAll('.sort-button');
-        sortButtons.forEach(button => {
-          button.addEventListener('click', (e) => {
-            // 現在はアクティブ状態の切り替えのみ
-            sortButtons.forEach(b => b.classList.remove('active'));
-            e.target.classList.add('active');
-            
-            // TODO: 実際のソート処理を実装
-            console.log(`Sort by: ${e.target.dataset.sort}`);
-          });
-        });
-      });
-    </script>
   </body>
 </html>
