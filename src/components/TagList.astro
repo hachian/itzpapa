@@ -65,10 +65,6 @@ function tagToSlug(tag: string): string {
   return encodeURIComponent(tag.replace(/\//g, '-').toLowerCase());
 }
 
-// 階層タグかどうかを判定
-function isHierarchical(tag: string): boolean {
-  return tag.includes('/');
-}
 ---
 
 <div class={listClasses} role="list" aria-label="タグ一覧">
@@ -77,7 +73,6 @@ function isHierarchical(tag: string): boolean {
       tag={tag}
       href={`${baseUrl}${tagToSlug(tag)}`}
       count={showCount ? tagCounts[tag] : undefined}
-      isHierarchical={isHierarchical(tag)}
       ariaLabel={`${tag}タグの記事を表示`}
     />
   ))}

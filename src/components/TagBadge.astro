@@ -2,6 +2,9 @@
 /**
  * タグバッジコンポーネント
  * 個別のタグを表示するための再利用可能なコンポーネント
+ * 
+ * 階層タグと単一タグを統一されたスタイルで表示します。
+ * CSS変数を使用してテーマとダークモードに対応。
  */
 
 interface Props {
@@ -11,8 +14,6 @@ interface Props {
   href?: string;
   /** 使用回数（省略時は表示しない） */
   count?: number;
-  /** 階層タグかどうか */
-  isHierarchical?: boolean;
   /** 追加のCSSクラス */
   className?: string;
   /** アクセシビリティ用のaria-label */
@@ -23,7 +24,6 @@ const {
   tag, 
   href, 
   count, 
-  isHierarchical = false, 
   className = '',
   ariaLabel
 } = Astro.props;
@@ -31,10 +31,9 @@ const {
 // タグ名を正規化（#プレフィックスを確実に追加）
 const displayTag = tag.startsWith('#') ? tag : `#${tag}`;
 
-// CSSクラスを構築
+// CSSクラスを構築 - 統一スタイル適用（isHierarchicalによる区別を廃止）
 const tagClasses = [
   'tag',
-  isHierarchical ? 'tag-hierarchical' : '',
   className
 ].filter(Boolean).join(' ');
 
@@ -78,16 +77,16 @@ const accessibility = {
     display: inline-flex;
     align-items: center;
     gap: 0.25em;
-    padding: 0.2em 0.6em;
-    margin: 0 0.2em 0.2em 0;
-    background-color: var(--tag-bg, #e1f5fe);
-    color: var(--tag-color, #0277bd);
-    border: 1px solid var(--tag-border, #b3e5fc);
-    border-radius: 1rem;
-    font-size: 0.875rem;
-    font-weight: 500;
+    padding: var(--tag-padding-y) var(--tag-padding-x);
+    margin: 0 var(--tag-margin-x) var(--tag-margin-y) 0;
+    background-color: var(--tag-bg);
+    color: var(--tag-color);
+    border: 1px solid var(--tag-border);
+    border-radius: var(--tag-border-radius);
+    font-size: var(--tag-font-size);
+    font-weight: var(--tag-font-weight);
     text-decoration: none;
-    transition: all 0.2s ease;
+    transition: all var(--tag-transition-duration) var(--tag-transition-easing);
     white-space: nowrap;
     cursor: default;
   }
@@ -96,33 +95,21 @@ const accessibility = {
     cursor: pointer;
   }
   
-  .tag-hierarchical {
-    background-color: var(--tag-hierarchical-bg, #fff8e1);
-    color: var(--tag-hierarchical-color, #f57f17);
-    border-color: var(--tag-hierarchical-border, #ffecb3);
-  }
   
-  /* ホバー効果 */
+  /* ホバー効果 - 統一スタイル */
   .tag:where(a):hover,
   .tag:where(a):focus {
-    background-color: var(--tag-hover-bg, #0277bd);
-    color: var(--tag-hover-color, #ffffff);
-    border-color: var(--tag-hover-border, #0277bd);
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .tag-hierarchical:where(a):hover,
-  .tag-hierarchical:where(a):focus {
-    background-color: var(--tag-hierarchical-hover-bg, #f57f17);
-    color: var(--tag-hierarchical-hover-color, #ffffff);
-    border-color: var(--tag-hierarchical-hover-border, #f57f17);
+    background-color: var(--tag-hover-bg);
+    color: var(--tag-hover-color);
+    border-color: var(--tag-hover-border);
+    transform: var(--tag-hover-transform);
+    box-shadow: var(--tag-hover-shadow);
   }
   
   /* フォーカス表示 */
   .tag:where(a):focus {
-    outline: 2px solid var(--focus-color, #2196f3);
-    outline-offset: 2px;
+    outline: 2px solid var(--tag-focus-color);
+    outline-offset: var(--tag-focus-offset);
   }
   
   .tag-text {
@@ -130,53 +117,51 @@ const accessibility = {
   }
   
   .tag-count {
-    background-color: rgba(255, 255, 255, 0.3);
+    background-color: var(--tag-count-bg);
     color: inherit;
-    padding: 0.1em 0.4em;
-    border-radius: 0.75rem;
-    font-size: 0.75em;
-    font-weight: 600;
-    min-width: 1.2em;
+    padding: var(--tag-count-padding-y) var(--tag-count-padding-x);
+    border-radius: var(--tag-count-border-radius);
+    font-size: var(--tag-count-font-size);
+    font-weight: var(--tag-count-font-weight);
+    min-width: var(--tag-count-min-width);
     text-align: center;
   }
   
-  /* ダークモード対応 */
+  /* ダークモード対応 - 統一スタイル */
   html.dark .tag {
-    background-color: var(--tag-dark-bg, #1e3a8a);
-    color: var(--tag-dark-color, #93c5fd);
-    border-color: var(--tag-dark-border, #1e40af);
-  }
-  
-  html.dark .tag-hierarchical {
-    background-color: var(--tag-hierarchical-dark-bg, #7c2d12);
-    color: var(--tag-hierarchical-dark-color, #fed7aa);
-    border-color: var(--tag-hierarchical-dark-border, #9a3412);
+    background-color: var(--tag-bg);
+    color: var(--tag-color);
+    border-color: var(--tag-border);
   }
   
   html.dark .tag:where(a):hover,
   html.dark .tag:where(a):focus {
-    background-color: var(--tag-dark-hover-bg, #3b82f6);
-    color: var(--tag-dark-hover-color, #ffffff);
-    border-color: var(--tag-dark-hover-border, #3b82f6);
+    background-color: var(--tag-hover-bg);
+    color: var(--tag-hover-color);
+    border-color: var(--tag-hover-border);
   }
   
-  html.dark .tag-hierarchical:where(a):hover,
-  html.dark .tag-hierarchical:where(a):focus {
-    background-color: var(--tag-hierarchical-dark-hover-bg, #ea580c);
-    color: var(--tag-hierarchical-dark-hover-color, #ffffff);
-    border-color: var(--tag-hierarchical-dark-hover-border, #ea580c);
-  }
-  
-  /* 小さい画面での調整 */
+  /* 小さい画面での調整 - CSS変数使用 */
   @media (max-width: 640px) {
     .tag {
-      font-size: 0.8rem;
-      padding: 0.15em 0.5em;
+      font-size: var(--tag-mobile-font-size);
+      padding: var(--tag-mobile-padding-y) var(--tag-mobile-padding-x);
     }
     
     .tag-count {
-      font-size: 0.7em;
-      padding: 0.05em 0.3em;
+      font-size: var(--tag-mobile-count-font-size);
+      padding: var(--tag-mobile-count-padding-y) var(--tag-mobile-count-padding-x);
+    }
+  }
+
+  /* アクセシビリティ: タッチデバイス用の最小タップサイズ確保 */
+  @media (hover: none) and (pointer: coarse) {
+    .tag {
+      min-height: var(--tag-min-tap-size);
+      min-width: var(--tag-min-tap-size);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
   }
 </style>
