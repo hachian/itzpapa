@@ -49,11 +49,11 @@ export function processInlineTags(markdown: string, baseUrl: string = '/tags/'):
       tags.push(tagName);
     }
     
-    // リンクHTML生成
+    // リンクHTML生成 - TagBadgeと同じ構造に統一
     const url = generateTagUrl(tagName);
     const ariaLabel = `${tagName}タグの記事を表示`;
     
-    return `<a href="${url}" class="inline-tag" aria-label="${ariaLabel}" role="link">#${escapeHtml(tagName)}</a>`;
+    return `<a href="${url}" class="tag" aria-label="${ariaLabel}" role="link"><span class="tag-text">#${escapeHtml(tagName)}</span></a>`;
   });
   
   return { tags, html };

@@ -190,8 +190,8 @@ const treeClasses = [
     font-family: var(--font-mono, 'Monaco', 'Consolas', monospace);
     font-size: 0.9rem;
     line-height: 1.4;
-    background: white;
-    border: 1px solid rgb(var(--gray-light));
+    background: var(--tree-bg);
+    border: 1px solid var(--tree-border);
     border-radius: 8px;
     padding: 1rem;
     margin: 1rem 0;
@@ -221,7 +221,7 @@ const treeClasses = [
   }
   
   .tree-node-content:hover {
-    background-color: rgb(var(--gray-light), 0.3);
+    background-color: var(--tree-hover-bg);
   }
   
   .tree-indent {
@@ -243,7 +243,7 @@ const treeClasses = [
     top: 0;
     bottom: 0;
     width: 1px;
-    background-color: rgb(var(--gray-light));
+    background-color: var(--tree-guide-color);
   }
   
   .tree-toggle {
@@ -254,7 +254,7 @@ const treeClasses = [
     height: 1.5rem;
     border: none;
     background: none;
-    color: rgb(var(--gray));
+    color: var(--tree-toggle-color);
     cursor: pointer;
     border-radius: 3px;
     transition: all 0.15s ease;
@@ -263,13 +263,13 @@ const treeClasses = [
   }
   
   .tree-toggle:hover {
-    background-color: rgb(var(--gray-light), 0.5);
-    color: rgb(var(--gray-dark));
+    background-color: var(--tree-toggle-hover-bg);
+    color: var(--tree-toggle-hover-color);
   }
   
   .tree-toggle:focus {
-    outline: 2px solid rgb(var(--accent));
-    outline-offset: 1px;
+    outline: 2px solid var(--tag-focus-color);
+    outline-offset: var(--tag-focus-offset);
   }
   
   .toggle-icon {

@@ -47,6 +47,15 @@
   /* アクセシビリティ */
   --tag-min-tap-size: 44px;
   
+  /* tag-more要素用変数 */
+  --tag-more-bg: #f8fafc;
+  --tag-more-color: #64748b;
+  --tag-more-border: #e2e8f0;
+  --tag-more-padding-y: 0.2em;
+  --tag-more-padding-x: 0.6em;
+  --tag-more-font-size: 0.875rem;
+  --tag-more-border-radius: 1rem;
+  
   /* レスポンシブ用変数 */
   --tag-mobile-font-size: 0.8rem;
   --tag-mobile-padding-y: 0.15em;
@@ -54,6 +63,20 @@
   --tag-mobile-count-font-size: 0.7em;
   --tag-mobile-count-padding-y: 0.05em;
   --tag-mobile-count-padding-x: 0.3em;
+  
+  /* tag-more要素レスポンシブ */
+  --tag-more-mobile-font-size: 0.8rem;
+  --tag-more-mobile-padding-y: 0.15em;
+  --tag-more-mobile-padding-x: 0.5em;
+  
+  /* TagTree要素用変数 */
+  --tree-bg: #ffffff;
+  --tree-border: #e5e7eb;
+  --tree-hover-bg: rgba(243, 244, 246, 0.5);
+  --tree-guide-color: #e5e7eb;
+  --tree-toggle-color: #6b7280;
+  --tree-toggle-hover-bg: rgba(243, 244, 246, 0.8);
+  --tree-toggle-hover-color: #374151;
 }
 
 /* ダークモード対応 */
@@ -69,6 +92,20 @@ html.dark {
   --tag-focus-color: #60a5fa;
   
   --tag-count-bg: rgba(0, 0, 0, 0.3);
+  
+  /* tag-more要素ダークモード */
+  --tag-more-bg: #334155;
+  --tag-more-color: #cbd5e1;
+  --tag-more-border: #475569;
+  
+  /* TagTree要素ダークモード */
+  --tree-bg: #1f2937;
+  --tree-border: #374151;
+  --tree-hover-bg: rgba(55, 65, 81, 0.5);
+  --tree-guide-color: #374151;
+  --tree-toggle-color: #9ca3af;
+  --tree-toggle-hover-bg: rgba(55, 65, 81, 0.8);
+  --tree-toggle-hover-color: #d1d5db;
 }
 
 /* 階層タグ用の追加変数（廃止予定 - 統一スタイルに移行） */
