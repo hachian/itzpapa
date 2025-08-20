@@ -1,0 +1,115 @@
+/**
+ * タグスタイル統一用CSS変数定義
+ * TASK-001: CSS変数の定義と整理
+ * 
+ * すべてのタグコンポーネントで使用される統一スタイル変数
+ */
+
+:root {
+  /* 基本カラー - TagBadgeの階層タグスタイルに統一 */
+  --tag-bg: #e1f5fe;
+  --tag-color: #0277bd;
+  --tag-border: #b3e5fc;
+  
+  /* ホバー状態 */
+  --tag-hover-bg: #0277bd;
+  --tag-hover-color: #ffffff;
+  --tag-hover-border: #0277bd;
+  
+  /* フォーカス状態 */
+  --tag-focus-color: #2196f3;
+  --tag-focus-offset: 2px;
+  
+  /* サイズとスペーシング */
+  --tag-padding-y: 0.2em;
+  --tag-padding-x: 0.6em;
+  --tag-margin-x: 0.2em;
+  --tag-margin-y: 0.2em;
+  --tag-border-radius: 1rem;
+  --tag-font-size: 0.875rem;
+  --tag-font-weight: 500;
+  
+  /* タグカウント表示 */
+  --tag-count-bg: rgba(255, 255, 255, 0.3);
+  --tag-count-padding-y: 0.1em;
+  --tag-count-padding-x: 0.4em;
+  --tag-count-border-radius: 0.75rem;
+  --tag-count-font-size: 0.75em;
+  --tag-count-font-weight: 600;
+  --tag-count-min-width: 1.2em;
+  
+  /* アニメーション */
+  --tag-transition-duration: 0.2s;
+  --tag-transition-easing: ease;
+  --tag-hover-transform: translateY(-1px);
+  --tag-hover-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  
+  /* アクセシビリティ */
+  --tag-min-tap-size: 44px;
+  
+  /* レスポンシブ用変数 */
+  --tag-mobile-font-size: 0.8rem;
+  --tag-mobile-padding-y: 0.15em;
+  --tag-mobile-padding-x: 0.5em;
+  --tag-mobile-count-font-size: 0.7em;
+  --tag-mobile-count-padding-y: 0.05em;
+  --tag-mobile-count-padding-x: 0.3em;
+}
+
+/* ダークモード対応 */
+html.dark {
+  --tag-bg: #1e3a8a;
+  --tag-color: #93c5fd;
+  --tag-border: #1e40af;
+  
+  --tag-hover-bg: #3b82f6;
+  --tag-hover-color: #ffffff;
+  --tag-hover-border: #3b82f6;
+  
+  --tag-focus-color: #60a5fa;
+  
+  --tag-count-bg: rgba(0, 0, 0, 0.3);
+}
+
+/* 階層タグ用の追加変数（廃止予定 - 統一スタイルに移行） */
+:root {
+  --tag-hierarchical-bg: var(--tag-bg);
+  --tag-hierarchical-color: var(--tag-color);
+  --tag-hierarchical-border: var(--tag-border);
+  --tag-hierarchical-hover-bg: var(--tag-hover-bg);
+  --tag-hierarchical-hover-color: var(--tag-hover-color);
+  --tag-hierarchical-hover-border: var(--tag-hover-border);
+}
+
+html.dark {
+  --tag-hierarchical-bg: var(--tag-bg);
+  --tag-hierarchical-color: var(--tag-color);
+  --tag-hierarchical-border: var(--tag-border);
+  --tag-hierarchical-hover-bg: var(--tag-hover-bg);
+  --tag-hierarchical-hover-color: var(--tag-hover-color);
+  --tag-hierarchical-hover-border: var(--tag-hover-border);
+  
+  /* ダークモード用の追加変数 */
+  --tag-dark-bg: var(--tag-bg);
+  --tag-dark-color: var(--tag-color);
+  --tag-dark-border: var(--tag-border);
+  --tag-dark-hover-bg: var(--tag-hover-bg);
+  --tag-dark-hover-color: var(--tag-hover-color);
+  --tag-dark-hover-border: var(--tag-hover-border);
+  
+  --tag-hierarchical-dark-bg: var(--tag-bg);
+  --tag-hierarchical-dark-color: var(--tag-color);
+  --tag-hierarchical-dark-border: var(--tag-border);
+  --tag-hierarchical-dark-hover-bg: var(--tag-hover-bg);
+  --tag-hierarchical-dark-hover-color: var(--tag-hover-color);
+  --tag-hierarchical-dark-hover-border: var(--tag-hover-border);
+}
+
+/* メディアクエリブレークポイント 
+ * 注: CSS変数はメディアクエリ内で直接使用できないため、
+ * 各CSSファイルで直接値を指定する必要があります。
+ * 以下は参照用の値です：
+ * - モバイル: max-width: 640px
+ * - タブレット: max-width: 768px  
+ * - デスクトップ: min-width: 1024px
+ */

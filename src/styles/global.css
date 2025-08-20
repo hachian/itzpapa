@@ -7,8 +7,14 @@
 /* Import rehype-callouts Obsidian theme */
 @import 'rehype-callouts/theme/obsidian';
 
+/* Import tag variables (must be before tag styles) */
+@import './tag-variables.css';
+
 /* Import tag styles */
 @import './tag.css';
+
+/* Import inline tag styles */
+@import './inline-tag.css';
 
 :root {
 	--accent: #2337ff;
