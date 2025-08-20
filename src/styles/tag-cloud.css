@@ -1,0 +1,39 @@
+/**
+ * Tag Cloud Styles - 独立ファイル
+ * TASK-201: グローバルCSS整理と統一
+ * 
+ * 将来のタグクラウド機能用スタイル定義
+ */
+
+:root {
+  /* タグクラウド用変数 */
+  --tag-cloud-gap: 0.5em;
+  --tag-cloud-padding: 1em;
+  --tag-cloud-justify: center;
+  
+  /* サイズバリエーション */
+  --tag-cloud-size-1: 0.8em;
+  --tag-cloud-size-2: 1.0em;
+  --tag-cloud-size-3: 1.2em;
+  --tag-cloud-size-4: 1.4em;
+  --tag-cloud-size-5: 1.6em;
+  --tag-cloud-size-5-weight: bold;
+}
+
+/* タグクラウド用（将来の実装用） */
+.tag-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tag-cloud-gap);
+  justify-content: var(--tag-cloud-justify);
+  padding: var(--tag-cloud-padding);
+}
+
+.tag-cloud .tag-size-1 { font-size: var(--tag-cloud-size-1); }
+.tag-cloud .tag-size-2 { font-size: var(--tag-cloud-size-2); }
+.tag-cloud .tag-size-3 { font-size: var(--tag-cloud-size-3); }
+.tag-cloud .tag-size-4 { font-size: var(--tag-cloud-size-4); }
+.tag-cloud .tag-size-5 { 
+  font-size: var(--tag-cloud-size-5); 
+  font-weight: var(--tag-cloud-size-5-weight); 
+}

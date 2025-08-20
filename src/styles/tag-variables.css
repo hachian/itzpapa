@@ -6,6 +6,15 @@
  */
 
 :root {
+  /* グローバルカラーシステム - 統一管理 */
+  --accent: #2337ff;
+  --accent-dark: #000d8a;
+  --black: 15, 18, 25;
+  --gray: 96, 115, 159;
+  --gray-light: 229, 233, 240;
+  --gray-dark: 34, 41, 57;
+  --gray-gradient: rgba(var(--gray-light), 50%), #fff;
+  
   /* 基本カラー - TagBadgeの階層タグスタイルに統一 */
   --tag-bg: #e1f5fe;
   --tag-color: #0277bd;
@@ -46,6 +55,10 @@
   
   /* アクセシビリティ */
   --tag-min-tap-size: 44px;
+  
+  /* Mark要素用グラデーション変数 */
+  --mark-bg: rgba(255, 235, 59, 0.6);
+  --mark-bg-dark: rgba(255, 193, 7, 0.4);
   
   /* tag-more要素用変数 */
   --tag-more-bg: #f8fafc;
