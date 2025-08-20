@@ -37,6 +37,7 @@
   --tag-border-radius: 1rem;
   --tag-font-size: 0.875rem;
   --tag-font-weight: 500;
+  --tag-line-height: 1.2;
   
   /* タグカウント表示 */
   --tag-count-bg: rgba(255, 255, 255, 0.3);

@@ -260,6 +260,8 @@ const pageDescription = `${tagName}タグが付けられた${sortedPosts.length}
         display: flex;
         flex-wrap: wrap;
         gap: 0.3em;
+        align-items: center;
+        line-height: 1;
       }
       
       .empty-state {
@@ -410,7 +412,6 @@ const pageDescription = `${tagName}タグが付けられた${sortedPosts.length}
                   tag={childTag.name}
                   href={`/tags/${childTag.slug}`}
                   count={childTag.count}
-                  isHierarchical={true}
                 />
               ))}
             </div>
@@ -437,7 +438,6 @@ const pageDescription = `${tagName}タグが付けられた${sortedPosts.length}
                           <TagBadge
                             tag={postTag}
                             href={`/tags/${encodeURIComponent(postTag.replace(/\//g, '-').toLowerCase())}`}
-                            isHierarchical={postTag.includes('/')}
                           />
                         ))}
                       </div>
