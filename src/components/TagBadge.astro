@@ -159,7 +159,18 @@ const accessibility = {
   @media (hover: none) and (pointer: coarse) {
     .tag {
       min-height: var(--tag-min-tap-size);
-      min-width: var(--tag-min-tap-size);
+      padding: var(--tag-mobile-padding-y) var(--tag-mobile-padding-x);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  /* 小画面でのタッチターゲットサイズ確保（ブラウザエミュレーション対応） */
+  @media (max-width: 640px) {
+    .tag {
+      min-height: var(--tag-min-tap-size);
+      padding: var(--tag-mobile-padding-y) var(--tag-mobile-padding-x);
       display: inline-flex;
       align-items: center;
       justify-content: center;
