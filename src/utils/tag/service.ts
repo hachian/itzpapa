@@ -278,9 +278,8 @@ export class TagService {
    * タグをスラッグに変換
    */
   private tagToSlug(tagName: string): string {
-    return tagName
-      .replace(new RegExp(this.options.hierarchySeparator, 'g'), '-')
-      .toLowerCase();
+    // タグ名をそのまま小文字にして返す（スラッシュもハイフンも保持）
+    return tagName.toLowerCase();
   }
 }
 

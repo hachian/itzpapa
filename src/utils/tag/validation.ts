@@ -127,16 +127,11 @@ export function normalizeTag(tagName: string, options: TagOptions = {}): string 
 export function tagToSlug(tagName: string, options: TagOptions = {}): string {
   const opts = { ...DEFAULT_TAG_OPTIONS, ...options };
   const normalized = normalizeTag(tagName, opts);
-  
-  // スラッシュをハイフンに置換
-  let slug = normalized.replace(
-    new RegExp(escapeRegExp(opts.hierarchySeparator), 'g'),
-    '-'
-  );
-  
+
+  // スラッシュとハイフンをそのまま保持
   // URLセーフな文字に変換（日本語はそのまま残す）
-  slug = encodeURIComponent(slug);
-  
+  let slug = encodeURIComponent(normalized);
+
   return slug;
 }
 
@@ -145,13 +140,10 @@ export function tagToSlug(tagName: string, options: TagOptions = {}): string {
  */
 export function slugToTag(slug: string, options: TagOptions = {}): string {
   const opts = { ...DEFAULT_TAG_OPTIONS, ...options };
-  
+
   // URLデコード
   let tag = decodeURIComponent(slug);
-  
-  // ハイフンをスラッシュに戻す
-  tag = tag.replace(/-/g, opts.hierarchySeparator);
-  
+
   return tag;
 }
 

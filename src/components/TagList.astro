@@ -62,7 +62,8 @@ const listClasses = [
 
 // タグのスラッグを生成
 function tagToSlug(tag: string): string {
-  return encodeURIComponent(tag.replace(/\//g, '-').toLowerCase());
+  // タグ名をそのまま小文字にして返す（スラッシュもハイフンも保持）
+  return tag.toLowerCase();
 }
 
 ---

@@ -17,35 +17,40 @@ import { slugToTag, isDescendantTag } from '../../utils/tag/validation';
 export async function getStaticPaths() {
   // 全ブログ記事を取得
   const posts = await getCollection('blog');
-  
+
   // タグサービスを使ってタグ情報を収集
   const tagService = new TagService();
-  
+
   posts.forEach(post => {
     const frontmatterTags = post.data.tags || [];
     tagService.addPostTags(post.id, frontmatterTags, []);
   });
-  
+
   // 全タグのスラッグを生成
   const allTags = tagService.getAllTags();
-  
-  return allTags.map(tag => ({
-    params: { 
-      slug: tag.slug 
-    },
-    props: { 
-      tag,
-      posts,
-      tagService
-    }
-  }));
+
+  return allTags.map(tag => {
+    // タグ名を階層に応じて配列に分割（スラッシュをそのまま使用）
+    const slugParts = tag.name.split('/');
+
+    return {
+      params: {
+        slug: slugParts.length === 1 ? slugParts[0] : slugParts.join('/')  // 文字列として渡す
+      },
+      props: {
+        tag,
+        posts,
+        tagService
+      }
+    };
+  });
 }
 
 const { tag, posts, tagService } = Astro.props;
 const { slug } = Astro.params;
 
-// スラッグからタグ名を復元
-const tagName = slugToTag(slug);
+// スラッグ配列からタグ名を復元（スラッシュで結合）
+const tagName = Array.isArray(slug) ? slug.join('/') : slug;
 
 // このタグとその子孫タグを取得
 const hierarchy = tagService.getTagHierarchy();
@@ -369,7 +374,7 @@ const pageDescription = `${tagName}タグが付けられた${sortedPosts.length}
                 {crumb.isLast ? (
                   <span>{crumb.name}</span>
                 ) : (
-                  <a href={`/tags/${crumb.slug}`} class="breadcrumb-link">
+                  <a href={`/tags/${crumb.fullName.toLowerCase()}`} class="breadcrumb-link">
                     {crumb.name}
                   </a>
                 )}
@@ -410,7 +415,7 @@ const pageDescription = `${tagName}タグが付けられた${sortedPosts.length}
               {childTags.map(childTag => (
                 <TagBadge
                   tag={childTag.name}
-                  href={`/tags/${childTag.slug}`}
+                  href={`/tags/${childTag.name.toLowerCase()}`}
                   count={childTag.count}
                 />
               ))}
@@ -437,7 +442,7 @@ const pageDescription = `${tagName}タグが付けられた${sortedPosts.length}
                         {post.data.tags.map(postTag => (
                           <TagBadge
                             tag={postTag}
-                            href={`/tags/${encodeURIComponent(postTag.replace(/\//g, '-').toLowerCase())}`}
+                            href={`/tags/${postTag.toLowerCase()}`}
                           />
                         ))}
                       </div>
