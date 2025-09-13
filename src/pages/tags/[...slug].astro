@@ -141,15 +141,28 @@ const pageDescription = `${tagName}タグが付けられた${sortedPosts.length}
       }
       
       .breadcrumb-link {
-        color: rgb(var(--accent));
+        display: inline-flex;
+        align-items: center;
+        background-color: var(--tag-bg);
+        color: var(--tag-color);
+        border: 1px solid var(--tag-border);
+        border-radius: var(--tag-border-radius);
+        padding: var(--tag-padding-y) var(--tag-padding-x);
+        font-size: var(--tag-font-size);
+        font-weight: var(--tag-font-weight);
+        line-height: var(--tag-line-height);
         text-decoration: none;
-        padding: 0.2em 0.4em;
-        border-radius: 4px;
-        transition: background-color 0.2s ease;
+        transition: all var(--tag-transition-duration) var(--tag-transition-easing);
+        white-space: nowrap;
+        cursor: pointer;
       }
-      
+
       .breadcrumb-link:hover {
-        background-color: rgb(var(--gray-light), 0.5);
+        background-color: var(--tag-hover-bg);
+        color: var(--tag-hover-color);
+        border-color: var(--tag-hover-border);
+        transform: var(--tag-hover-transform);
+        box-shadow: var(--tag-hover-shadow);
       }
       
       .breadcrumb-separator {
@@ -225,14 +238,22 @@ const pageDescription = `${tagName}タグが付けられた${sortedPosts.length}
         border: 1px solid rgb(var(--gray-light));
         border-radius: 8px;
         transition: all 0.2s ease;
-        text-decoration: none;
-        color: inherit;
       }
-      
+
       .post-card:hover {
         border-color: rgb(var(--accent));
         box-shadow: 0 4px 12px rgba(var(--gray), 0.15);
         transform: translateY(-2px);
+      }
+
+      .post-link {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+      }
+
+      .post-link:hover .post-title {
+        color: rgb(var(--accent));
       }
       
       .post-date {
@@ -347,11 +368,15 @@ const pageDescription = `${tagName}タグが付けられた${sortedPosts.length}
       }
       
       html.dark .breadcrumb-link {
-        color: rgb(var(--accent-dark));
+        background-color: var(--tag-bg);
+        color: var(--tag-color);
+        border-color: var(--tag-border);
       }
-      
+
       html.dark .breadcrumb-link:hover {
-        background-color: rgb(var(--gray), 0.3);
+        background-color: var(--tag-hover-bg);
+        color: var(--tag-hover-color);
+        border-color: var(--tag-hover-border);
       }
     </style>
   </head>
@@ -372,10 +397,10 @@ const pageDescription = `${tagName}タグが付けられた${sortedPosts.length}
               <div class="breadcrumb-item">
                 {index > 0 && <span class="breadcrumb-separator">/</span>}
                 {crumb.isLast ? (
-                  <span>{crumb.name}</span>
+                  <span>#{crumb.name}</span>
                 ) : (
                   <a href={`/tags/${crumb.fullName.toLowerCase()}`} class="breadcrumb-link">
-                    {crumb.name}
+                    #{crumb.name}
                   </a>
                 )}
               </div>
@@ -430,13 +455,15 @@ const pageDescription = `${tagName}タグが付けられた${sortedPosts.length}
           {sortedPosts.length > 0 ? (
             <div class="posts-grid">
               {sortedPosts.map((post) => (
-                <a href={`/blog/${post.id}`} class="post-card">
+                <div class="post-card">
                   <div class="post-date">
                     <FormattedDate date={post.data.pubDate} />
                   </div>
                   <div class="post-content">
-                    <h3 class="post-title">{post.data.title}</h3>
-                    <p class="post-description">{post.data.description}</p>
+                    <a href={`/blog/${post.id}`} class="post-link">
+                      <h3 class="post-title">{post.data.title}</h3>
+                      <p class="post-description">{post.data.description}</p>
+                    </a>
                     {post.data.tags && post.data.tags.length > 0 && (
                       <div class="post-tags">
                         {post.data.tags.map(postTag => (
@@ -448,7 +475,7 @@ const pageDescription = `${tagName}タグが付けられた${sortedPosts.length}
                       </div>
                     )}
                   </div>
-                </a>
+                </div>
               ))}
             </div>
           ) : (
