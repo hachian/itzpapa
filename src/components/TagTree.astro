@@ -165,7 +165,7 @@ const treeClasses = [
           <div class="tree-tag">
             <TagBadge
               tag={item.tag.name}
-              href={`${baseUrl}${item.tag.slug}`}
+              href={`${baseUrl}${item.tag.name.toLowerCase()}`}
               count={showCount ? item.tag.count : undefined}
               className="tree-tag-badge"
             />
