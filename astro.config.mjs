@@ -16,8 +16,13 @@ export default defineConfig({
 			remarkPlugins: [
 				// Wikilinkを次に処理（GFMの前）
 				[remarkWikilink, { priority: 'high' }],
-				// ハイライト記法処理
-				remarkMarkHighlight,
+				// ハイライト記法処理（セキュリティ強化設定）
+				[remarkMarkHighlight, {
+					accessibility: true,
+					cache: true,
+					securityMode: 'auto',
+					maxInputLength: 100000
+				}],
 				// タグ処理プラグイン
 				[remarkTags, { convertToLinks: true }]
 			],
@@ -33,8 +38,13 @@ export default defineConfig({
 		remarkPlugins: [
 			// Wikilinkを最初に処理（最高優先度）
 			[remarkWikilink, { priority: 'high' }],
-			// GFM処理後にハイライト記法とタグを処理
-			remarkMarkHighlight,
+			// GFM処理後にハイライト記法とタグを処理（セキュリティ強化設定）
+			[remarkMarkHighlight, {
+				accessibility: true,
+				cache: true,
+				securityMode: 'auto',
+				maxInputLength: 100000
+			}],
 			[remarkTags, { convertToLinks: true }]
 		],
 		rehypePlugins: [

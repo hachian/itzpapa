@@ -1,0 +1,111 @@
+/*
+ * Mark Highlight Plugin CSS
+ * Styles for the ==highlight== syntax
+ */
+
+/* Base mark element styling */
+mark {
+  /* Background using CSS variables with fallback */
+  background-color: var(--mark-bg, rgba(255, 235, 59, 0.6));
+
+  /* Typography */
+  color: inherit;
+  font-weight: inherit;
+  font-style: inherit;
+
+  /* Layout */
+  padding: 0.125em 0.25em;
+  border-radius: 2px;
+
+  /* Transitions for smooth effects */
+  transition: background-color 0.2s ease;
+
+  /* Accessibility */
+  outline-offset: 2px;
+}
+
+/* Focus state for accessibility */
+mark:focus {
+  outline: 2px solid var(--accent, #2337ff);
+  outline-offset: 1px;
+}
+
+/* Dark mode support */
+html.dark mark {
+  background-color: var(--mark-bg-dark, rgba(255, 193, 7, 0.4));
+}
+
+/* Custom class support */
+mark.highlight-yellow {
+  background-color: var(--mark-bg, rgba(255, 235, 59, 0.6));
+}
+
+html.dark mark.highlight-yellow {
+  background-color: var(--mark-bg-dark, rgba(255, 193, 7, 0.4));
+}
+
+mark.highlight-blue {
+  background-color: rgba(59, 130, 246, 0.3);
+}
+
+html.dark mark.highlight-blue {
+  background-color: rgba(96, 165, 250, 0.4);
+}
+
+mark.highlight-green {
+  background-color: rgba(34, 197, 94, 0.3);
+}
+
+html.dark mark.highlight-green {
+  background-color: rgba(74, 222, 128, 0.4);
+}
+
+mark.highlight-pink {
+  background-color: rgba(236, 72, 153, 0.3);
+}
+
+html.dark mark.highlight-pink {
+  background-color: rgba(244, 114, 182, 0.4);
+}
+
+/* Print support */
+@media print {
+  mark {
+    background-color: rgba(255, 235, 59, 0.3) !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 720px) {
+  mark {
+    /* Slightly larger touch targets on mobile */
+    padding: 0.15em 0.3em;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  mark {
+    background-color: yellow;
+    color: black;
+    font-weight: bold;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  mark {
+    transition: none;
+  }
+}
+
+/* Selection styling to ensure visibility */
+mark::selection {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+mark::-moz-selection {
+  background-color: rgba(0, 0, 0, 0.2);
+}
