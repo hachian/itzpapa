@@ -5,6 +5,7 @@ import sitemap from '@astrojs/sitemap';
 import { defineConfig } from 'astro/config';
 import remarkWikilink from './src/plugins/remark-wikilink/index.js';
 import remarkTags from './src/plugins/remark-tags/index.js';
+import remarkMarkHighlight from './src/plugins/remark-mark-highlight/index.js';
 import rehypeCallouts from 'rehype-callouts';
 
 // https://astro.build/config
@@ -15,6 +16,8 @@ export default defineConfig({
 			remarkPlugins: [
 				// Wikilinkを次に処理（GFMの前）
 				[remarkWikilink, { priority: 'high' }],
+				// ハイライト記法処理
+				remarkMarkHighlight,
 				// タグ処理プラグイン
 				[remarkTags, { convertToLinks: true }]
 			],
@@ -30,6 +33,8 @@ export default defineConfig({
 		remarkPlugins: [
 			// Wikilinkを次に処理（GFMの前）
 			[remarkWikilink, { priority: 'high' }],
+			// ハイライト記法処理
+			remarkMarkHighlight,
 			// タグ処理プラグイン
 			[remarkTags, { convertToLinks: true }]
 		],
