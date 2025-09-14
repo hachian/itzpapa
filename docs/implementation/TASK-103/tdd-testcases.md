@@ -1,287 +1,150 @@
-# TASK-103: TagTreeコンポーネントのスタイル適用 - テストケース定義
+# TASK-103: 他のMarkdown記法との統合 - テストケース
 
-## 単体テストケース
+## テストケース一覧
 
-### 1. CSS変数適用テスト
+### 1. WikiLink記法との併用テスト
 
-#### TC-103-001: ツリー基本要素のCSS変数適用
-```javascript
-describe('CSS変数統合', () => {
-  test('tree背景色がCSS変数を使用', () => {
-    // Given: TagTreeコンポーネント
-    // When: CSS変数ベースのスタイルを適用
-    // Then: --tree-bg変数が使用される
-  });
-  
-  test('treeボーダーがCSS変数を使用', () => {
-    // Given: TagTreeコンポーネント
-    // When: CSS変数ベースのスタイルを適用
-    // Then: --tree-border変数が使用される
-  });
-  
-  test('インデントガイドがCSS変数を使用', () => {
-    // Given: .indent-guide要素
-    // When: CSS変数ベースのスタイルを適用
-    // Then: --tree-guide-color変数が使用される
-  });
-});
-```
+#### TC-103-001: WikiLink優先処理
+- **入力**: `[[==highlighted page==]]`
+- **期待結果**: WikiLinkが優先され、ハイライト記法は無視される
+- **理由**: WikiLinkプラグインが先に処理されるため
 
-### 2. インタラクション要素テスト
+#### TC-103-002: WikiLinkとハイライトの並列処理
+- **入力**: `==[[wikilink]] highlighted==`
+- **期待結果**: `<mark><a href="/wikilink">wikilink</a> highlighted</mark>`
+- **理由**: ハイライト範囲内でWikiLinkが処理される
 
-#### TC-103-002: トグルボタンのCSS変数適用
-```javascript
-describe('トグルボタンCSS変数', () => {
-  test('トグルボタン色がCSS変数を使用', () => {
-    // Given: .tree-toggle要素
-    // When: CSS変数ベースのスタイルを適用
-    // Then: --tree-toggle-color変数が使用される
-  });
-  
-  test('トグルホバー効果がCSS変数を使用', () => {
-    // Given: .tree-toggle:hover状態
-    // When: CSS変数ベースのスタイルを適用
-    // Then: --tree-toggle-hover-bg, --tree-toggle-hover-color変数が使用される
-  });
-  
-  test('フォーカス表示がタグシステムと統一', () => {
-    // Given: .tree-toggle:focus状態
-    // When: CSS変数ベースのスタイルを適用
-    // Then: --tag-focus-color変数が使用される
-  });
-});
-```
+#### TC-103-003: 独立したWikiLinkとハイライト
+- **入力**: `[[page1]] and ==highlight== text`
+- **期待結果**: `<a href="/page1">page1</a> and <mark>highlight</mark> text`
 
-### 3. ダークモード統合テスト
+### 2. GFM記法との併用テスト
 
-#### TC-103-003: ダークモード自動適用
-```javascript
-describe('ダークモード統合', () => {
-  test('ダークモードでCSS変数が自動適用される', () => {
-    // Given: html.darkクラスが設定された環境
-    // When: TagTreeコンポーネントを表示
-    // Then: ダーク用CSS変数が自動適用される
-  });
-  
-  test('ハードコーディングされたwhite背景が除去されている', () => {
-    // Given: 修正後のTagTreeコンポーネント
-    // When: CSSを確認
-    // Then: background: whiteが存在しない
-  });
-  
-  test('rgb(var(--*))計算式が除去されている', () => {
-    // Given: 修正後のTagTreeコンポーネント
-    // When: CSSを確認  
-    // Then: rgb()計算式が存在しない
-  });
-});
-```
+#### TC-103-004: 太字内ハイライト
+- **入力**: `**==bold highlight==**`
+- **期待結果**: `<strong><mark>bold highlight</mark></strong>`
 
-### 4. 機能保持テスト
+#### TC-103-005: ハイライト内太字
+- **入力**: `==**inner bold**==`
+- **期待結果**: `<mark><strong>inner bold</strong></mark>`
 
-#### TC-103-004: 既存ツリー機能の動作確認
-```javascript
-describe('既存機能保持', () => {
-  test('ツリー展開機能が正常動作', () => {
-    // Given: 階層タグを持つTagTree
-    // When: トグルボタンをクリック
-    // Then: 子要素が表示/非表示される
-  });
-  
-  test('TagBadge統合が保持される', () => {
-    // Given: TagTreeコンポーネント
-    // When: タグ要素を確認
-    // Then: TagBadgeコンポーネントが使用されている
-  });
-  
-  test('アクセシビリティ属性が保持される', () => {
-    // Given: TagTreeコンポーネント
-    // When: HTML属性を確認
-    // Then: role, aria-label等が適切に設定されている
-  });
-  
-  test('initialDisplayLevel機能が正常動作', () => {
-    // Given: initialDisplayLevel=2のTagTree
-    // When: 初期表示
-    // Then: レベル2までが表示される
-  });
-});
-```
+#### TC-103-006: 斜体内ハイライト
+- **入力**: `*==italic highlight==*`
+- **期待結果**: `<em><mark>italic highlight</mark></em>`
 
-## 統合テストケース
+#### TC-103-007: ハイライト内斜体
+- **入力**: `==*inner italic*==`
+- **期待結果**: `<mark><em>inner italic</em></mark>`
 
-### 1. ブラウザ表示テスト
+#### TC-103-008: 取り消し線内ハイライト
+- **入力**: `~~==strikethrough highlight==~~`
+- **期待結果**: `<del><mark>strikethrough highlight</mark></del>`
 
-#### IT-103-001: 実際のページでの動作確認
-```javascript
-describe('ブラウザ統合テスト', () => {
-  test('ツリー要素が統一スタイルで表示される', async () => {
-    // Given: タグページのTagTreeコンポーネント
-    // When: ブラウザで表示
-    // Then: 統一されたスタイルで表示される
-  });
-  
-  test('CSS変数の継承が正常動作', () => {
-    // Given: タグシステムのCSS変数が定義済み
-    // When: TagTreeコンポーネントを表示
-    // Then: 変数が正しく継承・適用される
-  });
-  
-  test('ダークモード切替が正常動作', async () => {
-    // Given: TagTreeが表示された状態
-    // When: ダークモードに切替
-    // Then: 自動でダークスタイルに変更される
-  });
-});
-```
+#### TC-103-009: リンク内ハイライト
+- **入力**: `[==link text==](https://example.com)`
+- **期待結果**: `<a href="https://example.com"><mark>link text</mark></a>`
 
-## ビジュアルテストケース
+#### TC-103-010: コード内ハイライト（除外）
+- **入力**: `` `==code==` ``
+- **期待結果**: `<code>==code==</code>`（変換されない）
 
-### 1. スタイル統一確認
+### 3. タグ記法との併用テスト
 
-#### VT-103-001: 視覚的一貫性テスト
-```javascript
-describe('ビジュアル統一確認', () => {
-  test('ツリー要素がタグシステムと調和', async () => {
-    // Given: TagTreeとTagBadgeが同じページに存在
-    // When: ブラウザで表示
-    // Then: 視覚的に調和したデザイン
-  });
-  
-  test('フォーカス表示が統一されている', async () => {
-    // Given: ツリートグルボタン
-    // When: キーボードフォーカス
-    // Then: タグシステムと同じフォーカススタイル
-  });
-  
-  test('ホバー効果が一貫している', async () => {
-    // Given: ツリー要素
-    // When: マウスホバー
-    // Then: 統一されたホバーエフェクト
-  });
-});
-```
+#### TC-103-011: ハイライト内タグ
+- **入力**: `==highlighted #tag==`
+- **期待結果**: `<mark>highlighted <a href="/tags/tag" class="tag-link">#tag</a></mark>`
 
-## CSS変数テストケース
+#### TC-103-012: 独立したタグとハイライト
+- **入力**: `#tag ==highlight==`
+- **期待結果**: `<a href="/tags/tag" class="tag-link">#tag</a> <mark>highlight</mark>`
 
-### CV-103-001: 変数定義確認
-```javascript
-describe('CSS変数定義', () => {
-  test('ツリー用CSS変数が定義されている', () => {
-    // Given: tag-variables.css
-    // When: CSS変数を確認
-    // Then: --tree-*変数が適切に定義
-  });
-  
-  test('ダークモード変数が定義されている', () => {
-    // Given: tag-variables.css内のhtml.dark
-    // When: ダークモード変数を確認
-    // Then: ダーク用--tree-*変数が定義
-  });
-  
-  test('CSS変数がカスケードで適用される', () => {
-    // Given: ルート要素のCSS変数
-    // When: ツリー要素をレンダリング
-    // Then: 変数が正しく継承される
-  });
-});
-```
+### 4. 複合記法の処理テスト
 
-## パフォーマンステストケース
+#### TC-103-013: 太字-ハイライト-WikiLink複合
+- **入力**: `**==[[compound]]==**`
+- **期待結果**: `<strong><mark><a href="/compound">compound</a></mark></strong>`
 
-### PT-103-001: ツリー表示性能
-```javascript
-describe('パフォーマンス', () => {
-  test('100個のタグツリーが500ms以内にレンダリング', () => {
-    // Given: 100個のタグを含む階層構造
-    // When: TagTreeをレンダリング
-    // Then: 500ms以内に完了
-  });
-  
-  test('展開/折りたたみが100ms以内に応答', () => {
-    // Given: 大きなタグツリー
-    // When: トグルボタンをクリック
-    // Then: 100ms以内にアニメーション完了
-  });
-  
-  test('CSS変数計算のオーバーヘッドが最小', () => {
-    // Given: CSS変数ベースのスタイル
-    // When: 大量のツリー要素をレンダリング
-    // Then: 従来と同等の性能
-  });
-});
-```
+#### TC-103-014: WikiLink内複合記法
+- **入力**: `[[==**multi-syntax**==]]`
+- **期待結果**: WikiLinkが優先され、内部記法は無視される
 
-## 回帰テストケース
+#### TC-103-015: タグ-太字-ハイライト複合
+- **入力**: `#tag ==**bold highlight**==`
+- **期待結果**: `<a href="/tags/tag" class="tag-link">#tag</a> <mark><strong>bold highlight</strong></mark>`
 
-### RT-103-001: 既存機能への影響確認
-```javascript
-describe('回帰テスト', () => {
-  test('TagBadgeコンポーネントに影響がない', () => {
-    // Given: 修正後のTagTreeコンポーネント
-    // When: TagBadgeを含むページを表示
-    // Then: TagBadgeのスタイルに変化がない
-  });
-  
-  test('TagListコンポーネントに影響がない', () => {
-    // Given: 修正後のTagTreeコンポーネント
-    // When: TagListを含むページを表示
-    // Then: TagListのスタイルに変化がない
-  });
-  
-  test('インラインタグに影響がない', () => {
-    // Given: 修正後のTagTreeコンポーネント
-    // When: インラインタグを含むページを表示
-    // Then: インラインタグのスタイルに変化がない
-  });
-});
-```
+### 5. エッジケースのテスト
 
-## エッジケーステスト
+#### TC-103-016: ネストした複合記法
+- **入力**: `**==*nested italic*==**`
+- **期待結果**: `<strong><mark><em>nested italic</em></mark></strong>`
 
-### ET-103-001: 境界値・異常ケース
-```javascript
-describe('エッジケース', () => {
-  test('空の階層データの場合', () => {
-    // Given: 空のhierarchyオブジェクト
-    // When: TagTreeをレンダリング
-    // Then: "階層タグがありません"メッセージが表示
-  });
-  
-  test('maxLevelを超える深い階層', () => {
-    // Given: 10レベルの深い階層とmaxLevel=5
-    // When: TagTreeをレンダリング
-    // Then: 5レベルまでのみ表示される
-  });
-  
-  test('非常に長いタグ名での表示', () => {
-    // Given: 50文字の長いタグ名
-    // When: TagTreeをレンダリング
-    // Then: レイアウトが崩れない
-  });
-  
-  test('大量の子要素を持つノード', () => {
-    // Given: 100個の子要素を持つタグ
-    // When: ツリーを展開
-    // Then: パフォーマンス問題なく表示
-  });
-});
-```
+#### TC-103-017: 不完全な記法の混在
+- **入力**: `==incomplete **bold== end**`
+- **期待結果**: `<mark>incomplete **bold</mark> end**`
 
-## 実装前チェックリスト
+#### TC-103-018: 複数ハイライトと他記法
+- **入力**: `==first== **bold** ==second==`
+- **期待結果**: `<mark>first</mark> <strong>bold</strong> <mark>second</mark>`
 
-- [ ] tag-variables.cssの現在の変数定義確認
-- [ ] TagTreeの現在のハードコーディング箇所特定
-- [ ] 必要な新CSS変数の設計
-- [ ] TagBadge統合部分の確認
-- [ ] アクセシビリティ要件の理解
+### 6. パフォーマンステスト
 
-## 実装後チェックリスト
+#### TC-103-019: 大量記法の処理
+- **入力**: 100個の各記法が混在するテキスト
+- **期待結果**: 処理時間が既存の110%以内
+- **測定項目**: 処理時間、メモリ使用量
 
-- [ ] 全単体テストが合格
-- [ ] CSS変数テストが合格
-- [ ] ビジュアルテストで統一確認
-- [ ] 回帰テストで既存機能確認
-- [ ] パフォーマンステストが合格
-- [ ] エッジケーステストが合格
-- [ ] ブラウザでツリー表示・操作確認
+#### TC-103-020: 深いネスト記法
+- **入力**: 10レベル以上のネストした記法
+- **期待結果**: 適切に処理され、スタックオーバーフローが発生しない
+
+### 7. 安全性テスト
+
+#### TC-103-021: XSS防止の維持
+- **入力**: `==<script>alert('xss')</script>==`
+- **期待結果**: HTMLエスケープが適用される
+- **確認項目**: 既存のXSS対策が他記法との統合で損なわれない
+
+#### TC-103-022: 予期しないHTML出力の防止
+- **入力**: 記法の組み合わせによる異常なHTML
+- **期待結果**: 有効なHTMLのみが出力される
+
+### 8. 回帰テスト
+
+#### TC-103-023: 既存機能の動作確認
+- **入力**: TASK-101, TASK-102で実装した全テストケース
+- **期待結果**: 全テストが成功する
+- **確認項目**: 統合により既存機能が破損していない
+
+#### TC-103-024: プラグイン無効時の動作
+- **入力**: remarkMarkHighlightを無効にした場合
+- **期待結果**: 他のプラグインが正常動作する
+
+## テスト実装戦略
+
+### 1. 単体テスト
+- 各記法の組み合わせパターンの個別テスト
+- remarkプロセッサーでの統合テスト
+
+### 2. 統合テスト
+- 実際のMarkdownファイルでのE2Eテスト
+- ブラウザでの表示確認
+
+### 3. パフォーマンステスト
+- 処理時間測定
+- メモリ使用量監視
+
+### 4. 回帰テスト
+- 既存テストスイートの実行
+- CI/CDでの自動テスト
+
+## 実装前の準備
+
+### テストデータ
+1. 各記法の組み合わせサンプル
+2. 大量データでのパフォーマンステスト用ファイル
+3. エッジケースの例文集
+
+### テスト環境
+1. remarkプロセッサーの完全な統合環境
+2. ブラウザでの表示確認環境
+3. パフォーマンス測定ツール

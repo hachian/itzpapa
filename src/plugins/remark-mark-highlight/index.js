@@ -18,19 +18,46 @@ export default function remarkMarkHighlight(options = {}) {
       if (
         parent.type === 'link' ||
         parent.type === 'inlineCode' ||
-        parent.type === 'code'
+        parent.type === 'code' ||
+        parent.type === 'linkReference' ||
+        parent.type === 'imageReference' ||
+        parent.type === 'footnoteReference' ||
+        parent.type === 'math' ||
+        parent.type === 'inlineMath'
       ) {
         return;
       }
 
-      const text = node.value;
+      let text = node.value;
+
+      // Escape processing: handle \== sequences
+      // Temporarily replace escaped sequences to prevent processing
+      const escapeToken = '__ESCAPED_MARK_TOKEN__';
+      const escapedSequences = [];
+
+      // Handle escaped equals - both start and end of potential highlight sequences
+      text = text.replace(/\\==/g, (match) => {
+        const token = `${escapeToken}${escapedSequences.length}${escapeToken}`;
+        escapedSequences.push('==');
+        return token;
+      });
 
       // Pattern to match ==text== for highlighting
-      // Supports multi-line and nested inline elements
+      // [^=]+ prevents nested highlights (e.g., ==outer ==inner== text== won't match)
+      // This is the desired behavior for safety and clarity
       const markHighlightRegex = /==([^=]+)==/g;
 
       // Early return if no highlight syntax found
       if (!markHighlightRegex.test(text)) {
+        // Restore escaped sequences before returning
+        escapedSequences.forEach((sequence, index) => {
+          const token = `${escapeToken}${index}${escapeToken}`;
+          text = text.replace(token, sequence);
+        });
+
+        if (text !== node.value) {
+          node.value = text;
+        }
         return;
       }
 
@@ -50,17 +77,16 @@ export default function remarkMarkHighlight(options = {}) {
           });
         }
 
-        // Create mark element
         const highlightedText = match[1];
 
-        // Handle empty highlight (====)
+        // Handle empty highlight (e.g., ====) - leave as-is
         if (!highlightedText || highlightedText.length === 0) {
           parts.push({
             type: 'text',
             value: match[0]
           });
         } else {
-          // Create HTML node for <mark> element
+          // Create HTML node for <mark> element with escaped content
           const markNode = {
             type: 'html',
             value: `<mark${className ? ` class="${className}"` : ''}>${escapeHtml(highlightedText)}</mark>`
@@ -76,6 +102,18 @@ export default function remarkMarkHighlight(options = {}) {
         parts.push({
           type: 'text',
           value: text.slice(lastIndex)
+        });
+      }
+
+      // Restore escaped sequences in all text nodes
+      if (escapedSequences.length > 0) {
+        parts.forEach(part => {
+          if (part.type === 'text') {
+            escapedSequences.forEach((sequence, index) => {
+              const token = `${escapeToken}${index}${escapeToken}`;
+              part.value = part.value.replace(new RegExp(token, 'g'), sequence);
+            });
+          }
         });
       }
 

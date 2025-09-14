@@ -31,18 +31,17 @@ export default defineConfig({
 	],
 	markdown: {
 		remarkPlugins: [
-			// Wikilinkを次に処理（GFMの前）
+			// Wikilinkを最初に処理（最高優先度）
 			[remarkWikilink, { priority: 'high' }],
-			// ハイライト記法処理
+			// GFM処理後にハイライト記法とタグを処理
 			remarkMarkHighlight,
-			// タグ処理プラグイン
 			[remarkTags, { convertToLinks: true }]
 		],
 		rehypePlugins: [
 			// Callouts処理（remarkの後でHTMLを処理）
 			[rehypeCallouts, { theme: 'obsidian' }]
 		],
-		// GFMを明示的に設定して順序を制御
+		// GFMを明示的に設定（remarkPluginsより前に処理される）
 		gfm: true
 	}
 });
