@@ -16,9 +16,6 @@
 /* Import inline tag styles */
 @import './inline-tag.css';
 
-/* Import mark highlight styles */
-@import './mark.css';
-
 /* Import tag cloud styles */
 @import './tag-cloud.css';
 

@@ -4,7 +4,6 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import { defineConfig } from 'astro/config';
 import remarkWikilink from './src/plugins/remark-wikilink/index.js';
-import remarkMarkHighlight from './src/plugins/remark-mark-highlight/index.js';
 import remarkTags from './src/plugins/remark-tags/index.js';
 import rehypeCallouts from 'rehype-callouts';
 
@@ -14,8 +13,6 @@ export default defineConfig({
 	integrations: [
 		mdx({
 			remarkPlugins: [
-				// マークハイライトを最初に処理（最優先）
-				remarkMarkHighlight,
 				// Wikilinkを次に処理（GFMの前）
 				[remarkWikilink, { priority: 'high' }],
 				// タグ処理プラグイン
@@ -31,8 +28,6 @@ export default defineConfig({
 	],
 	markdown: {
 		remarkPlugins: [
-			// マークハイライトを最初に処理（最優先）
-			remarkMarkHighlight,
 			// Wikilinkを次に処理（GFMの前）
 			[remarkWikilink, { priority: 'high' }],
 			// タグ処理プラグイン
