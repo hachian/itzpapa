@@ -42,6 +42,7 @@ const tocItems: TocItem[] = tocHeadings.map(heading => ({
           <a
             href={item.href}
             class="toc-link"
+            data-id={item.id}
             aria-label={`${item.text}へ移動`}
           >
             {item.text}
@@ -100,6 +101,12 @@ const tocItems: TocItem[] = tocHeadings.map(heading => ({
     color: var(--accent, #7611a6);
   }
 
+  /* アクティブ状態（スクロール連動ハイライト） */
+  .toc-link.active {
+    color: var(--accent, #7611a6);
+    font-weight: bold;
+  }
+
   .toc-link:focus {
     outline: 2px solid var(--accent, #7611a6);
     outline-offset: 2px;
@@ -119,3 +126,89 @@ const tocItems: TocItem[] = tocHeadings.map(heading => ({
     }
   }
 </style>
+
+<script>
+  // シンプルなスクロール連動ハイライト機能
+  document.addEventListener('DOMContentLoaded', () => {
+    const headings = document.querySelectorAll('h2[id], h3[id]');
+
+    if (headings.length === 0) return;
+
+    // 現在アクティブな見出しを追跡
+    let activeHeading: string | null = null;
+
+    // Intersection Observer の設定
+    const observerOptions = {
+      root: null,
+      rootMargin: '-20% 0px -60% 0px', // ビューポート上部20%、下部60%の範囲で判定
+      threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      // 全ての見出しの現在位置を取得
+      const allHeadingPositions: { id: string; y: number; isVisible: boolean }[] = [];
+
+      Array.from(headings).forEach(heading => {
+        const rect = heading.getBoundingClientRect();
+        allHeadingPositions.push({
+          id: heading.id,
+          y: rect.top,
+          isVisible: rect.top <= window.innerHeight * 0.6 // 画面上部60%以内
+        });
+      });
+
+      // 通過済み（画面上部にある）見出しの中で最も下にあるものを選択
+      const passedHeadings = allHeadingPositions.filter(h => h.y <= window.innerHeight * 0.2);
+
+      let newActiveId: string | null = null;
+
+      if (passedHeadings.length > 0) {
+        // 通過済み見出しの中で最も下にあるもの
+        const bottomMostPassed = passedHeadings.reduce((prev, current) =>
+          prev.y > current.y ? prev : current
+        );
+        newActiveId = bottomMostPassed.id;
+      } else {
+        // 通過済みがない場合は、最初の見出しをアクティブ
+        if (allHeadingPositions.length > 0) {
+          newActiveId = allHeadingPositions[0].id;
+        }
+      }
+
+      // アクティブ状態を更新
+      if (activeHeading !== newActiveId) {
+        // 古いアクティブ状態を削除
+        if (activeHeading) {
+          const oldLink = document.querySelector(`.toc-link[data-id="${activeHeading}"]`);
+          oldLink?.classList.remove('active');
+        }
+
+        // 新しいアクティブ状態を設定
+        if (newActiveId) {
+          const newLink = document.querySelector(`.toc-link[data-id="${newActiveId}"]`);
+          newLink?.classList.add('active');
+        }
+
+        activeHeading = newActiveId;
+      }
+    }, observerOptions);
+
+    // 各見出しを監視対象に追加
+    headings.forEach(heading => {
+      observer.observe(heading);
+    });
+
+    // 初期状態の設定（最初の見出しをアクティブに）
+    if (headings.length > 0) {
+      const firstHeading = headings[0] as HTMLElement;
+      const firstLink = document.querySelector(`.toc-link[data-id="${firstHeading.id}"]`);
+      firstLink?.classList.add('active');
+      activeHeading = firstHeading.id;
+    }
+
+    // クリーンアップ（Astroページ遷移時）
+    document.addEventListener('astro:before-swap', () => {
+      observer.disconnect();
+    });
+  });
+</script>
