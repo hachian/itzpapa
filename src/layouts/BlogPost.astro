@@ -6,7 +6,10 @@ import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 import TagList from '../components/TagList.astro';
+// デフォルトの目次（アクティブ状態なし）
+// アクティブ状態が必要な場合は TableOfContentsWithActive を使用
 import TableOfContents from '../components/TableOfContents.astro';
+// import TableOfContentsWithActive from '../components/TableOfContentsWithActive.astro';
 import '../styles/table-of-contents.css';
 
 type Props = CollectionEntry<'blog'>['data'] & {

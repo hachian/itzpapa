@@ -1,0 +1,130 @@
+---
+// アクティブ状態管理機能付き目次コンポーネント（テスト用）
+import TableOfContents from './TableOfContents.astro';
+
+export interface Props {
+  headings: Array<{ depth: number; text: string; slug: string }>;
+}
+
+const { headings } = Astro.props;
+---
+
+<TableOfContents headings={headings} />
+
+<style>
+  /* アクティブ状態のスタイル */
+  :global(.toc-link.active) {
+    color: var(--accent, #7611a6);
+    font-weight: bold;
+    position: relative;
+  }
+
+  :global(.toc-link.active::before) {
+    content: '';
+    position: absolute;
+    left: -1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 1.5em;
+    background-color: var(--accent, #7611a6);
+    border-radius: 2px;
+  }
+
+  /* トランジション */
+  :global(.toc-link) {
+    transition: color 0.2s ease, font-weight 0.2s ease;
+  }
+</style>
+
+<script>
+  // Intersection Observer によるアクティブ状態管理
+  document.addEventListener('DOMContentLoaded', () => {
+    // 見出し要素を取得
+    const headings = document.querySelectorAll('h2[id], h3[id]');
+
+    if (headings.length === 0) {
+      console.warn('No headings found for active state management');
+      return;
+    }
+
+    // Intersection Observer の設定
+    const observerOptions = {
+      root: null,
+      rootMargin: '-20% 0px -70% 0px', // ビューポートの上部30%の範囲で判定
+      threshold: 0
+    };
+
+    // 現在アクティブな見出しを追跡
+    let activeHeading: string | null = null;
+    const headingStates = new Map<string, boolean>();
+
+    const observerCallback: IntersectionObserverCallback = (entries) => {
+      // 各エントリの状態を更新
+      entries.forEach(entry => {
+        const id = entry.target.id;
+        headingStates.set(id, entry.isIntersecting);
+      });
+
+      // 表示されている見出しの中で最上部のものを選択
+      const visibleHeadings = Array.from(headingStates.entries())
+        .filter(([_, isVisible]) => isVisible)
+        .map(([id]) => document.getElementById(id))
+        .filter(el => el !== null) as HTMLElement[];
+
+      if (visibleHeadings.length > 0) {
+        // Y座標が最も小さい（最上部の）見出しを選択
+        const topHeading = visibleHeadings.reduce((prev, current) => {
+          const prevRect = prev.getBoundingClientRect();
+          const currentRect = current.getBoundingClientRect();
+          return Math.abs(prevRect.top) < Math.abs(currentRect.top) ? prev : current;
+        });
+
+        const newActiveId = topHeading.id;
+        if (activeHeading !== newActiveId) {
+          // 古いアクティブ状態を削除
+          if (activeHeading) {
+            const oldLink = document.querySelector(`.toc-link[href="#${activeHeading}"]`);
+            oldLink?.classList.remove('active');
+          }
+
+          // 新しいアクティブ状態を設定
+          const newLink = document.querySelector(`.toc-link[href="#${newActiveId}"]`);
+          newLink?.classList.add('active');
+
+          activeHeading = newActiveId;
+        }
+      } else if (activeHeading) {
+        // 表示されている見出しがない場合はアクティブ状態をクリア
+        const oldLink = document.querySelector(`.toc-link[href="#${activeHeading}"]`);
+        oldLink?.classList.remove('active');
+        activeHeading = null;
+      }
+    };
+
+    // Intersection Observer のサポートチェック
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+      // 各見出しを監視
+      headings.forEach(heading => {
+        observer.observe(heading);
+      });
+
+      // 初期状態の設定（最初の見出しをアクティブに）
+      if (headings.length > 0) {
+        const firstHeading = headings[0] as HTMLElement;
+        const firstLink = document.querySelector(`.toc-link[href="#${firstHeading.id}"]`);
+        firstLink?.classList.add('active');
+        activeHeading = firstHeading.id;
+      }
+
+      // クリーンアップ（ページ遷移時）
+      document.addEventListener('astro:before-swap', () => {
+        observer.disconnect();
+      });
+    } else {
+      console.warn('IntersectionObserver not supported');
+    }
+  });
+</script>
