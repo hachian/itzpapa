@@ -1,0 +1,114 @@
+---
+import TableOfContents from '../components/TableOfContents.astro';
+
+// テスト用の見出しデータ
+const testHeadings = [
+  { depth: 2, text: "はじめに", slug: "introduction" },
+  { depth: 3, text: "サブセクション1", slug: "subsection-1" },
+  { depth: 2, text: "主要機能", slug: "main-features" },
+  { depth: 3, text: "機能A", slug: "feature-a" },
+  { depth: 3, text: "機能B", slug: "feature-b" },
+  { depth: 2, text: "まとめ", slug: "conclusion" },
+  { depth: 4, text: "これは表示されない（H4）", slug: "not-shown" },
+];
+---
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>目次コンポーネントテスト</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .test-container {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 2rem;
+    }
+
+    .content {
+      padding: 1rem;
+    }
+
+    .test-section {
+      margin: 2rem 0;
+      padding: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+
+    h2 {
+      color: #333;
+    }
+
+    h3 {
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <h1>目次コンポーネントテスト</h1>
+
+  <div class="test-container">
+    <div class="content">
+      <div class="test-section">
+        <h2 id="introduction">はじめに</h2>
+        <p>これはテストセクションです。</p>
+
+        <h3 id="subsection-1">サブセクション1</h3>
+        <p>サブセクションの内容です。</p>
+      </div>
+
+      <div class="test-section">
+        <h2 id="main-features">主要機能</h2>
+        <p>主要機能について説明します。</p>
+
+        <h3 id="feature-a">機能A</h3>
+        <p>機能Aの詳細です。</p>
+
+        <h3 id="feature-b">機能B</h3>
+        <p>機能Bの詳細です。</p>
+      </div>
+
+      <div class="test-section">
+        <h2 id="conclusion">まとめ</h2>
+        <p>まとめのセクションです。</p>
+
+        <h4 id="not-shown">これは表示されない（H4）</h4>
+        <p>H4なので目次には表示されません。</p>
+      </div>
+    </div>
+
+    <aside>
+      <TableOfContents headings={testHeadings} />
+    </aside>
+  </div>
+
+  <hr />
+
+  <h2>エッジケーステスト</h2>
+
+  <div class="test-section">
+    <h3>空の見出しリスト</h3>
+    <TableOfContents headings={[]} />
+    <p>↑ 何も表示されないはずです（EDGE-001）</p>
+  </div>
+
+  <div class="test-section">
+    <h3>空のテキストを含む見出し</h3>
+    <TableOfContents headings={[
+      { depth: 2, text: "", slug: "empty" },
+      { depth: 2, text: "正常な見出し", slug: "normal" }
+    ]} />
+    <p>↑ 「無題のセクション」と表示されるはずです（EDGE-003）</p>
+  </div>
+
+</body>
+</html>

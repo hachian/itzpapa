@@ -1,0 +1,179 @@
+---
+import TableOfContents from '../components/TableOfContents.astro';
+import '../styles/table-of-contents.css';
+
+// テスト用の見出しデータ
+const testHeadings = [
+  { depth: 2, text: "導入", slug: "introduction" },
+  { depth: 3, text: "背景", slug: "background" },
+  { depth: 3, text: "目的", slug: "purpose" },
+  { depth: 2, text: "実装方法", slug: "implementation" },
+  { depth: 3, text: "準備", slug: "preparation" },
+  { depth: 3, text: "手順", slug: "procedure" },
+  { depth: 2, text: "使用例", slug: "examples" },
+  { depth: 2, text: "トラブルシューティング", slug: "troubleshooting" },
+  { depth: 2, text: "まとめ", slug: "conclusion" },
+];
+---
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS Grid レイアウトテスト</title>
+  <style>
+    :root {
+      --gray-light: #f6f6f7;
+      --gray: #8e8e93;
+      --gray-dark: #1a1a1a;
+      --accent: #7611a6;
+      --accent-light: #9933cc;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 2rem 0;
+    }
+
+    /* 記事コンテンツのスタイル */
+    .prose {
+      max-width: 65ch;
+    }
+
+    .prose h2 {
+      margin-top: 3rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--gray-light);
+    }
+
+    .prose h3 {
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .prose p {
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    /* レスポンシブテスト用のデバッグ表示 */
+    .debug-info {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 12px;
+      z-index: 9999;
+    }
+
+    @media (max-width: 768px) {
+      .debug-info::after {
+        content: " (Mobile)";
+      }
+    }
+
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .debug-info::after {
+        content: " (Tablet)";
+      }
+    }
+
+    @media (min-width: 1025px) {
+      .debug-info::after {
+        content: " (Desktop)";
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>CSS Grid レイアウトテスト</h1>
+
+  <div class="blog-layout-with-toc">
+    <article class="blog-content prose">
+      <h2 id="introduction">導入</h2>
+      <p>このページは、CSS Gridを使用した目次レイアウトのテストページです。デスクトップでは右側に目次が表示され、モバイルでは上部に移動します。</p>
+
+      <h3 id="background">背景</h3>
+      <p>現代のWebデザインにおいて、レスポンシブなレイアウトは必須の要件となっています。CSS Gridは、複雑なレイアウトを簡潔に実装できる強力な機能です。</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+
+      <h3 id="purpose">目的</h3>
+      <p>このプロジェクトの目的は、ユーザーフレンドリーな目次機能を実装することです。</p>
+      <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+
+      <h2 id="implementation">実装方法</h2>
+      <p>CSS Gridを使用して、フレキシブルな2カラムレイアウトを構築します。</p>
+
+      <h3 id="preparation">準備</h3>
+      <p>まず、必要なスタイルシートを読み込み、HTMLの構造を整えます。</p>
+      <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+
+      <h3 id="procedure">手順</h3>
+      <p>以下の手順に従って実装を進めます：</p>
+      <ol>
+        <li>グリッドコンテナの設定</li>
+        <li>レスポンシブブレークポイントの定義</li>
+        <li>スティッキーポジションの適用</li>
+        <li>アクセシビリティの確保</li>
+      </ol>
+
+      <h2 id="examples">使用例</h2>
+      <p>実際の使用例をいくつか紹介します。</p>
+      <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+      <p>さらに詳しい例：</p>
+      <ul>
+        <li>ブログ記事での使用</li>
+        <li>ドキュメンテーションサイト</li>
+        <li>チュートリアルページ</li>
+      </ul>
+
+      <h2 id="troubleshooting">トラブルシューティング</h2>
+      <p>よくある問題と解決方法：</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+      <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+
+      <h2 id="conclusion">まとめ</h2>
+      <p>CSS Gridを使用することで、柔軟でメンテナンスしやすい目次レイアウトを実現できました。</p>
+      <p>この実装により、以下のメリットが得られます：</p>
+      <ul>
+        <li>JavaScriptに依存しない安定した動作</li>
+        <li>優れたパフォーマンス</li>
+        <li>アクセシビリティの向上</li>
+        <li>レスポンシブデザインの簡単な実現</li>
+      </ul>
+      <p>今後も継続的な改善を行い、より良いユーザー体験を提供していきます。</p>
+    </article>
+
+    <aside class="toc-sidebar">
+      <TableOfContents headings={testHeadings} />
+    </aside>
+  </div>
+
+  <div class="debug-info">
+    Viewport Width: <span id="viewport-width"></span>px
+  </div>
+
+  <script>
+    // ビューポート幅の表示（デバッグ用）
+    function updateViewportWidth() {
+      const width = window.innerWidth;
+      document.getElementById('viewport-width').textContent = width;
+    }
+
+    updateViewportWidth();
+    window.addEventListener('resize', updateViewportWidth);
+  </script>
+</body>
+</html>

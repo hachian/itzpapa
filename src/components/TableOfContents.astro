@@ -1,0 +1,121 @@
+---
+export interface Heading {
+  depth: number;
+  text: string;
+  slug: string;
+}
+
+export interface Props {
+  headings: Heading[];
+}
+
+const { headings } = Astro.props;
+
+// H2とH3のみをフィルタリング（depth 2と3）
+const tocHeadings = headings.filter(heading => heading.depth === 2 || heading.depth === 3);
+
+// 見出しが存在しない場合は何も表示しない (EDGE-001)
+const shouldShowToc = tocHeadings.length > 0;
+
+// 階層構造の構築
+interface TocItem {
+  id: string;
+  text: string;
+  level: number;
+  href: string;
+}
+
+const tocItems: TocItem[] = tocHeadings.map(heading => ({
+  id: heading.slug,
+  text: heading.text || '無題のセクション', // EDGE-003: 空の見出しテキストへの対応
+  level: heading.depth,
+  href: `#${heading.slug}`
+}));
+---
+
+{shouldShowToc && (
+  <nav class="table-of-contents" aria-label="目次">
+    <h2 class="toc-title">目次</h2>
+    <ul class="toc-list">
+      {tocItems.map((item) => (
+        <li class={`toc-item toc-level-${item.level}`}>
+          <a
+            href={item.href}
+            class="toc-link"
+            aria-label={`${item.text}へ移動`}
+          >
+            {item.text}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+)}
+
+<style>
+  .table-of-contents {
+    padding: 1rem;
+    background-color: var(--gray-light, #f6f6f7);
+    border-radius: 8px;
+    font-size: 0.9rem;
+  }
+
+  .toc-title {
+    margin: 0 0 1rem 0;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: var(--gray-dark, #1a1a1a);
+  }
+
+  .toc-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .toc-item {
+    margin: 0.5rem 0;
+    line-height: 1.6;
+  }
+
+  /* H2レベルの目次項目 */
+  .toc-level-2 {
+    padding-left: 0;
+  }
+
+  /* H3レベルの目次項目（インデント） */
+  .toc-level-3 {
+    padding-left: 1.5rem;
+  }
+
+  .toc-link {
+    color: var(--gray-dark, #1a1a1a);
+    text-decoration: none;
+    display: block;
+    padding: 0.25rem 0;
+    transition: color 0.2s ease;
+  }
+
+  .toc-link:hover {
+    color: var(--accent, #7611a6);
+  }
+
+  .toc-link:focus {
+    outline: 2px solid var(--accent, #7611a6);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* アクセシビリティ: キーボードフォーカス時のビジュアル */
+  .toc-link:focus-visible {
+    outline: 2px solid var(--accent, #7611a6);
+    outline-offset: 2px;
+  }
+
+  /* プリント時のスタイル */
+  @media print {
+    .table-of-contents {
+      display: none;
+    }
+  }
+</style>

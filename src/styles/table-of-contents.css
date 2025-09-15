@@ -1,0 +1,144 @@
+/* 目次機能のグリッドレイアウトスタイル */
+
+/* ブログ記事のグリッドコンテナ */
+.blog-layout-with-toc {
+  display: grid;
+  grid-template-columns: 1fr 250px;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  align-items: start;
+}
+
+/* メインコンテンツエリア */
+.blog-content {
+  min-width: 0; /* グリッドアイテムのオーバーフロー防止 */
+}
+
+/* 目次サイドバーエリア */
+.toc-sidebar {
+  position: sticky;
+  top: 2rem;
+  height: fit-content;
+  max-height: calc(100vh - 4rem);
+  overflow-y: auto;
+}
+
+/* モバイルレスポンシブ（768px以下） */
+@media (max-width: 768px) {
+  .blog-layout-with-toc {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  /* モバイルで目次を上部に移動 */
+  .toc-sidebar {
+    order: -1;
+    position: relative;
+    top: 0;
+    max-height: none;
+    margin-bottom: 2rem;
+  }
+
+  .blog-content {
+    order: 1;
+  }
+
+  /* モバイルで目次を折りたたみ可能にする（オプション） */
+  .table-of-contents {
+    border: 1px solid var(--gray-light, #e0e0e0);
+  }
+}
+
+/* タブレット用の中間ブレークポイント */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .blog-layout-with-toc {
+    grid-template-columns: 1fr 200px;
+    gap: 1.5rem;
+  }
+}
+
+/* 大画面用の調整 */
+@media (min-width: 1440px) {
+  .blog-layout-with-toc {
+    grid-template-columns: 1fr 300px;
+    max-width: 1400px;
+  }
+}
+
+/* プリント時のスタイル */
+@media print {
+  .blog-layout-with-toc {
+    display: block;
+  }
+
+  .toc-sidebar {
+    display: none;
+  }
+
+  .blog-content {
+    width: 100%;
+  }
+}
+
+/* スクロールバーのスタイリング（オプション） */
+.toc-sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.toc-sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.toc-sidebar::-webkit-scrollbar-thumb {
+  background: var(--gray-light, #d0d0d0);
+  border-radius: 3px;
+}
+
+.toc-sidebar::-webkit-scrollbar-thumb:hover {
+  background: var(--gray, #a0a0a0);
+}
+
+/* スムーズスクロールの有効化 */
+html {
+  scroll-behavior: smooth;
+}
+
+/* フォーカスインジケーター強化 */
+.toc-link:focus-visible {
+  outline: 2px solid var(--accent, #7611a6);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* 目次コンテナの追加スタイル調整 */
+.table-of-contents {
+  background-color: var(--gray-light, #f9f9fa);
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.2s ease;
+}
+
+.table-of-contents:hover {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* ダークモード対応（オプション） */
+@media (prefers-color-scheme: dark) {
+  .table-of-contents {
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .toc-link {
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .toc-link:hover {
+    color: var(--accent-light, #9933cc);
+  }
+}
