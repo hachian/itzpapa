@@ -36,20 +36,22 @@ const tocItems: TocItem[] = tocHeadings.map(heading => ({
 {shouldShowToc && (
   <nav class="table-of-contents" aria-label="目次">
     <h2 class="toc-title">目次</h2>
-    <ul class="toc-list">
-      {tocItems.map((item) => (
-        <li class={`toc-item toc-level-${item.level}`}>
-          <a
-            href={item.href}
-            class="toc-link"
-            data-id={item.id}
-            aria-label={`${item.text}へ移動`}
-          >
-            {item.text}
-          </a>
-        </li>
-      ))}
-    </ul>
+    <div class="toc-scroll-container">
+      <ul class="toc-list">
+        {tocItems.map((item) => (
+          <li class={`toc-item toc-level-${item.level}`}>
+            <a
+              href={item.href}
+              class="toc-link"
+              data-id={item.id}
+              aria-label={`${item.text}へ移動`}
+            >
+              {item.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
   </nav>
 )}
 
@@ -66,6 +68,35 @@ const tocItems: TocItem[] = tocHeadings.map(heading => ({
     font-size: 1.1rem;
     font-weight: bold;
     color: var(--gray-dark, #1a1a1a);
+  }
+
+  /* スクロールコンテナ */
+  .toc-scroll-container {
+    max-height: 800px;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+
+    /* カスタムスクロールバー */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(118, 17, 166, 0.3) transparent;
+  }
+
+  /* Webkitブラウザ用のスクロールバースタイル */
+  .toc-scroll-container::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .toc-scroll-container::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .toc-scroll-container::-webkit-scrollbar-thumb {
+    background-color: rgba(118, 17, 166, 0.3);
+    border-radius: 3px;
+  }
+
+  .toc-scroll-container::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(118, 17, 166, 0.5);
   }
 
   .toc-list {
