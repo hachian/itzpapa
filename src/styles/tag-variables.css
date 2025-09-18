@@ -156,11 +156,30 @@ html.dark {
   --tag-hierarchical-dark-hover-border: var(--tag-hover-border);
 }
 
-/* メディアクエリブレークポイント 
+/* メディアクエリブレークポイント
  * 注: CSS変数はメディアクエリ内で直接使用できないため、
  * 各CSSファイルで直接値を指定する必要があります。
- * 以下は参照用の値です：
- * - モバイル: max-width: 640px
- * - タブレット: max-width: 768px  
+ * 統一ブレークポイント（参照用）：
+ * - モバイル: max-width: 767px
+ * - タブレット: min-width: 768px and max-width: 1023px
  * - デスクトップ: min-width: 1024px
  */
+
+/* レスポンシブ用CSS変数 */
+:root {
+  /* レイアウト幅 */
+  --responsive-max-width: 720px;
+  --responsive-content-padding: 1rem;
+
+  /* ブレークポイント参照値（JS用） */
+  --breakpoint-mobile: 767px;
+  --breakpoint-tablet: 1023px;
+  --breakpoint-desktop: 1024px;
+
+  /* グリッドレイアウト */
+  --responsive-grid-gap: 1rem;
+  --responsive-sidebar-width: minmax(200px, 300px);
+
+  /* タッチターゲットサイズ */
+  --touch-target-min: 44px;
+}

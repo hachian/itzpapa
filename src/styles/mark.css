@@ -77,8 +77,8 @@ html.dark mark.highlight-pink {
   }
 }
 
-/* Responsive adjustments */
-@media (max-width: 720px) {
+/* Responsive adjustments - 統一ブレークポイント（767px以下） */
+@media (max-width: 767px) {
   mark {
     /* Slightly larger touch targets on mobile */
     padding: 0.15em 0.3em;

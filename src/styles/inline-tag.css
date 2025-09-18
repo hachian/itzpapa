@@ -68,11 +68,14 @@ blockquote .tag:where(a) {
   vertical-align: baseline;
 }
 
-/* レスポンシブ対応 */
-@media (max-width: 640px) {
+/* レスポンシブ対応 - 統一ブレークポイント（767px以下） */
+@media (max-width: 767px) {
   .tag:where(a) {
     font-size: var(--tag-mobile-font-size);
     padding: var(--tag-mobile-padding-y) var(--tag-mobile-padding-x);
+    /* タッチターゲットサイズ確保 */
+    min-height: 44px;
+    min-width: auto;
   }
 }
 

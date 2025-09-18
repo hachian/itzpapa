@@ -59,8 +59,8 @@ body {
 	line-height: 1.7;
 }
 main {
-	width: 720px;
-	max-width: calc(100% - 2em);
+	max-width: 720px;
+	width: calc(100% - 2em);
 	margin: auto;
 	padding: 3em 1em;
 }
@@ -119,6 +119,27 @@ img {
 	max-width: 100%;
 	height: auto;
 	border-radius: 8px;
+	display: block;
+}
+
+/* 画像エラー時の代替表示 */
+img:not([src]),
+img[src=""],
+img:not([alt]) {
+	position: relative;
+	min-height: 100px;
+	background: #f0f0f0;
+}
+
+img:not([src])::before,
+img[src=""]::before {
+	content: "画像を読み込めません";
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	color: #666;
+	font-size: 14px;
 }
 code {
 	padding: 2px 5px;
@@ -144,12 +165,49 @@ hr {
 	border: none;
 	border-top: 1px solid rgb(var(--gray-light));
 }
-@media (max-width: 720px) {
+/* モバイル対応 */
+@media (max-width: 767px) {
 	body {
 		font-size: 18px;
 	}
 	main {
 		padding: 1em;
+		width: calc(100% - 2em);
+	}
+}
+
+/* タブレット対応 */
+@media (min-width: 768px) and (max-width: 1023px) {
+	main {
+		padding: 2em 1em;
+		width: calc(100% - 2em);
+	}
+}
+
+/* デスクトップ対応 */
+@media (min-width: 1024px) {
+	main {
+		max-width: 720px;
+	}
+}
+
+/* 極小画面対応 (320px未満) */
+@media (max-width: 319px) {
+	main {
+		padding: 0.5em;
+		width: calc(100% - 1em);
+		min-width: 280px;
+	}
+	body {
+		font-size: 16px;
+		overflow-x: auto;
+	}
+}
+
+/* 極大画面対応 (1920px以上) */
+@media (min-width: 1920px) {
+	main {
+		max-width: 960px;
 	}
 }
 
