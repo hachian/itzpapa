@@ -11,6 +11,7 @@ import TagList from '../components/TagList.astro';
 import TableOfContents from '../components/TableOfContents.astro';
 // import TableOfContentsWithActive from '../components/TableOfContentsWithActive.astro';
 import '../styles/table-of-contents.css';
+import '../styles/callout.css';
 
 type Props = CollectionEntry<'blog'>['data'] & {
   headings?: Array<{ depth: number; text: string; slug: string }>;
@@ -24,22 +25,51 @@ const { title, description, pubDate, updatedDate, heroImage, tags, headings = []
 		<BaseHead title={title} description={description} />
 		<style>
 			main {
-				width: calc(100% - 2em);
+				width: 100%;
 				max-width: 100%;
 				margin: 0;
+				padding: 0;
 			}
 			.hero-image {
 				width: 100%;
+				max-width: 960px;
+				margin: 0 auto;
+				overflow: hidden;
 			}
 			.hero-image img {
 				display: block;
+				width: 100%;
+				max-width: 100%;
+				height: auto;
 				margin: 0 auto;
 				border-radius: 12px;
 				box-shadow: var(--box-shadow);
+				object-fit: cover;
+				aspect-ratio: 2 / 1;
+			}
+
+			/* 画像読み込み中のスケルトン表示 */
+			.hero-image img:not([src]) {
+				background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+				background-size: 200% 100%;
+				animation: loading 1.5s ease-in-out infinite;
+			}
+
+			@keyframes loading {
+				0% { background-position: 200% 0; }
+				100% { background-position: -200% 0; }
+			}
+
+			/* モバイル対応 */
+			@media (max-width: 767px) {
+				.hero-image img {
+					aspect-ratio: 16 / 9;
+					border-radius: 8px;
+				}
 			}
 			.prose {
-				width: 720px;
-				max-width: calc(100% - 2em);
+				max-width: 720px;
+				width: calc(100% - 2em);
 				margin: auto;
 				padding: 1em;
 				color: rgb(var(--gray-dark));
@@ -73,6 +103,27 @@ const { title, description, pubDate, updatedDate, heroImage, tags, headings = []
 				margin-bottom: 0.5em;
 				font-size: 1.1em;
 				color: rgb(var(--gray-dark));
+			}
+
+			/* レスポンシブ対応 */
+			@media (max-width: 767px) {
+				.prose {
+					width: 100%;
+					padding: 1em;
+				}
+			}
+
+			/* 目次ありの場合のレスポンシブ調整 */
+			.blog-layout-with-toc .prose {
+				max-width: 100%;
+				width: 100%;
+				padding: 0;
+			}
+
+			@media (min-width: 768px) {
+				.blog-layout-with-toc .blog-content {
+					padding: 0 1em;
+				}
 			}
 		</style>
 	</head>

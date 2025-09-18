@@ -1,0 +1,25 @@
+/* Callout レスポンシブ対応 */
+
+/* より具体的なセレクターで特異性を高める */
+.prose .callout {
+  /* 横スクロール防止 */
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* モバイル対応 - !important を除去し、特異性で解決 */
+@media (max-width: 767px) {
+  .prose .callout {
+    /* モバイルでパディングを調整 */
+    padding: 8px 8px 8px 16px;
+    margin: 16px 0;
+  }
+}
+
+/* タブレット・デスクトップ対応 */
+@media (min-width: 768px) {
+  .prose .callout {
+    /* 上位画面サイズでも横スクロール防止を継続 */
+    max-width: 100%;
+  }
+}
