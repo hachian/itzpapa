@@ -29,31 +29,191 @@
   overflow-wrap: break-word; /* 長いタイトルの折り返し */
 }
 
-/* モバイルレスポンシブ（767px以下） - 既存の768px基準を維持 */
+/* モバイルレスポンシブ（767px以下） - 右下折りたたみ式 */
 @media (max-width: 767px) {
   .blog-layout-with-toc {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+    display: block;
     padding: 1rem;
   }
 
-  /* モバイルで目次を上部に移動 */
-  .toc-sidebar {
-    order: -1;
-    position: relative;
-    top: 0;
-    max-height: none;
-    margin-bottom: 2rem;
-  }
-
   .blog-content {
-    order: 1;
+    width: 100%;
   }
 
-  /* モバイルで目次を折りたたみ可能にする（オプション） */
-  .table-of-contents {
-    border: 1px solid var(--gray-light, #e0e0e0);
+  /* 目次を右下に固定配置 - より洗練されたデザイン */
+  .toc-sidebar {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    top: auto;
+    left: auto;
+    z-index: 1000;
+    width: 320px;
+    max-width: calc(100vw - 40px);
+    max-height: 75vh;
+    background: rgba(255, 255, 255, 0.97);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.12),
+      0 0 0 1px rgba(255, 255, 255, 0.05);
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: bottom right;
+  }
+
+  /* 初期状態（折りたたみ）- 目次ボタンのみ表示 */
+  .toc-sidebar:not(.expanded) {
+    height: 56px;
+    transform: scale(0.95);
+  }
+
+  /* 展開状態 */
+  .toc-sidebar.expanded {
+    height: auto;
+    max-height: 75vh;
+    transform: scale(1);
+    box-shadow:
+      0 16px 48px rgba(0, 0, 0, 0.18),
+      0 0 0 1px rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.98);
+  }
+
+  /* 折りたたみボタン - より洗練されたスタイル */
+  .toc-sidebar::before {
+    content: '📋 目次';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 56px;
+    background: linear-gradient(135deg, var(--accent, #7611a6), #8e1aa8);
+    color: white;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    user-select: none;
+    z-index: 1001;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    letter-spacing: 0.3px;
+    box-shadow: 0 2px 8px rgba(118, 17, 166, 0.3);
+  }
+
+  /* 展開時のボタン変更 */
+  .toc-sidebar.expanded::before {
+    content: '📖 目次';
+    border-radius: 16px 16px 0 0;
+    background: linear-gradient(135deg, var(--accent, #7611a6), #8e1aa8);
+    box-shadow: 0 2px 8px rgba(118, 17, 166, 0.2);
+  }
+
+  /* ホバー効果 - より滑らかな変化 */
+  .toc-sidebar::before:hover {
+    background: linear-gradient(135deg, #8e1aa8, #a020b0);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(118, 17, 166, 0.4);
+  }
+
+  /* アクティブ効果 */
+  .toc-sidebar::before:active {
+    transform: translateY(0);
+    transition: transform 0.1s ease;
+  }
+
+  /* 目次コンテンツのパディング調整 - 洗練されたスタイル */
+  .toc-sidebar .table-of-contents {
+    margin-top: 56px;
+    border: none;
+    border-radius: 0 0 16px 16px;
+    max-height: calc(75vh - 56px);
+    overflow-y: auto;
+    background: transparent;
+    padding: 24px 20px 20px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
+  }
+
+  /* 展開時のコンテンツ表示 - 滑らかなアニメーション */
+  .toc-sidebar.expanded .table-of-contents {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  /* 目次タイトルの調整 */
+  .toc-sidebar .table-of-contents .toc-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent, #7611a6);
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid rgba(118, 17, 166, 0.1);
+  }
+
+  /* スクロールコンテナの高さ調整 */
+  .toc-sidebar .toc-scroll-container {
+    max-height: calc(75vh - 140px);
+    padding-right: 8px;
+  }
+
+  /* より洗練されたスクロールバー */
+  .toc-sidebar .toc-scroll-container::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .toc-sidebar .toc-scroll-container::-webkit-scrollbar-track {
+    background: rgba(118, 17, 166, 0.05);
+    border-radius: 2px;
+  }
+
+  .toc-sidebar .toc-scroll-container::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, var(--accent, #7611a6), #8e1aa8);
+    border-radius: 2px;
+  }
+
+  .toc-sidebar .toc-scroll-container::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(to bottom, #8e1aa8, #a020b0);
+  }
+
+  /* 目次リンクの改善 */
+  .toc-sidebar .toc-link {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    position: relative;
+  }
+
+  .toc-sidebar .toc-link:hover {
+    background: rgba(118, 17, 166, 0.08);
+    color: var(--accent, #7611a6);
+    transform: translateX(4px);
+  }
+
+  .toc-sidebar .toc-link.active {
+    background: rgba(118, 17, 166, 0.12);
+    color: var(--accent, #7611a6);
+    font-weight: 600;
+  }
+
+  .toc-sidebar .toc-link.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 60%;
+    background: linear-gradient(to bottom, var(--accent, #7611a6), #8e1aa8);
+    border-radius: 0 2px 2px 0;
   }
 }
 

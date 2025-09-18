@@ -127,4 +127,92 @@ const { headings } = Astro.props;
       console.warn('IntersectionObserver not supported');
     }
   });
+
+  // モバイル用折りたたみ機能
+  document.addEventListener('DOMContentLoaded', () => {
+    const tocSidebar = document.querySelector('.toc-sidebar');
+    if (!tocSidebar) return;
+
+    // 折りたたみトグル機能
+    const toggleToc = () => {
+      tocSidebar.classList.toggle('expanded');
+    };
+
+    // ::before疑似要素をクリック可能にするため、要素全体にクリックハンドラを追加
+    const handleClick = (event) => {
+      const rect = tocSidebar.getBoundingClientRect();
+      const isClickOnButton = event.clientY <= rect.top + 56; // ボタンエリア（高さ56px）
+
+      if (isClickOnButton) {
+        event.preventDefault();
+        event.stopPropagation();
+        toggleToc();
+      }
+    };
+
+    // タッチデバイス対応
+    const handleTouch = (event) => {
+      const rect = tocSidebar.getBoundingClientRect();
+      const touch = event.touches[0] || event.changedTouches[0];
+      const isClickOnButton = touch.clientY <= rect.top + 56;
+
+      if (isClickOnButton) {
+        event.preventDefault();
+        event.stopPropagation();
+        toggleToc();
+      }
+    };
+
+    // メディアクエリで767px以下の場合のみイベントリスナを追加
+    const mediaQuery = window.matchMedia('(max-width: 767px)');
+
+    const updateEventListeners = () => {
+      if (mediaQuery.matches) {
+        // モバイル表示時のみイベントリスナを追加
+        tocSidebar.addEventListener('click', handleClick);
+        tocSidebar.addEventListener('touchend', handleTouch);
+        tocSidebar.style.cursor = 'pointer';
+      } else {
+        // デスクトップ表示時はイベントリスナを削除
+        tocSidebar.removeEventListener('click', handleClick);
+        tocSidebar.removeEventListener('touchend', handleTouch);
+        tocSidebar.style.cursor = 'auto';
+        // 展開状態をリセット
+        tocSidebar.classList.remove('expanded');
+      }
+    };
+
+    // 初期設定
+    updateEventListeners();
+
+    // 画面サイズ変更時の処理
+    mediaQuery.addEventListener('change', updateEventListeners);
+
+    // キーボードアクセシビリティ
+    tocSidebar.addEventListener('keydown', (event) => {
+      if (mediaQuery.matches && (event.key === 'Enter' || event.key === ' ')) {
+        const rect = tocSidebar.getBoundingClientRect();
+        const isOnButton = event.target === tocSidebar; // フォーカスがボタンエリア
+
+        if (isOnButton) {
+          event.preventDefault();
+          toggleToc();
+        }
+      }
+    });
+
+    // アクセシビリティ属性の設定
+    if (mediaQuery.matches) {
+      tocSidebar.setAttribute('role', 'button');
+      tocSidebar.setAttribute('aria-label', '目次の表示/非表示を切り替え');
+      tocSidebar.setAttribute('tabindex', '0');
+    }
+
+    // クリーンアップ（ページ遷移時）
+    document.addEventListener('astro:before-swap', () => {
+      mediaQuery.removeEventListener('change', updateEventListeners);
+      tocSidebar.removeEventListener('click', handleClick);
+      tocSidebar.removeEventListener('touchend', handleTouch);
+    });
+  });
 </script>
