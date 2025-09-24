@@ -25,6 +25,9 @@ pnpm-debug.log*
 # claude code settings
 .claude/
 
+# serena files
+.serena/
+
 # test reports
 test/test-report.txt
 test/test-report.json
