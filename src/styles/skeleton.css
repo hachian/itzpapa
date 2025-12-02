@@ -1,0 +1,187 @@
+/**
+ * Skeleton Loader Styles
+ *
+ * コンテンツ読み込み中のスケルトンローダー
+ *
+ * Requirements: 4.6
+ */
+
+/* =========================================
+   Base Skeleton
+   ========================================= */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-gray-200) 25%,
+    var(--color-gray-100) 50%,
+    var(--color-gray-200) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+  border-radius: var(--radius-md);
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* =========================================
+   Skeleton Variants
+   ========================================= */
+
+/* Text line skeleton */
+.skeleton--text {
+  height: 1em;
+  margin-bottom: var(--space-2);
+}
+
+.skeleton--text:last-child {
+  width: 80%;
+}
+
+/* Title skeleton */
+.skeleton--title {
+  height: 1.5em;
+  width: 60%;
+  margin-bottom: var(--space-3);
+}
+
+/* Heading skeleton (h2) */
+.skeleton--heading {
+  height: 2em;
+  width: 50%;
+  margin-bottom: var(--space-4);
+}
+
+/* Image/thumbnail skeleton */
+.skeleton--image {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  border-radius: var(--radius-lg);
+}
+
+/* Avatar skeleton */
+.skeleton--avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
+}
+
+.skeleton--avatar-sm {
+  width: 32px;
+  height: 32px;
+}
+
+.skeleton--avatar-lg {
+  width: 64px;
+  height: 64px;
+}
+
+/* Button skeleton */
+.skeleton--button {
+  height: var(--touch-target-min);
+  width: 120px;
+  border-radius: var(--radius-full);
+}
+
+/* Card skeleton */
+.skeleton--card {
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+}
+
+/* Tag skeleton */
+.skeleton--tag {
+  height: 1.5em;
+  width: 80px;
+  border-radius: var(--radius-full);
+  display: inline-block;
+}
+
+/* =========================================
+   Skeleton Group
+   ========================================= */
+.skeleton-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.skeleton-group--horizontal {
+  flex-direction: row;
+  gap: var(--space-3);
+}
+
+/* =========================================
+   Skeleton Card Example
+   ========================================= */
+.skeleton-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+}
+
+.skeleton-card__thumbnail {
+  aspect-ratio: 16 / 9;
+  background: linear-gradient(
+    90deg,
+    var(--color-gray-200) 25%,
+    var(--color-gray-100) 50%,
+    var(--color-gray-200) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+}
+
+.skeleton-card__content {
+  padding: var(--space-6);
+}
+
+/* =========================================
+   Dark Mode Adjustments
+   ========================================= */
+html.dark .skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-gray-700) 25%,
+    var(--color-gray-600) 50%,
+    var(--color-gray-700) 75%
+  );
+  background-size: 200% 100%;
+}
+
+html.dark .skeleton-card {
+  border-color: var(--color-gray-700);
+}
+
+html.dark .skeleton-card__thumbnail {
+  background: linear-gradient(
+    90deg,
+    var(--color-gray-700) 25%,
+    var(--color-gray-600) 50%,
+    var(--color-gray-700) 75%
+  );
+  background-size: 200% 100%;
+}
+
+/* =========================================
+   Reduced Motion
+   ========================================= */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton,
+  .skeleton-card__thumbnail {
+    animation: none;
+    background: var(--color-gray-200);
+  }
+
+  html.dark .skeleton,
+  html.dark .skeleton-card__thumbnail {
+    background: var(--color-gray-700);
+  }
+}

@@ -4,6 +4,9 @@
   License MIT: https://github.com/HermanMartinus/bearblog/blob/master/LICENSE.md
  */
 
+/* Design System Foundation */
+@import './design-tokens.css';
+
 /* Import rehype-callouts Obsidian theme */
 @import 'rehype-callouts/theme/obsidian';
 
@@ -21,6 +24,11 @@
 
 /* Import mark highlight styles */
 @import './mark.css';
+
+/* Import component styles */
+@import './card.css';
+@import './button.css';
+@import './skeleton.css';
 
 :root {
 	--box-shadow:

@@ -1,14 +1,17 @@
 /**
  * タグスタイル統一用CSS変数定義
  * TASK-001: CSS変数の定義と整理
- * 
+ *
  * すべてのタグコンポーネントで使用される統一スタイル変数
+ *
+ * Note: design-tokens.cssで定義されたOKLCHベースのデザイントークンを参照
  */
 
 :root {
-  /* グローバルカラーシステム - 統一管理 */
-  --accent: #2337ff;
-  --accent-dark: #000d8a;
+  /* グローバルカラーシステム - design-tokensと統合
+   * レガシー互換性のためrgb形式も維持 */
+  --accent: var(--color-link, #2337ff);
+  --accent-dark: var(--color-link-hover, #000d8a);
   --black: 15, 18, 25;
   --gray: 96, 115, 159;
   --gray-light: 229, 233, 240;
@@ -48,14 +51,14 @@
   --tag-count-font-weight: 600;
   --tag-count-min-width: 1.2em;
   
-  /* アニメーション */
-  --tag-transition-duration: 0.2s;
-  --tag-transition-easing: ease;
+  /* アニメーション - design-tokensを参照 */
+  --tag-transition-duration: var(--duration-fast, 0.2s);
+  --tag-transition-easing: var(--easing-default, ease);
   --tag-hover-transform: translateY(-1px);
-  --tag-hover-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  
-  /* アクセシビリティ */
-  --tag-min-tap-size: 44px;
+  --tag-hover-shadow: var(--shadow-sm, 0 2px 4px rgba(0, 0, 0, 0.1));
+
+  /* アクセシビリティ - design-tokensを参照 */
+  --tag-min-tap-size: var(--touch-target-min, 44px);
   
   /* Mark要素用グラデーション変数 */
   --mark-bg: rgba(255, 235, 59, 0.6);
@@ -159,27 +162,29 @@ html.dark {
 /* メディアクエリブレークポイント
  * 注: CSS変数はメディアクエリ内で直接使用できないため、
  * 各CSSファイルで直接値を指定する必要があります。
- * 統一ブレークポイント（参照用）：
- * - モバイル: max-width: 767px
- * - タブレット: min-width: 768px and max-width: 1023px
- * - デスクトップ: min-width: 1024px
+ *
+ * 統一ブレークポイント（design-tokens.cssで定義）：
+ * - sm (モバイル): 480px
+ * - md (タブレット): 768px
+ * - lg (デスクトップ): 1024px
+ * - xl (大画面): 1440px
  */
 
-/* レスポンシブ用CSS変数 */
+/* レスポンシブ用CSS変数 - design-tokensを参照 */
 :root {
-  /* レイアウト幅 */
-  --responsive-max-width: 720px;
-  --responsive-content-padding: 1rem;
+  /* レイアウト幅 - design-tokensと統合 */
+  --responsive-max-width: var(--content-max-width, 720px);
+  --responsive-content-padding: var(--content-padding, 1rem);
 
-  /* ブレークポイント参照値（JS用） */
-  --breakpoint-mobile: 767px;
-  --breakpoint-tablet: 1023px;
-  --breakpoint-desktop: 1024px;
+  /* ブレークポイント参照値（JS用）- design-tokensと統合 */
+  --breakpoint-mobile: var(--breakpoint-sm, 480px);
+  --breakpoint-tablet: var(--breakpoint-md, 768px);
+  --breakpoint-desktop: var(--breakpoint-lg, 1024px);
 
   /* グリッドレイアウト */
-  --responsive-grid-gap: 1rem;
+  --responsive-grid-gap: var(--space-4, 1rem);
   --responsive-sidebar-width: minmax(200px, 300px);
 
-  /* タッチターゲットサイズ */
-  --touch-target-min: 44px;
+  /* タッチターゲットサイズ - design-tokensで定義済み、フォールバック */
+  /* --touch-target-min は design-tokens.css で定義 */
 }

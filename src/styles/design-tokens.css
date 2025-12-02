@@ -1,0 +1,280 @@
+/**
+ * Design Tokens - デザインシステム基盤
+ *
+ * OKLCHベースの統一カラーシステム、スペーシング、タイポグラフィ、
+ * アニメーション、シャドウなどのデザイントークンを定義
+ *
+ * Requirements: 1.1-1.5, 3.1-3.2, 7.1, 7.3, 8.1-8.2, 8.4
+ */
+
+/* =========================================
+   OKLCH Fallback for older browsers
+   ========================================= */
+@supports not (color: oklch(0% 0 0)) {
+  :root {
+    /* Primary Purple Palette - Hex Fallbacks */
+    --color-primary-50: #faf5ff;
+    --color-primary-100: #f3e8ff;
+    --color-primary-200: #e9d5ff;
+    --color-primary-300: #d8b4fe;
+    --color-primary-400: #c084fc;
+    --color-primary-500: #7c3aed;
+    --color-primary-600: #6d28d9;
+    --color-primary-700: #5b21b6;
+    --color-primary-800: #4c1d95;
+    --color-primary-900: #3b0764;
+
+    /* Neutral Gray Palette - Hex Fallbacks */
+    --color-gray-50: #fafafa;
+    --color-gray-100: #f4f4f5;
+    --color-gray-200: #e4e4e7;
+    --color-gray-300: #d4d4d8;
+    --color-gray-400: #a1a1aa;
+    --color-gray-500: #71717a;
+    --color-gray-600: #52525b;
+    --color-gray-700: #3f3f46;
+    --color-gray-800: #27272a;
+    --color-gray-900: #18181b;
+
+    /* Semantic Colors - Hex Fallbacks */
+    --color-background: #fafafa;
+    --color-surface: #ffffff;
+    --color-text-primary: #18181b;
+    --color-text-secondary: #52525b;
+    --color-accent: #7c3aed;
+
+    /* Shadows - RGBA Fallbacks */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1), 0 8px 10px rgba(0, 0, 0, 0.04);
+  }
+}
+
+/* =========================================
+   OKLCH Color System
+   ========================================= */
+:root {
+  /* Primary Purple Palette (OKLCH)
+   * Base: #7c3aed → oklch(55% 0.24 293)
+   * Lightness varies from 97% (50) to 25% (900)
+   */
+  --color-primary-50: oklch(97% 0.02 293);
+  --color-primary-100: oklch(94% 0.05 293);
+  --color-primary-200: oklch(88% 0.10 293);
+  --color-primary-300: oklch(78% 0.16 293);
+  --color-primary-400: oklch(68% 0.20 293);
+  --color-primary-500: oklch(55% 0.24 293);
+  --color-primary-600: oklch(48% 0.22 293);
+  --color-primary-700: oklch(40% 0.19 293);
+  --color-primary-800: oklch(32% 0.15 293);
+  --color-primary-900: oklch(25% 0.12 293);
+
+  /* Neutral Gray Palette (OKLCH)
+   * Subtle purple hue (280) for cohesion with primary
+   */
+  --color-gray-50: oklch(98% 0.005 280);
+  --color-gray-100: oklch(96% 0.008 280);
+  --color-gray-200: oklch(92% 0.010 280);
+  --color-gray-300: oklch(85% 0.012 280);
+  --color-gray-400: oklch(70% 0.015 280);
+  --color-gray-500: oklch(55% 0.015 280);
+  --color-gray-600: oklch(45% 0.015 280);
+  --color-gray-700: oklch(35% 0.015 280);
+  --color-gray-800: oklch(25% 0.012 280);
+  --color-gray-900: oklch(15% 0.010 280);
+
+  /* Semantic Colors */
+  --color-background: var(--color-gray-50);
+  --color-surface: oklch(100% 0 0);
+  --color-text-primary: var(--color-gray-900);
+  --color-text-secondary: var(--color-gray-600);
+  --color-accent: var(--color-primary-500);
+  --color-link: var(--color-primary-600);
+  --color-link-hover: var(--color-primary-700);
+
+  /* =========================================
+     Spacing Scale (4px base)
+     ========================================= */
+  --space-0: 0;
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.25rem;   /* 20px */
+  --space-6: 1.5rem;    /* 24px */
+  --space-8: 2rem;      /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+  --space-20: 5rem;     /* 80px */
+  --space-24: 6rem;     /* 96px */
+
+  /* =========================================
+     Typography Scale
+     ========================================= */
+  --font-size-xs: 0.75rem;    /* 12px */
+  --font-size-sm: 0.875rem;   /* 14px */
+  --font-size-base: 1rem;     /* 16px */
+  --font-size-lg: 1.125rem;   /* 18px */
+  --font-size-xl: 1.25rem;    /* 20px */
+  --font-size-2xl: 1.5rem;    /* 24px */
+  --font-size-3xl: 1.875rem;  /* 30px */
+  --font-size-4xl: 2.25rem;   /* 36px */
+  --font-size-5xl: 3rem;      /* 48px */
+
+  /* Line Heights */
+  --line-height-tight: 1.25;
+  --line-height-snug: 1.375;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.625;
+  --line-height-loose: 1.85;  /* Japanese text optimal */
+
+  /* Font Weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Font Families */
+  --font-family-sans: "Noto Sans JP", "Hiragino Kaku Gothic Pro", "Meiryo", sans-serif;
+  --font-family-display: "Atkinson", var(--font-family-sans);
+  --font-family-mono: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
+
+  /* =========================================
+     Animation Tokens
+     ========================================= */
+  --duration-instant: 0ms;
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  --duration-slow: 500ms;
+  --duration-slower: 700ms;
+
+  --easing-default: cubic-bezier(0.4, 0, 0.2, 1);
+  --easing-in: cubic-bezier(0.4, 0, 1, 1);
+  --easing-out: cubic-bezier(0, 0, 0.2, 1);
+  --easing-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --easing-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* =========================================
+     Shadows (OKLCH)
+     ========================================= */
+  --shadow-sm: 0 1px 2px oklch(0% 0 0 / 0.05);
+  --shadow-md: 0 4px 6px oklch(0% 0 0 / 0.07), 0 2px 4px oklch(0% 0 0 / 0.06);
+  --shadow-lg: 0 10px 15px oklch(0% 0 0 / 0.1), 0 4px 6px oklch(0% 0 0 / 0.05);
+  --shadow-xl: 0 20px 25px oklch(0% 0 0 / 0.1), 0 8px 10px oklch(0% 0 0 / 0.04);
+  --shadow-2xl: 0 25px 50px oklch(0% 0 0 / 0.25);
+  --shadow-inner: inset 0 2px 4px oklch(0% 0 0 / 0.06);
+
+  /* =========================================
+     Border Radius
+     ========================================= */
+  --radius-none: 0;
+  --radius-sm: 0.25rem;   /* 4px */
+  --radius-md: 0.5rem;    /* 8px */
+  --radius-lg: 0.75rem;   /* 12px */
+  --radius-xl: 1rem;      /* 16px */
+  --radius-2xl: 1.5rem;   /* 24px */
+  --radius-full: 9999px;
+
+  /* =========================================
+     Focus & Accessibility
+     ========================================= */
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+  --focus-ring-color: var(--color-primary-500);
+  --touch-target-min: 44px;
+
+  /* =========================================
+     Breakpoints (Reference values for JS/documentation)
+     CSS media queries must use literal values
+     ========================================= */
+  --breakpoint-sm: 480px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1440px;
+
+  /* =========================================
+     Layout
+     ========================================= */
+  --content-max-width: 720px;
+  --content-wide-max-width: 960px;
+  --content-padding: var(--space-4);
+  --header-height: 64px;
+
+  /* =========================================
+     Z-Index Scale
+     ========================================= */
+  --z-base: 0;
+  --z-dropdown: 10;
+  --z-sticky: 50;
+  --z-fixed: 100;
+  --z-modal-backdrop: 200;
+  --z-modal: 300;
+  --z-tooltip: 400;
+}
+
+/* =========================================
+   Dark Mode
+   ========================================= */
+html.dark {
+  /* Semantic Colors - Dark Mode */
+  --color-background: var(--color-gray-900);
+  --color-surface: var(--color-gray-800);
+  --color-text-primary: var(--color-gray-100);
+  --color-text-secondary: var(--color-gray-400);
+
+  /* Primary Adjustment (increase lightness for dark backgrounds) */
+  --color-primary-500: oklch(65% 0.20 293);
+  --color-accent: var(--color-primary-500);
+  --color-link: oklch(72% 0.18 293);
+  --color-link-hover: oklch(78% 0.16 293);
+
+  /* Shadows - Darker and more diffused for dark mode */
+  --shadow-sm: 0 1px 2px oklch(0% 0 0 / 0.2);
+  --shadow-md: 0 4px 6px oklch(0% 0 0 / 0.25), 0 2px 4px oklch(0% 0 0 / 0.2);
+  --shadow-lg: 0 10px 15px oklch(0% 0 0 / 0.3), 0 4px 6px oklch(0% 0 0 / 0.2);
+  --shadow-xl: 0 20px 25px oklch(0% 0 0 / 0.35), 0 8px 10px oklch(0% 0 0 / 0.25);
+  --shadow-2xl: 0 25px 50px oklch(0% 0 0 / 0.5);
+  --shadow-inner: inset 0 2px 4px oklch(0% 0 0 / 0.2);
+
+  /* Focus ring adjustment for dark mode */
+  --focus-ring-color: oklch(72% 0.18 293);
+}
+
+/* =========================================
+   OS Dark Mode Preference (auto)
+   Applies when html doesn't have .light class
+   ========================================= */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --color-background: var(--color-gray-900);
+    --color-surface: var(--color-gray-800);
+    --color-text-primary: var(--color-gray-100);
+    --color-text-secondary: var(--color-gray-400);
+    --color-primary-500: oklch(65% 0.20 293);
+    --color-accent: var(--color-primary-500);
+    --color-link: oklch(72% 0.18 293);
+    --color-link-hover: oklch(78% 0.16 293);
+
+    --shadow-sm: 0 1px 2px oklch(0% 0 0 / 0.2);
+    --shadow-md: 0 4px 6px oklch(0% 0 0 / 0.25), 0 2px 4px oklch(0% 0 0 / 0.2);
+    --shadow-lg: 0 10px 15px oklch(0% 0 0 / 0.3), 0 4px 6px oklch(0% 0 0 / 0.2);
+    --shadow-xl: 0 20px 25px oklch(0% 0 0 / 0.35), 0 8px 10px oklch(0% 0 0 / 0.25);
+
+    --focus-ring-color: oklch(72% 0.18 293);
+  }
+}
+
+/* =========================================
+   Reduced Motion
+   ========================================= */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-instant: 0ms;
+    --duration-fast: 0ms;
+    --duration-normal: 0ms;
+    --duration-slow: 0ms;
+    --duration-slower: 0ms;
+  }
+}

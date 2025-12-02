@@ -1,0 +1,238 @@
+/**
+ * Card Component Styles
+ *
+ * 統一カードスタイル（ナビカード、記事カード共通）
+ *
+ * Requirements: 2.2, 2.3, 2.4, 4.2, 7.4
+ */
+
+/* =========================================
+   Base Card
+   ========================================= */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-sm);
+  transition:
+    transform var(--duration-normal) var(--easing-default),
+    box-shadow var(--duration-normal) var(--easing-default),
+    border-color var(--duration-normal) var(--easing-default);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-primary-300);
+}
+
+.card:focus-within {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* =========================================
+   Card Link (entire card clickable)
+   ========================================= */
+.card--link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.card--link:hover {
+  text-decoration: none;
+}
+
+/* =========================================
+   Card with Thumbnail
+   ========================================= */
+.card--has-thumbnail {
+  padding: 0;
+  overflow: hidden;
+}
+
+.card__thumbnail {
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  width: 100%;
+  display: block;
+  transition: transform var(--duration-normal) var(--easing-default);
+}
+
+.card--has-thumbnail:hover .card__thumbnail {
+  transform: scale(1.03);
+}
+
+.card__content {
+  padding: var(--space-6);
+}
+
+/* =========================================
+   Card Title
+   ========================================= */
+.card__title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-2) 0;
+  line-height: var(--line-height-tight);
+}
+
+.card__title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.card__title a:hover {
+  color: var(--color-primary-500);
+}
+
+/* =========================================
+   Card Description
+   ========================================= */
+.card__description {
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  margin: 0 0 var(--space-4) 0;
+  line-height: var(--line-height-relaxed);
+}
+
+/* =========================================
+   Card Meta (date, tags, etc.)
+   ========================================= */
+.card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.card__date {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+/* =========================================
+   Card Icon
+   ========================================= */
+.card__icon {
+  font-size: var(--font-size-4xl);
+  margin-bottom: var(--space-4);
+  display: block;
+}
+
+/* =========================================
+   Card Grid Layout
+   ========================================= */
+.card-grid {
+  display: grid;
+  gap: var(--space-6);
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+/* 2 columns max */
+.card-grid--2 {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  max-width: calc(300px * 2 + var(--space-6));
+}
+
+/* 3 columns max */
+.card-grid--3 {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+/* =========================================
+   Card Variants
+   ========================================= */
+
+/* Nav Card (for homepage navigation) */
+.card--nav {
+  text-align: center;
+  padding: var(--space-8);
+}
+
+.card--nav .card__title {
+  font-size: var(--font-size-2xl);
+}
+
+/* Feature Card (highlighted) */
+.card--feature {
+  border-color: var(--color-primary-200);
+  background: linear-gradient(
+    135deg,
+    var(--color-surface) 0%,
+    var(--color-primary-50) 100%
+  );
+}
+
+.card--feature:hover {
+  border-color: var(--color-primary-400);
+}
+
+/* Compact Card */
+.card--compact {
+  padding: var(--space-4);
+}
+
+.card--compact .card__title {
+  font-size: var(--font-size-lg);
+}
+
+.card--compact .card__description {
+  font-size: var(--font-size-sm);
+}
+
+/* =========================================
+   Dark Mode Adjustments
+   ========================================= */
+html.dark .card {
+  border-color: var(--color-gray-700);
+}
+
+html.dark .card:hover {
+  border-color: var(--color-primary-400);
+}
+
+html.dark .card--feature {
+  border-color: var(--color-primary-700);
+  background: linear-gradient(
+    135deg,
+    var(--color-surface) 0%,
+    oklch(25% 0.08 293) 100%
+  );
+}
+
+/* =========================================
+   Responsive Adjustments
+   ========================================= */
+@media (max-width: 480px) {
+  .card-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  .card {
+    padding: var(--space-4);
+  }
+
+  .card__content {
+    padding: var(--space-4);
+  }
+
+  .card__title {
+    font-size: var(--font-size-lg);
+  }
+
+  .card--nav {
+    padding: var(--space-6);
+  }
+
+  .card--nav .card__title {
+    font-size: var(--font-size-xl);
+  }
+}
