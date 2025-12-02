@@ -6,51 +6,58 @@ import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 import TagList from '../components/TagList.astro';
-// デフォルトの目次（アクティブ状態なし）
-// アクティブ状態が必要な場合は TableOfContentsWithActive を使用
 import TableOfContents from '../components/TableOfContents.astro';
-// import TableOfContentsWithActive from '../components/TableOfContentsWithActive.astro';
 import '../styles/table-of-contents.css';
 import '../styles/callout.css';
 
 type Props = CollectionEntry<'blog'>['data'] & {
   headings?: Array<{ depth: number; text: string; slug: string }>;
+  readingTime?: number;
 };
 
-const { title, description, pubDate, updatedDate, heroImage, tags, headings = [] } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, tags, headings = [], readingTime } = Astro.props;
 ---
 
-<html lang="en">
+<html lang="ja">
 	<head>
 		<BaseHead title={title} description={description} />
 		<style>
+			/* メインコンテナ */
 			main {
 				width: 100%;
 				max-width: 100%;
 				margin: 0;
 				padding: 0;
 			}
+
+			/* ヒーロー画像 */
 			.hero-image {
 				width: 100%;
 				max-width: 960px;
-				margin: 0 auto;
+				margin: 0 auto var(--space-8);
 				overflow: hidden;
-				border-radius: 12px;
+				border-radius: var(--radius-2xl);
 			}
+
 			.hero-image img {
 				display: block;
 				width: 100%;
 				max-width: 100%;
 				height: auto;
 				margin: 0 auto;
-				box-shadow: var(--box-shadow);
+				box-shadow: var(--shadow-lg);
 				object-fit: cover;
 				aspect-ratio: 2 / 1;
 			}
 
 			/* 画像読み込み中のスケルトン表示 */
 			.hero-image img:not([src]) {
-				background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+				background: linear-gradient(
+					90deg,
+					var(--color-gray-100) 25%,
+					var(--color-gray-200) 50%,
+					var(--color-gray-100) 75%
+				);
 				background-size: 200% 100%;
 				animation: loading 1.5s ease-in-out infinite;
 			}
@@ -60,72 +67,142 @@ const { title, description, pubDate, updatedDate, heroImage, tags, headings = []
 				100% { background-position: -200% 0; }
 			}
 
-			/* モバイル対応 */
-			@media (max-width: 767px) {
-				.hero-image {
-					border-radius: 8px;
-				}
-				.hero-image img {
-					aspect-ratio: 16 / 9;
-				}
-			}
+			/* 記事コンテンツ */
 			.prose {
 				max-width: 720px;
 				width: calc(100% - 2em);
 				margin: auto;
-				padding: 1em;
-				color: rgb(var(--gray-dark));
+				padding: var(--space-4);
+				color: var(--color-text-primary);
 			}
-			.title {
-				margin-bottom: 1em;
-				padding: 1em 0;
+
+			/* 記事ヘッダー */
+			.article-header {
+				margin-bottom: var(--space-8);
+				padding: var(--space-6) 0;
 				text-align: center;
-				line-height: 1;
+				border-bottom: 1px solid var(--color-gray-200);
 			}
-			.title h1 {
-				margin: 0 0 0.5em 0;
+
+			.article-header h1 {
+				font-size: var(--font-size-4xl);
+				font-weight: var(--font-weight-bold);
+				color: var(--color-text-primary);
+				line-height: var(--line-height-tight);
+				margin: 0 0 var(--space-4) 0;
 			}
-			.date {
-				margin-bottom: 0.5em;
-				color: rgb(var(--gray));
+
+			/* メタデータ */
+			.article-meta {
+				display: flex;
+				flex-wrap: wrap;
+				align-items: center;
+				justify-content: center;
+				gap: var(--space-4);
+				margin-bottom: var(--space-4);
+				font-size: var(--font-size-sm);
+				color: var(--color-text-secondary);
 			}
-			.last-updated-on {
+
+			.article-meta__item {
+				display: flex;
+				align-items: center;
+				gap: var(--space-2);
+			}
+
+			.article-meta__icon {
+				font-size: var(--font-size-base);
+			}
+
+			.article-meta__date {
+				color: var(--color-primary-500);
+				font-weight: var(--font-weight-medium);
+			}
+
+			.article-meta__reading-time {
+				color: var(--color-text-secondary);
+			}
+
+			.article-meta__updated {
 				font-style: italic;
+				color: var(--color-text-secondary);
 			}
+
+			/* タグ */
 			.article-tags {
-				margin: 1em 0;
+				margin: var(--space-4) 0;
 				text-align: center;
 			}
+
+			/* 記事フッター */
 			.article-footer-tags {
-				margin-top: 2em;
-				padding-top: 1em;
-				border-top: 1px solid rgb(var(--gray-light));
+				margin-top: var(--space-12);
+				padding-top: var(--space-6);
+				border-top: 1px solid var(--color-gray-200);
 			}
+
 			.article-footer-tags h3 {
-				margin-bottom: 0.5em;
-				font-size: 1.1em;
-				color: rgb(var(--gray-dark));
+				margin-bottom: var(--space-4);
+				font-size: var(--font-size-lg);
+				font-weight: var(--font-weight-semibold);
+				color: var(--color-text-primary);
 			}
 
-			/* レスポンシブ対応 */
-			@media (max-width: 767px) {
-				.prose {
-					width: 100%;
-					padding: 1em;
-				}
-			}
-
-			/* 目次ありの場合のレスポンシブ調整 */
+			/* 目次ありの場合の調整 */
 			.blog-layout-with-toc .prose {
 				max-width: 100%;
 				width: 100%;
 				padding: 0;
 			}
 
+			/* レスポンシブ: タブレット */
 			@media (min-width: 768px) {
-				.blog-layout-with-toc .blog-content {
-					padding: 0 1em;
+				.article-header h1 {
+					font-size: var(--font-size-5xl);
 				}
+
+				.blog-layout-with-toc .blog-content {
+					padding: 0 var(--space-4);
+				}
+			}
+
+			/* レスポンシブ: モバイル */
+			@media (max-width: 767px) {
+				.hero-image {
+					border-radius: var(--radius-xl);
+					margin: 0 var(--space-4) var(--space-6);
+				}
+
+				.hero-image img {
+					aspect-ratio: 16 / 9;
+				}
+
+				.prose {
+					width: 100%;
+					padding: var(--space-4);
+				}
+
+				.article-header {
+					padding: var(--space-4) 0;
+				}
+
+				.article-header h1 {
+					font-size: var(--font-size-2xl);
+				}
+
+				.article-meta {
+					flex-direction: column;
+					gap: var(--space-2);
+				}
+			}
+
+			/* ダークモード */
+			html.dark .article-header {
+				border-bottom-color: var(--color-gray-700);
+			}
+
+			html.dark .article-footer-tags {
+				border-top-color: var(--color-gray-700);
 			}
 		</style>
 	</head>
@@ -139,16 +216,26 @@ const { title, description, pubDate, updatedDate, heroImage, tags, headings = []
 				</div>
 				<div class={headings && headings.length > 0 ? "blog-layout-with-toc" : ""}>
 					<div class="prose blog-content">
-						<div class="title">
-							<div class="date">
-								<FormattedDate date={pubDate} />
-								{
-									updatedDate && (
-										<div class="last-updated-on">
-											Last updated on <FormattedDate date={updatedDate} />
-										</div>
-									)
-								}
+						<header class="article-header">
+							<div class="article-meta">
+								<span class="article-meta__item">
+									<span class="article-meta__icon" aria-hidden="true">📅</span>
+									<span class="article-meta__date">
+										<FormattedDate date={pubDate} />
+									</span>
+								</span>
+								{readingTime && (
+									<span class="article-meta__item">
+										<span class="article-meta__icon" aria-hidden="true">⏱️</span>
+										<span class="article-meta__reading-time">{readingTime}分で読めます</span>
+									</span>
+								)}
+								{updatedDate && (
+									<span class="article-meta__item article-meta__updated">
+										<span class="article-meta__icon" aria-hidden="true">🔄</span>
+										<span>更新: <FormattedDate date={updatedDate} /></span>
+									</span>
+								)}
 							</div>
 							<h1>{title}</h1>
 							{tags && tags.length > 0 && (
@@ -156,14 +243,13 @@ const { title, description, pubDate, updatedDate, heroImage, tags, headings = []
 									<TagList tags={tags} layout="horizontal" />
 								</div>
 							)}
-							<hr />
-						</div>
+						</header>
 						<slot />
 						{tags && tags.length > 0 && (
-							<div class="article-footer-tags">
-								<h3>タグ</h3>
+							<footer class="article-footer-tags">
+								<h3>関連タグ</h3>
 								<TagList tags={tags} layout="horizontal" showCount={false} />
-							</div>
+							</footer>
 						)}
 					</div>
 					{headings && headings.length > 0 && (

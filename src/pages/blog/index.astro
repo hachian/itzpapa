@@ -13,101 +13,192 @@ const posts = (await getCollection('blog')).sort(
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="ja">
 	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<BaseHead title={`ブログ記事一覧 | ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
 		<style>
 			main {
-				width: 960px;
+				max-width: 1000px;
+				margin: 0 auto;
+				padding: var(--space-8) var(--space-4);
 			}
-			ul {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 2rem;
+
+			.page-header {
+				text-align: center;
+				margin-bottom: var(--space-12);
+			}
+
+			.page-header h1 {
+				font-size: var(--font-size-4xl);
+				font-weight: var(--font-weight-bold);
+				color: var(--color-text-primary);
+				margin: 0 0 var(--space-4) 0;
+			}
+
+			.page-header p {
+				font-size: var(--font-size-lg);
+				color: var(--color-text-secondary);
+				margin: 0;
+			}
+
+			.posts-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+				gap: var(--space-8);
 				list-style-type: none;
 				margin: 0;
 				padding: 0;
 			}
-			ul li {
-				width: calc(50% - 1rem);
+
+			/* 最初の記事を目立たせる */
+			.posts-grid li:first-child {
+				grid-column: 1 / -1;
 			}
-			ul li * {
-				text-decoration: none;
-				transition: 0.2s ease;
-			}
-			ul li:first-child {
-				width: 100%;
-				margin-bottom: 1rem;
-				text-align: center;
-			}
-			ul li:first-child img {
-				width: 100%;
-			}
-			ul li:first-child .title {
-				font-size: 2.369rem;
-			}
-			ul li img {
-				margin-bottom: 0.5rem;
-				border-radius: 12px;
-			}
-			ul li a {
+
+			.post-card {
 				display: block;
+				background: var(--color-surface);
+				border-radius: var(--radius-xl);
+				overflow: hidden;
+				box-shadow: var(--shadow-sm);
+				text-decoration: none;
+				transition: transform var(--duration-normal) var(--easing-default),
+							box-shadow var(--duration-normal) var(--easing-default);
 			}
-			.title {
-				margin: 0;
-				color: rgb(var(--black));
-				line-height: 1;
+
+			.post-card:hover {
+				transform: translateY(-4px);
+				box-shadow: var(--shadow-lg);
 			}
-			.date {
-				margin: 0;
-				color: rgb(var(--gray));
+
+			.post-card:focus-visible {
+				outline: var(--focus-ring-width) solid var(--focus-ring-color);
+				outline-offset: var(--focus-ring-offset);
 			}
-			ul li a:hover h4,
-			ul li a:hover .date {
-				color: rgb(var(--accent));
+
+			.post-card__image {
+				width: 100%;
+				aspect-ratio: 16 / 9;
+				object-fit: cover;
 			}
-			ul a:hover img {
-				box-shadow: var(--box-shadow);
+
+			/* 最初の記事の画像は大きく */
+			.posts-grid li:first-child .post-card__image {
+				aspect-ratio: 2 / 1;
 			}
-			@media (max-width: 720px) {
-				ul {
-					gap: 0.5em;
+
+			.post-card__content {
+				padding: var(--space-6);
+			}
+
+			.post-card__title {
+				font-size: var(--font-size-xl);
+				font-weight: var(--font-weight-semibold);
+				color: var(--color-text-primary);
+				line-height: var(--line-height-snug);
+				margin: 0 0 var(--space-2) 0;
+				transition: color var(--duration-fast) var(--easing-default);
+			}
+
+			/* 最初の記事のタイトルは大きく */
+			.posts-grid li:first-child .post-card__title {
+				font-size: var(--font-size-3xl);
+			}
+
+			.post-card:hover .post-card__title {
+				color: var(--color-primary-500);
+			}
+
+			.post-card__description {
+				font-size: var(--font-size-base);
+				color: var(--color-text-secondary);
+				line-height: var(--line-height-relaxed);
+				margin: 0 0 var(--space-4) 0;
+				display: -webkit-box;
+				-webkit-line-clamp: 2;
+				-webkit-box-orient: vertical;
+				overflow: hidden;
+			}
+
+			.post-card__date {
+				font-size: var(--font-size-sm);
+				font-weight: var(--font-weight-medium);
+				color: var(--color-primary-500);
+			}
+
+			/* レスポンシブ: モバイル */
+			@media (max-width: 767px) {
+				main {
+					padding: var(--space-6) var(--space-4);
 				}
-				ul li {
-					width: 100%;
-					text-align: center;
+
+				.page-header h1 {
+					font-size: var(--font-size-2xl);
 				}
-				ul li:first-child {
-					margin-bottom: 0;
+
+				.page-header p {
+					font-size: var(--font-size-base);
 				}
-				ul li:first-child .title {
-					font-size: 1.563em;
+
+				.posts-grid {
+					grid-template-columns: 1fr;
+					gap: var(--space-6);
 				}
+
+				.posts-grid li:first-child .post-card__title {
+					font-size: var(--font-size-xl);
+				}
+
+				.posts-grid li:first-child .post-card__image {
+					aspect-ratio: 16 / 9;
+				}
+			}
+
+			/* ダークモード */
+			html.dark .post-card {
+				background: var(--color-gray-800);
+			}
+
+			html.dark .post-card:hover {
+				box-shadow: 0 20px 40px oklch(0% 0 0 / 0.4);
 			}
 		</style>
 	</head>
 	<body>
 		<Header />
 		<main>
-			<section>
-				<ul>
-					{
-						posts.map((post) => (
-							<li>
-								<a href={`/blog/${post.id}/`}>
-									{post.data.heroImage && (
-										<Image width={720} height={360} src={post.data.heroImage} alt="" />
+			<header class="page-header">
+				<h1>ブログ記事</h1>
+				<p>技術的な洞察、プログラミングのヒント、そして日々の学びを共有しています。</p>
+			</header>
+			<ul class="posts-grid" role="list">
+				{
+					posts.map((post) => (
+						<li>
+							<a href={`/blog/${post.id}/`} class="post-card">
+								{post.data.heroImage && (
+									<Image
+										width={720}
+										height={360}
+										src={post.data.heroImage}
+										alt=""
+										class="post-card__image"
+									/>
+								)}
+								<div class="post-card__content">
+									<h2 class="post-card__title">{post.data.title}</h2>
+									{post.data.description && (
+										<p class="post-card__description">{post.data.description}</p>
 									)}
-									<h4 class="title">{post.data.title}</h4>
-									<p class="date">
+									<time class="post-card__date" datetime={post.data.pubDate.toISOString()}>
 										<FormattedDate date={post.data.pubDate} />
-									</p>
-								</a>
-							</li>
-						))
-					}
-				</ul>
-			</section>
+									</time>
+								</div>
+							</a>
+						</li>
+					))
+				}
+			</ul>
 		</main>
 		<Footer />
 	</body>

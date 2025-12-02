@@ -2,24 +2,33 @@
 
 /* より具体的なセレクターで特異性を高める */
 .prose .callout {
-  /* 横スクロール防止 */
   max-width: 100%;
   box-sizing: border-box;
+  background-color: var(--color-primary-50);
+  border-left: 4px solid var(--color-primary-500);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  margin: var(--space-4) 0;
 }
 
-/* モバイル対応 - !important を除去し、特異性で解決 */
+/* モバイル対応 */
 @media (max-width: 767px) {
   .prose .callout {
-    /* モバイルでパディングを調整 */
-    padding: 8px 8px 8px 16px;
-    margin: 16px 0;
+    padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4);
+    margin: var(--space-4) 0;
   }
 }
 
 /* タブレット・デスクトップ対応 */
 @media (min-width: 768px) {
   .prose .callout {
-    /* 上位画面サイズでも横スクロール防止を継続 */
     max-width: 100%;
+    padding: var(--space-4) var(--space-5);
   }
+}
+
+/* ダークモード */
+html.dark .prose .callout {
+  background-color: oklch(30% 0.08 293);
+  border-left-color: var(--color-primary-400);
 }
