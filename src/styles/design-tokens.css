@@ -318,13 +318,11 @@ html.dark {
   animation: var(--duration-normal) var(--easing-out) both fade-in;
 }
 
-/* View Transition: メインコンテンツのスライド */
+/* View Transition: メインコンテンツのフェード */
 ::view-transition-old(main-content) {
-  animation: var(--duration-normal) var(--easing-out) both fade-out,
-             var(--duration-normal) var(--easing-out) both slide-to-left;
+  animation: var(--duration-normal) var(--easing-out) both fade-out;
 }
 
 ::view-transition-new(main-content) {
-  animation: var(--duration-normal) var(--easing-out) both fade-in,
-             var(--duration-normal) var(--easing-out) both slide-from-right;
+  animation: var(--duration-normal) var(--easing-out) both fade-in;
 }
