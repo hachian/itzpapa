@@ -77,17 +77,17 @@ const accessibility = {
     display: inline-flex;
     align-items: center;
     gap: 0.25em;
-    padding: var(--tag-padding-y) var(--tag-padding-x);
-    margin: 0 var(--tag-margin-x) var(--tag-margin-y) 0;
-    background-color: var(--tag-bg);
-    color: var(--tag-color);
-    border: 1px solid var(--tag-border);
-    border-radius: var(--tag-border-radius);
-    font-size: var(--tag-font-size);
-    font-weight: var(--tag-font-weight);
-    line-height: var(--tag-line-height);
+    padding: var(--tag-padding-y, 0.2em) var(--tag-padding-x, 0.6em);
+    margin: 0 var(--tag-margin-x, 0.2em) var(--tag-margin-y, 0.2em) 0;
+    background-color: var(--tag-bg, #e1f5fe);
+    color: var(--tag-color, #0277bd);
+    border: 1px solid var(--tag-border, #b3e5fc);
+    border-radius: var(--tag-border-radius, 1rem);
+    font-size: var(--tag-font-size, 0.875rem);
+    font-weight: var(--tag-font-weight, 500);
+    line-height: var(--tag-line-height, 1.2);
     text-decoration: none;
-    transition: all var(--tag-transition-duration) var(--tag-transition-easing);
+    transition: all var(--tag-transition-duration, 0.2s) var(--tag-transition-easing, ease);
     white-space: nowrap;
     cursor: default;
   }
@@ -100,17 +100,17 @@ const accessibility = {
   /* ホバー効果 - 統一スタイル */
   .tag:where(a):hover,
   .tag:where(a):focus {
-    background-color: var(--tag-hover-bg);
-    color: var(--tag-hover-color);
-    border-color: var(--tag-hover-border);
-    transform: var(--tag-hover-transform);
-    box-shadow: var(--tag-hover-shadow);
+    background-color: var(--tag-hover-bg, #0277bd);
+    color: var(--tag-hover-color, #ffffff);
+    border-color: var(--tag-hover-border, #0277bd);
+    transform: var(--tag-hover-transform, translateY(-1px));
+    box-shadow: var(--tag-hover-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));
   }
-  
+
   /* フォーカス表示 */
   .tag:where(a):focus {
-    outline: 2px solid var(--tag-focus-color);
-    outline-offset: var(--tag-focus-offset);
+    outline: 2px solid var(--tag-focus-color, #2196f3);
+    outline-offset: var(--tag-focus-offset, 2px);
   }
   
   .tag-text {
@@ -118,48 +118,48 @@ const accessibility = {
   }
   
   .tag-count {
-    background-color: var(--tag-count-bg);
+    background-color: var(--tag-count-bg, rgba(255, 255, 255, 0.3));
     color: inherit;
-    padding: var(--tag-count-padding-y) var(--tag-count-padding-x);
-    border-radius: var(--tag-count-border-radius);
-    font-size: var(--tag-count-font-size);
-    font-weight: var(--tag-count-font-weight);
-    min-width: var(--tag-count-min-width);
+    padding: var(--tag-count-padding-y, 0.1em) var(--tag-count-padding-x, 0.4em);
+    border-radius: var(--tag-count-border-radius, 0.75rem);
+    font-size: var(--tag-count-font-size, 0.75em);
+    font-weight: var(--tag-count-font-weight, 600);
+    min-width: var(--tag-count-min-width, 1.2em);
     text-align: center;
   }
   
   /* ダークモード対応 - 統一スタイル */
   html.dark .tag {
-    background-color: var(--tag-bg);
-    color: var(--tag-color);
-    border-color: var(--tag-border);
+    background-color: var(--tag-bg, #1e3a8a);
+    color: var(--tag-color, #93c5fd);
+    border-color: var(--tag-border, #1e40af);
   }
-  
+
   html.dark .tag:where(a):hover,
   html.dark .tag:where(a):focus {
-    background-color: var(--tag-hover-bg);
-    color: var(--tag-hover-color);
-    border-color: var(--tag-hover-border);
+    background-color: var(--tag-hover-bg, #3b82f6);
+    color: var(--tag-hover-color, #ffffff);
+    border-color: var(--tag-hover-border, #3b82f6);
   }
   
   /* 小さい画面での調整 - CSS変数使用 */
   @media (max-width: 640px) {
     .tag {
-      font-size: var(--tag-mobile-font-size);
-      padding: var(--tag-mobile-padding-y) var(--tag-mobile-padding-x);
+      font-size: var(--tag-mobile-font-size, 0.8rem);
+      padding: var(--tag-mobile-padding-y, 0.15em) var(--tag-mobile-padding-x, 0.5em);
     }
-    
+
     .tag-count {
-      font-size: var(--tag-mobile-count-font-size);
-      padding: var(--tag-mobile-count-padding-y) var(--tag-mobile-count-padding-x);
+      font-size: var(--tag-mobile-count-font-size, 0.7em);
+      padding: var(--tag-mobile-count-padding-y, 0.05em) var(--tag-mobile-count-padding-x, 0.3em);
     }
   }
 
   /* アクセシビリティ: タッチデバイス用の最小タップサイズ確保 */
   @media (hover: none) and (pointer: coarse) {
     .tag {
-      min-height: var(--tag-min-tap-size);
-      padding: var(--tag-mobile-padding-y) var(--tag-mobile-padding-x);
+      min-height: var(--tag-min-tap-size, 44px);
+      padding: var(--tag-mobile-padding-y, 0.15em) var(--tag-mobile-padding-x, 0.5em);
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -169,8 +169,8 @@ const accessibility = {
   /* 小画面でのタッチターゲットサイズ確保（ブラウザエミュレーション対応） */
   @media (max-width: 640px) {
     .tag {
-      min-height: var(--tag-min-tap-size);
-      padding: var(--tag-mobile-padding-y) var(--tag-mobile-padding-x);
+      min-height: var(--tag-min-tap-size, 44px);
+      padding: var(--tag-mobile-padding-y, 0.15em) var(--tag-mobile-padding-x, 0.5em);
       display: inline-flex;
       align-items: center;
       justify-content: center;

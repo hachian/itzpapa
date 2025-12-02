@@ -35,6 +35,40 @@ posts.forEach(post => {
 const allTags = tagService.getMostUsedTags(100); // 最大100個のタグを表示
 const tagStatistics = tagService.getTagStatistics();
 
+// 階層構造を取得
+const hierarchy = tagService.getTagHierarchy();
+
+// 階層タグ（子を持つルートタグ）とフラットタグを分離
+const hierarchicalRootTags: string[] = [];
+const flatTags: typeof allTags = [];
+
+// ルートレベルのタグを分類
+Object.entries(hierarchy).forEach(([tagName, { children }]) => {
+  // 子を持つタグは階層タグ
+  if (children && Object.keys(children).length > 0) {
+    hierarchicalRootTags.push(tagName);
+  }
+});
+
+// 全タグから階層タグとその子孫を除外したものがフラットタグ
+allTags.forEach(tag => {
+  // 階層タグのルートでない、かつスラッシュを含まない（子タグでない）
+  const isHierarchicalRoot = hierarchicalRootTags.includes(tag.name);
+  const isChildTag = tag.name.includes('/');
+
+  if (!isHierarchicalRoot && !isChildTag) {
+    flatTags.push(tag);
+  }
+});
+
+// 階層タグのみを含むhierarchyを作成
+const hierarchicalOnlyHierarchy: typeof hierarchy = {};
+hierarchicalRootTags.forEach(tagName => {
+  if (hierarchy[tagName]) {
+    hierarchicalOnlyHierarchy[tagName] = hierarchy[tagName];
+  }
+});
+
 // ページメタデータ
 const pageTitle = 'タグ一覧';
 const pageDescription = `${tagStatistics.totalTags}個のタグで記事を分類しています。`;
@@ -126,6 +160,68 @@ const pageDescription = `${tagStatistics.totalTags}個のタグで記事を分�
         border-bottom: 2px solid var(--color-primary-200);
       }
 
+      /* フラットタグをツリースタイルで表示 */
+      .flat-tags-tree {
+        font-family: var(--font-mono, 'Monaco', 'Consolas', monospace);
+        font-size: 0.9rem;
+        line-height: 1.4;
+        background: var(--tree-bg, #ffffff);
+        border: 1px solid var(--tree-border, #e5e7eb);
+        border-radius: 8px;
+        padding: 1rem;
+      }
+
+      .flat-tags-tree .tree-node {
+        display: block;
+        margin: 0;
+        margin-bottom: 0.125rem;
+      }
+
+      .flat-tags-tree .tree-node-content {
+        display: flex;
+        align-items: center;
+        padding: 0.25rem 0;
+        border-radius: 4px;
+        transition: background-color 0.15s ease;
+        min-height: 2rem;
+      }
+
+      .flat-tags-tree .tree-node-content:hover {
+        background-color: var(--tree-hover-bg, rgba(243, 244, 246, 0.5));
+      }
+
+      .flat-tags-tree .tree-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.5rem;
+        height: 1.5rem;
+        color: var(--color-text-secondary, #6b7280);
+        flex-shrink: 0;
+        margin-right: 0.5rem;
+      }
+
+      .flat-tags-tree .tree-tag {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .flat-tags-tree .tree-tag :global(.tree-tag-badge) {
+        font-size: 0.85rem;
+        padding: 0.15rem 0.5rem;
+        margin: 0;
+      }
+
+      /* ダークモード */
+      html.dark .flat-tags-tree {
+        background: var(--tree-bg, #1f2937);
+        border-color: var(--tree-border, #374151);
+      }
+
+      html.dark .flat-tags-tree .tree-node-content:hover {
+        background-color: var(--tree-hover-bg, rgba(55, 65, 81, 0.5));
+      }
+
       /* レスポンシブ対応 */
       @media (max-width: 768px) {
         .tags-container {
@@ -195,17 +291,47 @@ const pageDescription = `${tagStatistics.totalTags}個のタグで記事を分�
               </div>
             </section>
 
-            <!-- タグ階層ツリービュー -->
-            <section class="tree-section">
-              <h2 class="section-title">階層タグ</h2>
-              <TagTree 
-                hierarchy={tagService.getTagHierarchy()}
-                showCount={true}
-                expandAll={false}
-                initialDisplayLevel={0}
-                className="tags-tree"
-              />
-            </section>
+            {/* 階層タグセクション - 階層タグがある場合のみ表示 */}
+            {hierarchicalRootTags.length > 0 && (
+              <section class="tree-section">
+                <h2 class="section-title">階層タグ</h2>
+                <TagTree
+                  hierarchy={hierarchicalOnlyHierarchy}
+                  showCount={true}
+                  expandAll={false}
+                  initialDisplayLevel={0}
+                  className="tags-tree"
+                />
+              </section>
+            )}
+
+            {/* フラットタグセクション */}
+            {flatTags.length > 0 && (
+              <section class="tree-section">
+                <h2 class="section-title">タグ</h2>
+                <div class="flat-tags-tree" role="tree" aria-label="タグ一覧">
+                  {flatTags.map(tag => (
+                    <div class="tree-node leaf-node" role="treeitem">
+                      <div class="tree-node-content">
+                        <div class="tree-icon" aria-hidden="true">
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                            <path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"/>
+                          </svg>
+                        </div>
+                        <div class="tree-tag">
+                          <TagBadge
+                            tag={tag.name}
+                            href={`/tags/${tag.name.toLowerCase()}`}
+                            count={tag.count}
+                            className="tree-tag-badge"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
 
           </>
         ) : (

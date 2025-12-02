@@ -189,8 +189,8 @@ const treeClasses = [
     font-family: var(--font-mono, 'Monaco', 'Consolas', monospace);
     font-size: 0.9rem;
     line-height: 1.4;
-    background: var(--tree-bg);
-    border: 1px solid var(--tree-border);
+    background: var(--tree-bg, #ffffff);
+    border: 1px solid var(--tree-border, #e5e7eb);
     border-radius: 8px;
     padding: 1rem;
     margin: 1rem 0;
@@ -220,7 +220,7 @@ const treeClasses = [
   }
   
   .tree-node-content:hover {
-    background-color: var(--tree-hover-bg);
+    background-color: var(--tree-hover-bg, rgba(243, 244, 246, 0.5));
   }
   
   .tree-indent {
@@ -242,7 +242,7 @@ const treeClasses = [
     top: 0;
     bottom: 0;
     width: 1px;
-    background-color: var(--tree-guide-color);
+    background-color: var(--tree-guide-color, #e5e7eb);
   }
   
   .tree-toggle {
@@ -253,22 +253,22 @@ const treeClasses = [
     height: 1.5rem;
     border: none;
     background: none;
-    color: var(--tree-toggle-color);
+    color: var(--tree-toggle-color, #6b7280);
     cursor: pointer;
     border-radius: 3px;
     transition: all 0.15s ease;
     flex-shrink: 0;
     margin-right: 0.25rem;
   }
-  
+
   .tree-toggle:hover {
-    background-color: var(--tree-toggle-hover-bg);
-    color: var(--tree-toggle-hover-color);
+    background-color: var(--tree-toggle-hover-bg, rgba(243, 244, 246, 0.8));
+    color: var(--tree-toggle-hover-color, #374151);
   }
   
   .tree-toggle:focus {
-    outline: 2px solid var(--tag-focus-color);
-    outline-offset: var(--tag-focus-offset);
+    outline: 2px solid var(--tag-focus-color, #2196f3);
+    outline-offset: var(--tag-focus-offset, 2px);
   }
   
   .toggle-icon {
@@ -285,13 +285,13 @@ const treeClasses = [
     justify-content: center;
     width: 1.5rem;
     height: 1.5rem;
-    color: var(--color-text-secondary);
+    color: var(--color-text-secondary, #6b7280);
     flex-shrink: 0;
     margin-right: 0.5rem;
   }
 
   .tree-node.has-children .tree-icon {
-    color: var(--color-accent);
+    color: var(--color-accent, #0277bd);
   }
   
   .tree-tag {
@@ -332,7 +332,7 @@ const treeClasses = [
   .tree-empty {
     text-align: center;
     padding: 2rem 1rem;
-    color: var(--color-text-secondary);
+    color: var(--color-text-secondary, #6b7280);
     font-style: italic;
   }
   
@@ -347,22 +347,22 @@ const treeClasses = [
     display: none;
   }
   
-  /* ダークモード対応 */
+  /* ダークモード対応 - CSS変数を使用 */
   html.dark .tag-tree {
-    background: var(--color-gray-800);
-    border-color: var(--color-gray-700);
+    background: var(--tree-bg, #1f2937);
+    border-color: var(--tree-border, #374151);
   }
 
   html.dark .tree-node-content:hover {
-    background-color: var(--color-gray-700);
+    background-color: var(--tree-hover-bg, rgba(55, 65, 81, 0.5));
   }
 
   html.dark .tree-toggle:hover {
-    background-color: var(--color-gray-600);
+    background-color: var(--tree-toggle-hover-bg, rgba(55, 65, 81, 0.8));
   }
 
   html.dark .indent-guide::before {
-    background-color: var(--color-gray-600);
+    background-color: var(--tree-guide-color, #374151);
   }
   
   /* アニメーション */
