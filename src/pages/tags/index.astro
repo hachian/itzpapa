@@ -45,117 +45,125 @@ const pageDescription = `${tagStatistics.totalTags}個のタグで記事を分�
     <BaseHead title={pageTitle} description={pageDescription} />
     <style>
       .tags-container {
-        width: 720px;
+        width: var(--content-max-width);
         max-width: calc(100% - 2em);
-        margin: 2em auto;
-        padding: 1em;
+        margin: var(--space-8) auto;
+        padding: var(--space-4);
       }
-      
+
       .page-header {
         text-align: center;
-        margin-bottom: 2em;
-        padding-bottom: 1em;
-        border-bottom: 2px solid rgb(var(--gray-light));
+        margin-bottom: var(--space-8);
+        padding-bottom: var(--space-4);
+        border-bottom: 2px solid var(--color-gray-200);
       }
-      
+
       .page-title {
-        font-size: 2.5rem;
-        font-weight: bold;
-        color: rgb(var(--gray-dark));
-        margin: 0 0 0.5em 0;
+        font-size: var(--font-size-4xl);
+        font-weight: var(--font-weight-bold);
+        color: var(--color-text-primary);
+        margin: 0 0 var(--space-2) 0;
       }
-      
+
       .page-description {
-        font-size: 1.1rem;
-        color: rgb(var(--gray));
+        font-size: var(--font-size-lg);
+        color: var(--color-text-secondary);
         margin: 0;
       }
-      
+
       .tags-stats {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1em;
-        margin-bottom: 2em;
-        padding: 1em;
-        background-color: rgb(var(--gray-light), 0.3);
-        border-radius: 8px;
+        gap: var(--space-4);
+        margin-bottom: var(--space-8);
+        padding: var(--space-4);
+        background-color: var(--color-gray-100);
+        border-radius: var(--radius-lg);
       }
-      
+
       .stat-item {
         text-align: center;
       }
-      
+
       .stat-number {
-        font-size: 2rem;
-        font-weight: bold;
-        color: rgb(var(--accent));
+        font-size: var(--font-size-3xl);
+        font-weight: var(--font-weight-bold);
+        color: var(--color-accent);
         display: block;
       }
-      
+
       .stat-label {
-        font-size: 0.9rem;
-        color: rgb(var(--gray));
-        margin-top: 0.2em;
+        font-size: var(--font-size-sm);
+        color: var(--color-text-secondary);
+        margin-top: var(--space-1);
       }
-      
+
       .empty-state {
         text-align: center;
-        padding: 3em 1em;
-        color: rgb(var(--gray));
+        padding: var(--space-12) var(--space-4);
+        color: var(--color-text-secondary);
       }
-      
+
       .empty-state h2 {
-        font-size: 1.5rem;
-        margin-bottom: 0.5em;
+        font-size: var(--font-size-2xl);
+        margin-bottom: var(--space-2);
       }
-      
+
       .tree-section {
-        margin: 2em 0;
-        padding: 1.5em;
-        background: rgb(var(--gray-light), 0.2);
-        border-radius: 12px;
-        border: 1px solid rgb(var(--gray-light));
+        margin: var(--space-8) 0;
+        padding: var(--space-6);
+        background: var(--color-surface);
+        border-radius: var(--radius-xl);
+        border: 1px solid var(--color-gray-200);
       }
-      
+
       .section-title {
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: rgb(var(--gray-dark));
-        margin: 0 0 1rem 0;
-        padding-bottom: 0.5rem;
-        border-bottom: 2px solid rgb(var(--accent), 0.3);
+        font-size: var(--font-size-2xl);
+        font-weight: var(--font-weight-semibold);
+        color: var(--color-text-primary);
+        margin: 0 0 var(--space-4) 0;
+        padding-bottom: var(--space-2);
+        border-bottom: 2px solid var(--color-primary-200);
       }
-      
+
       /* レスポンシブ対応 */
       @media (max-width: 768px) {
         .tags-container {
-          margin: 1em auto;
-          padding: 0.5em;
+          margin: var(--space-4) auto;
+          padding: var(--space-2);
         }
-        
+
         .page-title {
-          font-size: 2rem;
+          font-size: var(--font-size-2xl);
         }
-        
+
         .tags-stats {
           grid-template-columns: repeat(2, 1fr);
-          gap: 0.5em;
-          padding: 0.75em;
+          gap: var(--space-2);
+          padding: var(--space-3);
         }
-        
+
         .stat-number {
-          font-size: 1.5rem;
+          font-size: var(--font-size-2xl);
         }
       }
-      
+
       /* ダークモード対応 */
       html.dark .tree-section {
-        background: rgb(var(--gray-dark), 0.3);
-        border-color: rgb(var(--gray));
+        background: var(--color-gray-800);
+        border-color: var(--color-gray-700);
       }
-      
+
+      html.dark .tags-stats {
+        background-color: var(--color-gray-800);
+      }
+
+      html.dark .page-header {
+        border-bottom-color: var(--color-gray-700);
+      }
+
       html.dark .section-title {
-        color: rgb(var(--gray-light));
+        border-bottom-color: var(--color-primary-700);
       }
     </style>
   </head>

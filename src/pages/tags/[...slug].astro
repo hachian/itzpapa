@@ -113,33 +113,33 @@ const pageDescription = `${tagName}タグが付けられた${sortedPosts.length}
     <BaseHead title={pageTitle} description={pageDescription} />
     <style>
       .tag-page-container {
-        width: 720px;
+        width: var(--content-max-width);
         max-width: calc(100% - 2em);
-        margin: 2em auto;
-        padding: 1em;
+        margin: var(--space-8) auto;
+        padding: var(--space-4);
       }
-      
+
       .page-header {
-        margin-bottom: 2em;
-        padding-bottom: 1em;
-        border-bottom: 2px solid rgb(var(--gray-light));
+        margin-bottom: var(--space-8);
+        padding-bottom: var(--space-4);
+        border-bottom: 2px solid var(--color-gray-200);
       }
-      
+
       .breadcrumbs {
         display: flex;
         align-items: center;
-        gap: 0.5em;
-        margin-bottom: 1em;
-        font-size: 0.9rem;
-        color: rgb(var(--gray));
+        gap: var(--space-2);
+        margin-bottom: var(--space-4);
+        font-size: var(--font-size-sm);
+        color: var(--color-text-secondary);
       }
-      
+
       .breadcrumb-item {
         display: flex;
         align-items: center;
-        gap: 0.5em;
+        gap: var(--space-2);
       }
-      
+
       .breadcrumb-link {
         display: inline-flex;
         align-items: center;
@@ -164,85 +164,85 @@ const pageDescription = `${tagName}タグが付けられた${sortedPosts.length}
         transform: var(--tag-hover-transform);
         box-shadow: var(--tag-hover-shadow);
       }
-      
+
       .breadcrumb-separator {
-        color: rgb(var(--gray));
-        font-weight: bold;
+        color: var(--color-text-secondary);
+        font-weight: var(--font-weight-bold);
       }
-      
+
       .page-title {
-        font-size: 2.5rem;
-        font-weight: bold;
-        color: rgb(var(--gray-dark));
-        margin: 0 0 0.5em 0;
+        font-size: var(--font-size-4xl);
+        font-weight: var(--font-weight-bold);
+        color: var(--color-text-primary);
+        margin: 0 0 var(--space-2) 0;
         display: flex;
         align-items: center;
-        gap: 0.5em;
+        gap: var(--space-2);
       }
-      
+
       .tag-icon {
-        font-size: 2rem;
-        color: rgb(var(--accent));
+        font-size: var(--font-size-3xl);
+        color: var(--color-accent);
       }
-      
+
       .page-meta {
         display: flex;
-        gap: 2em;
-        margin-bottom: 1em;
-        font-size: 0.9rem;
-        color: rgb(var(--gray));
+        gap: var(--space-8);
+        margin-bottom: var(--space-4);
+        font-size: var(--font-size-sm);
+        color: var(--color-text-secondary);
       }
-      
+
       .meta-item {
         display: flex;
         align-items: center;
-        gap: 0.3em;
+        gap: var(--space-1);
       }
-      
+
       .child-tags {
-        margin-bottom: 2em;
+        margin-bottom: var(--space-8);
       }
-      
+
       .child-tags h2 {
-        font-size: 1.2rem;
-        margin-bottom: 0.5em;
-        color: rgb(var(--gray-dark));
+        font-size: var(--font-size-lg);
+        margin-bottom: var(--space-2);
+        color: var(--color-text-primary);
       }
-      
+
       .child-tags-list {
         display: flex;
         flex-wrap: wrap;
-        gap: 0.5em;
+        gap: var(--space-2);
       }
-      
+
       .posts-section h2 {
-        font-size: 1.5rem;
-        margin-bottom: 1em;
-        color: rgb(var(--gray-dark));
-        border-bottom: 1px solid rgb(var(--gray-light));
-        padding-bottom: 0.5em;
+        font-size: var(--font-size-2xl);
+        margin-bottom: var(--space-4);
+        color: var(--color-text-primary);
+        border-bottom: 1px solid var(--color-gray-200);
+        padding-bottom: var(--space-2);
       }
-      
+
       .posts-grid {
         display: grid;
-        gap: 1.5em;
-        margin: 1em 0;
+        gap: var(--space-6);
+        margin: var(--space-4) 0;
       }
-      
+
       .post-card {
         display: grid;
         grid-template-columns: auto 1fr;
-        gap: 1em;
-        padding: 1.5em;
-        background: white;
-        border: 1px solid rgb(var(--gray-light));
-        border-radius: 8px;
-        transition: all 0.2s ease;
+        gap: var(--space-4);
+        padding: var(--space-6);
+        background: var(--color-surface);
+        border: 1px solid var(--color-gray-200);
+        border-radius: var(--radius-lg);
+        transition: all var(--duration-fast) var(--easing-default);
       }
 
       .post-card:hover {
-        border-color: rgb(var(--accent));
-        box-shadow: 0 4px 12px rgba(var(--gray), 0.15);
+        border-color: var(--color-accent);
+        box-shadow: var(--shadow-md);
         transform: translateY(-2px);
       }
 
@@ -253,120 +253,124 @@ const pageDescription = `${tagName}タグが付けられた${sortedPosts.length}
       }
 
       .post-link:hover .post-title {
-        color: rgb(var(--accent));
+        color: var(--color-accent);
       }
-      
+
       .post-date {
-        color: rgb(var(--gray));
-        font-size: 0.85rem;
+        color: var(--color-text-secondary);
+        font-size: var(--font-size-sm);
         white-space: nowrap;
-        padding-top: 0.2em;
+        padding-top: var(--space-1);
       }
-      
+
       .post-content {
         min-width: 0;
       }
-      
+
       .post-title {
-        font-size: 1.2rem;
-        font-weight: 600;
-        color: rgb(var(--gray-dark));
-        margin: 0 0 0.5em 0;
-        line-height: 1.3;
+        font-size: var(--font-size-lg);
+        font-weight: var(--font-weight-semibold);
+        color: var(--color-text-primary);
+        margin: 0 0 var(--space-2) 0;
+        line-height: var(--line-height-snug);
+        transition: color var(--duration-fast) var(--easing-default);
       }
-      
+
       .post-description {
-        color: rgb(var(--gray));
-        font-size: 0.9rem;
-        line-height: 1.5;
-        margin-bottom: 0.75em;
+        color: var(--color-text-secondary);
+        font-size: var(--font-size-sm);
+        line-height: var(--line-height-relaxed);
+        margin-bottom: var(--space-3);
       }
-      
+
       .post-tags {
         display: flex;
         flex-wrap: wrap;
-        gap: 0.3em;
+        gap: var(--space-1);
         align-items: center;
         line-height: 1;
       }
-      
+
       .empty-state {
         text-align: center;
-        padding: 3em 1em;
-        color: rgb(var(--gray));
+        padding: var(--space-12) var(--space-4);
+        color: var(--color-text-secondary);
       }
-      
+
       .empty-state h2 {
-        font-size: 1.5rem;
-        margin-bottom: 0.5em;
-        color: rgb(var(--gray-dark));
+        font-size: var(--font-size-2xl);
+        margin-bottom: var(--space-2);
+        color: var(--color-text-primary);
       }
-      
+
       .back-link {
         display: inline-flex;
         align-items: center;
-        gap: 0.5em;
-        color: rgb(var(--accent));
+        gap: var(--space-2);
+        color: var(--color-link);
         text-decoration: none;
-        padding: 0.5em 0;
-        margin-bottom: 1em;
-        transition: color 0.2s ease;
+        padding: var(--space-2) 0;
+        margin-bottom: var(--space-4);
+        transition: color var(--duration-fast) var(--easing-default);
       }
-      
+
       .back-link:hover {
-        color: rgb(var(--accent-dark));
+        color: var(--color-link-hover);
       }
-      
+
       /* レスポンシブ対応 */
       @media (max-width: 768px) {
         .tag-page-container {
-          margin: 1em auto;
-          padding: 0.5em;
+          margin: var(--space-4) auto;
+          padding: var(--space-2);
         }
-        
+
         .page-title {
-          font-size: 2rem;
+          font-size: var(--font-size-2xl);
           flex-direction: column;
           text-align: center;
         }
-        
+
         .page-meta {
           flex-direction: column;
-          gap: 0.5em;
+          gap: var(--space-2);
         }
-        
+
         .post-card {
           grid-template-columns: 1fr;
-          gap: 0.75em;
-          padding: 1em;
+          gap: var(--space-3);
+          padding: var(--space-4);
         }
-        
+
         .post-date {
           order: -1;
           white-space: normal;
         }
-        
+
         .breadcrumbs {
           flex-wrap: wrap;
         }
       }
-      
+
       /* ダークモード対応 */
+      html.dark .page-header {
+        border-bottom-color: var(--color-gray-700);
+      }
+
+      html.dark .posts-section h2 {
+        border-bottom-color: var(--color-gray-700);
+      }
+
       html.dark .post-card {
-        background: rgb(var(--gray-dark));
-        border-color: rgb(var(--gray));
-        color: rgb(var(--gray-light));
+        background: var(--color-gray-800);
+        border-color: var(--color-gray-700);
       }
-      
+
       html.dark .post-card:hover {
-        border-color: rgb(var(--accent-dark));
-        background: rgb(var(--gray-dark), 0.8);
+        border-color: var(--color-primary-500);
+        box-shadow: var(--shadow-lg);
       }
-      
-      html.dark .post-title {
-        color: rgb(var(--gray-light));
-      }
-      
+
       html.dark .breadcrumb-link {
         background-color: var(--tag-bg);
         color: var(--tag-color);

@@ -285,13 +285,13 @@ const treeClasses = [
     justify-content: center;
     width: 1.5rem;
     height: 1.5rem;
-    color: rgb(var(--gray));
+    color: var(--color-text-secondary);
     flex-shrink: 0;
     margin-right: 0.5rem;
   }
-  
+
   .tree-node.has-children .tree-icon {
-    color: rgb(var(--accent));
+    color: var(--color-accent);
   }
   
   .tree-tag {
@@ -332,7 +332,7 @@ const treeClasses = [
   .tree-empty {
     text-align: center;
     padding: 2rem 1rem;
-    color: rgb(var(--gray));
+    color: var(--color-text-secondary);
     font-style: italic;
   }
   
@@ -349,20 +349,20 @@ const treeClasses = [
   
   /* ダークモード対応 */
   html.dark .tag-tree {
-    background: rgb(var(--gray-dark));
-    border-color: rgb(var(--gray));
+    background: var(--color-gray-800);
+    border-color: var(--color-gray-700);
   }
-  
+
   html.dark .tree-node-content:hover {
-    background-color: rgb(var(--gray), 0.2);
+    background-color: var(--color-gray-700);
   }
-  
+
   html.dark .tree-toggle:hover {
-    background-color: rgb(var(--gray), 0.3);
+    background-color: var(--color-gray-600);
   }
-  
+
   html.dark .indent-guide::before {
-    background-color: rgb(var(--gray));
+    background-color: var(--color-gray-600);
   }
   
   /* アニメーション */
