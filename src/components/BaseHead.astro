@@ -67,3 +67,31 @@ const { title, description, image = FallbackImage } = Astro.props;
 
 <!-- View Transitions -->
 <ClientRouter />
+
+<!-- Dark Mode Detection Script (inline to prevent FOUC) -->
+<script is:inline>
+	// OSのダークモード設定に基づいてhtml.darkクラスを適用
+	(function() {
+		const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+		const storedTheme = localStorage.getItem('theme');
+
+		// ユーザーが明示的にテーマを選択している場合はそれを優先
+		if (storedTheme === 'dark' || (!storedTheme && prefersDark)) {
+			document.documentElement.classList.add('dark');
+		} else if (storedTheme === 'light') {
+			document.documentElement.classList.remove('dark');
+		}
+
+		// OS設定の変更を監視
+		window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+			// ユーザーが明示的にテーマを選択していない場合のみ自動切替
+			if (!localStorage.getItem('theme')) {
+				if (e.matches) {
+					document.documentElement.classList.add('dark');
+				} else {
+					document.documentElement.classList.remove('dark');
+				}
+			}
+		});
+	})();
+</script>

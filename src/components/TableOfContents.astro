@@ -153,13 +153,38 @@ const tocItems: TocItem[] = tocHeadings.map(heading => ({
   }
 
   /* ダークモード */
+  html.dark .table-of-contents {
+    background-color: var(--color-gray-800);
+  }
+
+  html.dark .toc-title {
+    color: var(--color-text-primary);
+  }
+
+  html.dark .toc-link {
+    color: var(--color-text-primary);
+  }
+
   html.dark .toc-link:hover {
+    color: var(--color-primary-400);
     background-color: oklch(30% 0.08 293);
   }
 
   html.dark .toc-link.active {
     color: var(--color-primary-400);
     background-color: oklch(30% 0.08 293);
+  }
+
+  html.dark .toc-scroll-container {
+    scrollbar-color: oklch(65% 0.20 293 / 0.3) transparent;
+  }
+
+  html.dark .toc-scroll-container::-webkit-scrollbar-thumb {
+    background-color: oklch(65% 0.20 293 / 0.3);
+  }
+
+  html.dark .toc-scroll-container::-webkit-scrollbar-thumb:hover {
+    background-color: oklch(65% 0.20 293 / 0.5);
   }
 </style>
 

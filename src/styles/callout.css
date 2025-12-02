@@ -27,8 +27,35 @@
   }
 }
 
-/* ダークモード */
+/* ダークモード対応（html.darkセレクター使用） */
 html.dark .prose .callout {
-  background-color: oklch(30% 0.08 293);
+  background-color: oklch(25% 0.04 293 / 0.5);
   border-left-color: var(--color-primary-400);
+}
+
+/* rehype-calloutsテーマのダークモード対応
+ * rehype-calloutsは.darkクラスを使用するが、
+ * 本サイトはhtml.darkを使用するため、オーバーライドが必要 */
+html.dark .callout {
+  mix-blend-mode: lighten;
+  background-color: rgb(from var(--rc-color-dark, var(--rc-color-default, #888)) r g b / 0.15);
+}
+
+html.dark .callout-title {
+  color: var(--rc-color-dark, var(--rc-color-default, #888));
+}
+
+html.dark .callout-content {
+  color: var(--color-text-primary);
+}
+
+/* callout内のテキスト色を明るく */
+html.dark .callout p,
+html.dark .callout li,
+html.dark .callout code {
+  color: var(--color-text-primary);
+}
+
+html.dark .callout code {
+  background-color: var(--color-gray-700);
 }
