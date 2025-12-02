@@ -21,31 +21,44 @@
 
 <script>
 	function setupThemeToggle() {
-		const toggleBtn = document.querySelector('[data-theme-toggle]');
-		if (!toggleBtn) return;
+		const toggleBtns = document.querySelectorAll('[data-theme-toggle]');
+		if (toggleBtns.length === 0) return;
 
-		// 現在のテーマに基づいてアイコンとaria-labelを更新
+		// 現在のテーマに基づいて全てのボタンのaria-labelを更新
 		function updateToggleState() {
 			const isDark = document.documentElement.classList.contains('dark');
-			toggleBtn.setAttribute('aria-label', isDark ? 'ライトモードに切り替え' : 'ダークモードに切り替え');
+			toggleBtns.forEach(btn => {
+				btn.setAttribute('aria-label', isDark ? 'ライトモードに切り替え' : 'ダークモードに切り替え');
+			});
 		}
 
 		// 初期状態を設定
 		updateToggleState();
 
-		// クリックでテーマ切り替え
-		toggleBtn.addEventListener('click', () => {
-			const isDark = document.documentElement.classList.contains('dark');
+		// 各ボタンにクリックイベントを設定
+		toggleBtns.forEach(btn => {
+			// 既存のリスナーを削除するため、一度クローンして置き換え
+			const newBtn = btn.cloneNode(true);
+			btn.parentNode?.replaceChild(newBtn, btn);
 
-			if (isDark) {
-				document.documentElement.classList.remove('dark');
-				localStorage.setItem('theme', 'light');
-			} else {
-				document.documentElement.classList.add('dark');
-				localStorage.setItem('theme', 'dark');
-			}
+			newBtn.addEventListener('click', () => {
+				const isDark = document.documentElement.classList.contains('dark');
 
-			updateToggleState();
+				if (isDark) {
+					document.documentElement.classList.remove('dark');
+					document.documentElement.classList.add('light');
+					localStorage.setItem('theme', 'light');
+				} else {
+					document.documentElement.classList.add('dark');
+					document.documentElement.classList.remove('light');
+					localStorage.setItem('theme', 'dark');
+				}
+
+				// 全てのボタンの状態を更新
+				document.querySelectorAll('[data-theme-toggle]').forEach(b => {
+					b.setAttribute('aria-label', !isDark ? 'ライトモードに切り替え' : 'ダークモードに切り替え');
+				});
+			});
 		});
 	}
 

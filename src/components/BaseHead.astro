@@ -78,8 +78,15 @@ const { title, description, image = FallbackImage } = Astro.props;
 		// ユーザーが明示的にテーマを選択している場合はそれを優先
 		if (storedTheme === 'dark' || (!storedTheme && prefersDark)) {
 			document.documentElement.classList.add('dark');
-		} else {
+			document.documentElement.classList.remove('light');
+		} else if (storedTheme === 'light') {
+			// ユーザーが明示的にライトモードを選択した場合
 			document.documentElement.classList.remove('dark');
+			document.documentElement.classList.add('light');
+		} else {
+			// storedThemeがなく、システムがライトモードの場合
+			document.documentElement.classList.remove('dark');
+			document.documentElement.classList.remove('light');
 		}
 	}
 
@@ -95,8 +102,10 @@ const { title, description, image = FallbackImage } = Astro.props;
 		if (!localStorage.getItem('theme')) {
 			if (e.matches) {
 				document.documentElement.classList.add('dark');
+				document.documentElement.classList.remove('light');
 			} else {
 				document.documentElement.classList.remove('dark');
+				document.documentElement.classList.remove('light');
 			}
 		}
 	});
