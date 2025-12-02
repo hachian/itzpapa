@@ -9,9 +9,29 @@ const subpath = pathname.match(/[^\/]+/g);
 const isActive = href === pathname || href === '/' + (subpath?.[0] || '');
 ---
 
-<a href={href} class:list={[className, { active: isActive }]} {...props}>
+<a href={href} class:list={[className, { active: isActive }]} data-header-link {...props}>
 	<slot />
 </a>
+
+<script>
+	function updateActiveLinks() {
+		const links = document.querySelectorAll('a[data-header-link]');
+		const pathname = window.location.pathname.replace(import.meta.env.BASE_URL, '');
+		const subpath = pathname.match(/[^\/]+/g);
+
+		links.forEach((link) => {
+			const href = link.getAttribute('href');
+			const isActive = href === pathname || href === '/' + (subpath?.[0] || '');
+			link.classList.toggle('active', isActive);
+		});
+	}
+
+	// 初回ロード時に実行
+	updateActiveLinks();
+
+	// View Transitions後に実行
+	document.addEventListener('astro:after-swap', updateActiveLinks);
+</script>
 <style>
 	a {
 		display: inline-flex;
