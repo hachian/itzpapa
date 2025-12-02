@@ -18,19 +18,19 @@
   --gray-dark: 34, 41, 57;
   --gray-gradient: rgba(var(--gray-light), 50%), #fff;
   
-  /* 基本カラー - TagBadgeの階層タグスタイルに統一 */
-  --tag-bg: #e1f5fe;
-  --tag-color: #0277bd;
-  --tag-border: #b3e5fc;
-  
+  /* 基本カラー - デザイントークンのOKLCHパレットから参照 */
+  --tag-bg: var(--color-primary-50, #e1f5fe);
+  --tag-color: var(--color-primary-600, #0277bd);
+  --tag-border: var(--color-primary-200, #b3e5fc);
+
   /* ホバー状態 */
-  --tag-hover-bg: #0277bd;
-  --tag-hover-color: #ffffff;
-  --tag-hover-border: #0277bd;
-  
+  --tag-hover-bg: var(--color-primary-500, #0277bd);
+  --tag-hover-color: oklch(100% 0 0);
+  --tag-hover-border: var(--color-primary-500, #0277bd);
+
   /* フォーカス状態 */
-  --tag-focus-color: #2196f3;
-  --tag-focus-offset: 2px;
+  --tag-focus-color: var(--focus-ring-color, #2196f3);
+  --tag-focus-offset: var(--focus-ring-offset, 2px);
   
   /* サイズとスペーシング */
   --tag-padding-y: 0.2em;
@@ -96,19 +96,19 @@
   --tree-toggle-hover-color: #374151;
 }
 
-/* ダークモード対応 */
+/* ダークモード対応 - デザイントークンのOKLCHパレットから参照 */
 html.dark {
-  --tag-bg: #1e3a8a;
-  --tag-color: #93c5fd;
-  --tag-border: #1e40af;
-  
-  --tag-hover-bg: #3b82f6;
-  --tag-hover-color: #ffffff;
-  --tag-hover-border: #3b82f6;
-  
-  --tag-focus-color: #60a5fa;
-  
-  --tag-count-bg: rgba(0, 0, 0, 0.3);
+  --tag-bg: var(--color-primary-900, #1e3a8a);
+  --tag-color: var(--color-primary-200, #93c5fd);
+  --tag-border: var(--color-primary-800, #1e40af);
+
+  --tag-hover-bg: var(--color-primary-500, #3b82f6);
+  --tag-hover-color: oklch(100% 0 0);
+  --tag-hover-border: var(--color-primary-500, #3b82f6);
+
+  --tag-focus-color: var(--focus-ring-color, #60a5fa);
+
+  --tag-count-bg: oklch(0% 0 0 / 0.3);
   
   /* tag-more要素ダークモード */
   --tag-more-bg: #334155;
