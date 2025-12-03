@@ -287,6 +287,17 @@ html.dark {
 }
 
 /* =========================================
+   Theme Transition Disable
+   テーマ切り替え時のちらつき防止
+   ========================================= */
+html.theme-transitioning,
+html.theme-transitioning *,
+html.theme-transitioning *::before,
+html.theme-transitioning *::after {
+  transition: none !important;
+}
+
+/* =========================================
    View Transitions Styles
    ========================================= */
 @keyframes fade-in {

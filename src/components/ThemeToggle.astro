@@ -44,6 +44,9 @@
 			newBtn.addEventListener('click', () => {
 				const isDark = document.documentElement.classList.contains('dark');
 
+				// トランジションを一時的に無効化してちらつきを防止
+				document.documentElement.classList.add('theme-transitioning');
+
 				if (isDark) {
 					document.documentElement.classList.remove('dark');
 					document.documentElement.classList.add('light');
@@ -57,6 +60,13 @@
 				// 全てのボタンの状態を更新
 				document.querySelectorAll('[data-theme-toggle]').forEach(b => {
 					b.setAttribute('aria-label', !isDark ? 'ライトモードに切り替え' : 'ダークモードに切り替え');
+				});
+
+				// 次のフレームでトランジションを再有効化
+				requestAnimationFrame(() => {
+					requestAnimationFrame(() => {
+						document.documentElement.classList.remove('theme-transitioning');
+					});
 				});
 			});
 		});
