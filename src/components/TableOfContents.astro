@@ -72,7 +72,7 @@ const tocItems: TocItem[] = tocHeadings.map(heading => ({
 
   /* スクロールコンテナ */
   .toc-scroll-container {
-    max-height: 800px;
+    max-height: calc(100vh - var(--space-16) - 100px);
     overflow-y: auto;
     padding-right: var(--space-2);
     scrollbar-width: thin;

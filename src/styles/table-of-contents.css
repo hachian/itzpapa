@@ -24,7 +24,7 @@
   top: calc(var(--space-16) + var(--space-4));
   height: fit-content;
   max-height: calc(100vh - var(--space-16));
-  overflow-y: auto;
+  overflow: hidden;
   min-width: 0;
   overflow-wrap: break-word;
 }
@@ -238,24 +238,6 @@
   .blog-content {
     width: 100%;
   }
-}
-
-/* スクロールバーのスタイリング */
-.toc-sidebar::-webkit-scrollbar {
-  width: 6px;
-}
-
-.toc-sidebar::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.toc-sidebar::-webkit-scrollbar-thumb {
-  background: var(--color-gray-300);
-  border-radius: var(--radius-sm);
-}
-
-.toc-sidebar::-webkit-scrollbar-thumb:hover {
-  background: var(--color-gray-400);
 }
 
 /* スムーズスクロールの有効化 */
