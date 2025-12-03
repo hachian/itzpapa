@@ -7,8 +7,8 @@
 /* Design System Foundation */
 @import './design-tokens.css';
 
-/* Import rehype-callouts Obsidian theme */
-@import 'rehype-callouts/theme/obsidian';
+/* Import callout styles (custom remark-callout plugin) */
+@import './callout.css';
 
 /* Import tag variables (must be before tag styles) */
 @import './tag-variables.css';

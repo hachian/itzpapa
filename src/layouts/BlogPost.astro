@@ -261,5 +261,65 @@ const { title, description, pubDate, updatedDate, heroImage, tags, headings = []
 			</article>
 		</main>
 		<Footer />
+
+		<!-- Callout folding functionality -->
+		<script>
+			function initCalloutFolding() {
+				const foldableCallouts = document.querySelectorAll('blockquote[data-callout-foldable="true"]');
+
+				foldableCallouts.forEach((callout) => {
+					// Set initial collapsed state based on data-callout-folded attribute
+					const initiallyFolded = callout.getAttribute('data-callout-folded') === 'true';
+					if (initiallyFolded) {
+						callout.setAttribute('data-callout-collapsed', 'true');
+					}
+
+					// Create a clickable title overlay
+					const titleOverlay = document.createElement('div');
+					titleOverlay.className = 'callout-title-overlay';
+					titleOverlay.setAttribute('role', 'button');
+					titleOverlay.setAttribute('tabindex', '0');
+					titleOverlay.setAttribute('aria-expanded', initiallyFolded ? 'false' : 'true');
+
+					// Insert the overlay at the beginning of the callout
+					callout.insertBefore(titleOverlay, callout.firstChild);
+
+					// Add fold icon
+					const foldIcon = document.createElement('span');
+					foldIcon.className = 'callout-fold-icon';
+					foldIcon.setAttribute('aria-hidden', 'true');
+					titleOverlay.appendChild(foldIcon);
+
+					// Toggle function
+					const toggleCallout = () => {
+						const isCollapsed = callout.getAttribute('data-callout-collapsed') === 'true';
+						if (isCollapsed) {
+							callout.removeAttribute('data-callout-collapsed');
+							titleOverlay.setAttribute('aria-expanded', 'true');
+						} else {
+							callout.setAttribute('data-callout-collapsed', 'true');
+							titleOverlay.setAttribute('aria-expanded', 'false');
+						}
+					};
+
+					// Click handler
+					titleOverlay.addEventListener('click', toggleCallout);
+
+					// Keyboard handler for accessibility
+					titleOverlay.addEventListener('keydown', (e) => {
+						if (e.key === 'Enter' || e.key === ' ') {
+							e.preventDefault();
+							toggleCallout();
+						}
+					});
+				});
+			}
+
+			// Run on initial load
+			initCalloutFolding();
+
+			// Re-run after View Transitions (Astro)
+			document.addEventListener('astro:page-load', initCalloutFolding);
+		</script>
 	</body>
 </html>

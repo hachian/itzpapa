@@ -6,7 +6,7 @@ import { defineConfig } from 'astro/config';
 import remarkWikilink from './src/plugins/remark-wikilink/index.js';
 import remarkTags from './src/plugins/remark-tags/index.js';
 import remarkMarkHighlight from './src/plugins/remark-mark-highlight/index.js';
-import rehypeCallouts from 'rehype-callouts';
+import remarkCallout from './src/plugins/remark-callout/index.js';
 
 // https://astro.build/config
 export default defineConfig({
@@ -14,7 +14,7 @@ export default defineConfig({
 	integrations: [
 		mdx({
 			remarkPlugins: [
-				// Wikilinkを次に処理（GFMの前）
+				// Wikilinkを最初に処理（GFMの前）
 				[remarkWikilink, { priority: 'high' }],
 				// ハイライト記法処理（セキュリティ強化設定）
 				[remarkMarkHighlight, {
@@ -24,14 +24,12 @@ export default defineConfig({
 					maxInputLength: 100000
 				}],
 				// タグ処理プラグイン
-				[remarkTags, { convertToLinks: true }]
-			],
-			rehypePlugins: [
-				// Callouts処理（remarkの後でHTMLを処理）
-				[rehypeCallouts, { theme: 'obsidian' }]
+				[remarkTags, { convertToLinks: true }],
+				// コールアウトパース（データ属性を追加、CSSでスタイリング）
+				[remarkCallout, { maxNestingDepth: 3 }]
 			],
 			extendMarkdownConfig: false
-		}), 
+		}),
 		sitemap()
 	],
 	markdown: {
@@ -45,11 +43,9 @@ export default defineConfig({
 				securityMode: 'auto',
 				maxInputLength: 100000
 			}],
-			[remarkTags, { convertToLinks: true }]
-		],
-		rehypePlugins: [
-			// Callouts処理（remarkの後でHTMLを処理）
-			[rehypeCallouts, { theme: 'obsidian' }]
+			[remarkTags, { convertToLinks: true }],
+			// コールアウトパース（データ属性を追加、CSSでスタイリング）
+			[remarkCallout, { maxNestingDepth: 3 }]
 		],
 		// GFMを明示的に設定（remarkPluginsより前に処理される）
 		gfm: true

@@ -1,61 +1,488 @@
-/* Callout レスポンシブ対応 */
+/**
+ * Callout Styles - CSS-only approach for blockquotes with data attributes
+ *
+ * Supports 7 callout types: note, info, tip, warning, caution, important, danger
+ * Features: OKLCH colors, dark mode, responsive design, foldable callouts (via JS)
+ */
 
-/* より具体的なセレクターで特異性を高める */
-.prose .callout {
+/* ========================================
+   CSS Variables - OKLCH Color Definitions
+   ======================================== */
+
+:root {
+  /* note: Blue */
+  --callout-note-color: oklch(0.65 0.2 260);
+  --callout-note-bg: oklch(0.65 0.2 260 / 0.1);
+
+  /* info: Cyan */
+  --callout-info-color: oklch(0.7 0.15 210);
+  --callout-info-bg: oklch(0.7 0.15 210 / 0.1);
+
+  /* tip: Green */
+  --callout-tip-color: oklch(0.7 0.2 150);
+  --callout-tip-bg: oklch(0.7 0.2 150 / 0.1);
+
+  /* warning: Yellow/Orange */
+  --callout-warning-color: oklch(0.75 0.18 75);
+  --callout-warning-bg: oklch(0.75 0.18 75 / 0.1);
+
+  /* caution: Orange */
+  --callout-caution-color: oklch(0.7 0.2 55);
+  --callout-caution-bg: oklch(0.7 0.2 55 / 0.1);
+
+  /* important: Purple */
+  --callout-important-color: oklch(0.6 0.25 300);
+  --callout-important-bg: oklch(0.6 0.25 300 / 0.1);
+
+  /* danger: Red */
+  --callout-danger-color: oklch(0.65 0.25 25);
+  --callout-danger-bg: oklch(0.65 0.25 25 / 0.1);
+}
+
+/* Dark Mode Colors (increased L value for visibility) */
+html.dark {
+  --callout-note-color: oklch(0.75 0.18 260);
+  --callout-note-bg: oklch(0.75 0.18 260 / 0.15);
+
+  --callout-info-color: oklch(0.8 0.13 210);
+  --callout-info-bg: oklch(0.8 0.13 210 / 0.15);
+
+  --callout-tip-color: oklch(0.8 0.18 150);
+  --callout-tip-bg: oklch(0.8 0.18 150 / 0.15);
+
+  --callout-warning-color: oklch(0.85 0.16 75);
+  --callout-warning-bg: oklch(0.85 0.16 75 / 0.15);
+
+  --callout-caution-color: oklch(0.8 0.18 55);
+  --callout-caution-bg: oklch(0.8 0.18 55 / 0.15);
+
+  --callout-important-color: oklch(0.7 0.22 300);
+  --callout-important-bg: oklch(0.7 0.22 300 / 0.15);
+
+  --callout-danger-color: oklch(0.75 0.22 25);
+  --callout-danger-bg: oklch(0.75 0.22 25 / 0.15);
+}
+
+/* OS dark mode preference support */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --callout-note-color: oklch(0.75 0.18 260);
+    --callout-note-bg: oklch(0.75 0.18 260 / 0.15);
+
+    --callout-info-color: oklch(0.8 0.13 210);
+    --callout-info-bg: oklch(0.8 0.13 210 / 0.15);
+
+    --callout-tip-color: oklch(0.8 0.18 150);
+    --callout-tip-bg: oklch(0.8 0.18 150 / 0.15);
+
+    --callout-warning-color: oklch(0.85 0.16 75);
+    --callout-warning-bg: oklch(0.85 0.16 75 / 0.15);
+
+    --callout-caution-color: oklch(0.8 0.18 55);
+    --callout-caution-bg: oklch(0.8 0.18 55 / 0.15);
+
+    --callout-important-color: oklch(0.7 0.22 300);
+    --callout-important-bg: oklch(0.7 0.22 300 / 0.15);
+
+    --callout-danger-color: oklch(0.75 0.22 25);
+    --callout-danger-bg: oklch(0.75 0.22 25 / 0.15);
+  }
+}
+
+/* ========================================
+   SVG Icons as CSS Variables (data URIs)
+   ======================================== */
+
+:root {
+  --callout-icon-note: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 8v4'/%3E%3Cpath d='M12 16h.01'/%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3C/svg%3E");
+  --callout-icon-info: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 16v-4'/%3E%3Cpath d='M12 8h.01'/%3E%3C/svg%3E");
+  --callout-icon-tip: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18h6'/%3E%3Cpath d='M10 22h4'/%3E%3Cpath d='M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14'/%3E%3C/svg%3E");
+  --callout-icon-warning: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3'/%3E%3Cpath d='M12 9v4'/%3E%3Cpath d='M12 17h.01'/%3E%3C/svg%3E");
+  --callout-icon-caution: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 8v4'/%3E%3Cpath d='M12 16h.01'/%3E%3C/svg%3E");
+  --callout-icon-important: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z'/%3E%3C/svg%3E");
+  --callout-icon-danger: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17.28 10.4a7 7 0 1 0-9.56 9.56'/%3E%3Cpath d='M7.5 10.4 11 7l3.28 3.28'/%3E%3Cpath d='m2 2 20 20'/%3E%3C/svg%3E");
+  --callout-icon-fold: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+
+/* ========================================
+   Base Callout Styles (blockquote with data-callout)
+   ======================================== */
+
+blockquote[data-callout] {
+  position: relative;
   max-width: 100%;
   box-sizing: border-box;
-  background-color: var(--color-primary-50);
-  border-left: 4px solid var(--color-primary-500);
-  border-radius: var(--radius-md);
-  padding: var(--space-4);
-  margin: var(--space-4) 0;
+  border-radius: var(--radius-md, 0.375rem);
+  padding: var(--space-4, 1rem);
+  padding-top: calc(var(--space-4, 1rem) + 1.75rem); /* Extra space for title */
+  margin: var(--space-4, 1rem) 0;
+  border-left: 4px solid var(--callout-note-color);
+  background-color: var(--callout-note-bg);
 }
 
-/* モバイル対応 */
+/* Title bar using ::before */
+blockquote[data-callout]::before {
+  content: attr(data-callout-title);
+  position: absolute;
+  top: var(--space-3, 0.75rem);
+  left: var(--space-4, 1rem);
+  right: var(--space-4, 1rem);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2, 0.5rem);
+  font-weight: 600;
+  color: var(--callout-note-color);
+  padding-left: 1.75rem; /* Space for icon */
+}
+
+/* Icon using ::after */
+blockquote[data-callout]::after {
+  content: '';
+  position: absolute;
+  top: calc(var(--space-3, 0.75rem) + 0.125rem);
+  left: var(--space-4, 1rem);
+  width: 20px;
+  height: 20px;
+  background-color: var(--callout-note-color);
+  -webkit-mask-image: var(--callout-icon-note);
+  mask-image: var(--callout-icon-note);
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+/* ========================================
+   Callout Content Styles
+   ======================================== */
+
+blockquote[data-callout] > p:first-child {
+  margin-top: 0;
+}
+
+blockquote[data-callout] > :last-child {
+  margin-bottom: 0;
+}
+
+blockquote[data-callout] p {
+  margin: var(--space-2, 0.5rem) 0;
+}
+
+blockquote[data-callout] ul,
+blockquote[data-callout] ol {
+  margin: var(--space-2, 0.5rem) 0;
+  padding-left: var(--space-6, 1.5rem);
+}
+
+blockquote[data-callout] li {
+  margin: var(--space-1, 0.25rem) 0;
+}
+
+blockquote[data-callout] pre {
+  margin: var(--space-3, 0.75rem) 0;
+  border-radius: var(--radius-sm, 0.25rem);
+  overflow-x: auto;
+}
+
+blockquote[data-callout] code {
+  font-size: 0.875em;
+  background-color: var(--color-gray-100, #f3f4f6);
+  padding: 0.125rem 0.25rem;
+  border-radius: var(--radius-sm, 0.25rem);
+}
+
+blockquote[data-callout] pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+/* Images inside callouts */
+blockquote[data-callout] img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-sm, 0.25rem);
+}
+
+/* ========================================
+   Type-Specific Styles
+   ======================================== */
+
+/* Note (default) */
+blockquote[data-callout="note"] {
+  border-left-color: var(--callout-note-color);
+  background-color: var(--callout-note-bg);
+}
+blockquote[data-callout="note"]::before {
+  color: var(--callout-note-color);
+}
+blockquote[data-callout="note"]::after {
+  background-color: var(--callout-note-color);
+  -webkit-mask-image: var(--callout-icon-note);
+  mask-image: var(--callout-icon-note);
+}
+
+/* Info */
+blockquote[data-callout="info"] {
+  border-left-color: var(--callout-info-color);
+  background-color: var(--callout-info-bg);
+}
+blockquote[data-callout="info"]::before {
+  color: var(--callout-info-color);
+}
+blockquote[data-callout="info"]::after {
+  background-color: var(--callout-info-color);
+  -webkit-mask-image: var(--callout-icon-info);
+  mask-image: var(--callout-icon-info);
+}
+
+/* Tip */
+blockquote[data-callout="tip"] {
+  border-left-color: var(--callout-tip-color);
+  background-color: var(--callout-tip-bg);
+}
+blockquote[data-callout="tip"]::before {
+  color: var(--callout-tip-color);
+}
+blockquote[data-callout="tip"]::after {
+  background-color: var(--callout-tip-color);
+  -webkit-mask-image: var(--callout-icon-tip);
+  mask-image: var(--callout-icon-tip);
+}
+
+/* Warning */
+blockquote[data-callout="warning"] {
+  border-left-color: var(--callout-warning-color);
+  background-color: var(--callout-warning-bg);
+}
+blockquote[data-callout="warning"]::before {
+  color: var(--callout-warning-color);
+}
+blockquote[data-callout="warning"]::after {
+  background-color: var(--callout-warning-color);
+  -webkit-mask-image: var(--callout-icon-warning);
+  mask-image: var(--callout-icon-warning);
+}
+
+/* Caution */
+blockquote[data-callout="caution"] {
+  border-left-color: var(--callout-caution-color);
+  background-color: var(--callout-caution-bg);
+}
+blockquote[data-callout="caution"]::before {
+  color: var(--callout-caution-color);
+}
+blockquote[data-callout="caution"]::after {
+  background-color: var(--callout-caution-color);
+  -webkit-mask-image: var(--callout-icon-caution);
+  mask-image: var(--callout-icon-caution);
+}
+
+/* Important */
+blockquote[data-callout="important"] {
+  border-left-color: var(--callout-important-color);
+  background-color: var(--callout-important-bg);
+}
+blockquote[data-callout="important"]::before {
+  color: var(--callout-important-color);
+}
+blockquote[data-callout="important"]::after {
+  background-color: var(--callout-important-color);
+  -webkit-mask-image: var(--callout-icon-important);
+  mask-image: var(--callout-icon-important);
+}
+
+/* Danger */
+blockquote[data-callout="danger"] {
+  border-left-color: var(--callout-danger-color);
+  background-color: var(--callout-danger-bg);
+}
+blockquote[data-callout="danger"]::before {
+  color: var(--callout-danger-color);
+}
+blockquote[data-callout="danger"]::after {
+  background-color: var(--callout-danger-color);
+  -webkit-mask-image: var(--callout-icon-danger);
+  mask-image: var(--callout-icon-danger);
+}
+
+/* ========================================
+   Foldable Callout Styles
+   ======================================== */
+
+/* Foldable callouts - clickable title area */
+blockquote[data-callout-foldable="true"] {
+  position: relative;
+}
+
+/* Title overlay - clickable area */
+blockquote[data-callout-foldable="true"] .callout-title-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: calc(var(--space-3, 0.75rem) + 1.5rem);
+  cursor: pointer;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: var(--space-4, 1rem);
+}
+
+blockquote[data-callout-foldable="true"] .callout-title-overlay:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+blockquote[data-callout-foldable="true"] .callout-title-overlay:focus {
+  outline: 2px solid var(--color-primary-500, #6366f1);
+  outline-offset: -2px;
+}
+
+/* Fold icon (chevron) */
+blockquote[data-callout-foldable="true"] .callout-fold-icon {
+  width: 16px;
+  height: 16px;
+  background-color: var(--callout-note-color);
+  -webkit-mask-image: var(--callout-icon-fold);
+  mask-image: var(--callout-icon-fold);
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  transition: transform var(--transition-normal, 200ms) var(--ease-default, ease);
+  flex-shrink: 0;
+}
+
+/* Type-specific fold icon colors */
+blockquote[data-callout="note"] .callout-fold-icon { background-color: var(--callout-note-color); }
+blockquote[data-callout="info"] .callout-fold-icon { background-color: var(--callout-info-color); }
+blockquote[data-callout="tip"] .callout-fold-icon { background-color: var(--callout-tip-color); }
+blockquote[data-callout="warning"] .callout-fold-icon { background-color: var(--callout-warning-color); }
+blockquote[data-callout="caution"] .callout-fold-icon { background-color: var(--callout-caution-color); }
+blockquote[data-callout="important"] .callout-fold-icon { background-color: var(--callout-important-color); }
+blockquote[data-callout="danger"] .callout-fold-icon { background-color: var(--callout-danger-color); }
+
+/* Collapsed state - content hidden */
+blockquote[data-callout-foldable="true"][data-callout-collapsed="true"] > *:not(.callout-title-overlay) {
+  display: none;
+}
+
+/* Show title bar even when collapsed */
+blockquote[data-callout-foldable="true"][data-callout-collapsed="true"] {
+  padding-bottom: var(--space-3, 0.75rem);
+}
+
+/* Rotate fold icon when collapsed */
+blockquote[data-callout-foldable="true"][data-callout-collapsed="true"] .callout-fold-icon {
+  transform: rotate(-90deg);
+}
+
+/* ========================================
+   Nested Callout Styles
+   ======================================== */
+
+blockquote[data-callout] blockquote[data-callout] {
+  margin: var(--space-3, 0.75rem) 0;
+}
+
+blockquote[data-callout][data-nest-level="1"] {
+  margin-left: var(--space-2, 0.5rem);
+}
+
+blockquote[data-callout][data-nest-level="2"] {
+  margin-left: var(--space-4, 1rem);
+}
+
+/* ========================================
+   Dark Mode Adjustments
+   ======================================== */
+
+html.dark blockquote[data-callout] code {
+  background-color: var(--color-gray-700, #374151);
+}
+
+/* OS dark mode preference */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) blockquote[data-callout] code {
+    background-color: var(--color-gray-700, #374151);
+  }
+}
+
+/* ========================================
+   Responsive Styles
+   ======================================== */
+
+/* Mobile */
 @media (max-width: 767px) {
-  .prose .callout {
-    padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4);
-    margin: var(--space-4) 0;
+  blockquote[data-callout] {
+    padding: var(--space-3, 0.75rem);
+    padding-top: calc(var(--space-3, 0.75rem) + 1.5rem);
+    margin: var(--space-3, 0.75rem) 0;
+  }
+
+  blockquote[data-callout]::before {
+    font-size: var(--font-size-sm, 0.875rem);
+    top: var(--space-2, 0.5rem);
+    left: var(--space-3, 0.75rem);
+  }
+
+  blockquote[data-callout]::after {
+    width: 18px;
+    height: 18px;
+    top: calc(var(--space-2, 0.5rem) + 0.0625rem);
+    left: var(--space-3, 0.75rem);
   }
 }
 
-/* タブレット・デスクトップ対応 */
+/* Tablet and Desktop */
 @media (min-width: 768px) {
-  .prose .callout {
-    max-width: 100%;
-    padding: var(--space-4) var(--space-5);
+  blockquote[data-callout] {
+    padding: var(--space-4, 1rem) var(--space-5, 1.25rem);
+    padding-top: calc(var(--space-4, 1rem) + 1.75rem);
   }
 }
 
-/* ダークモード対応（html.darkセレクター使用） */
-html.dark .prose .callout {
-  background-color: oklch(25% 0.04 293 / 0.5);
-  border-left-color: var(--color-primary-400);
+/* ========================================
+   Reduced Motion
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  blockquote[data-callout-foldable="true"] .callout-fold-indicator {
+    transition: none;
+  }
 }
 
-/* rehype-calloutsテーマのダークモード対応
- * rehype-calloutsは.darkクラスを使用するが、
- * 本サイトはhtml.darkを使用するため、オーバーライドが必要 */
-html.dark .callout {
-  mix-blend-mode: lighten;
-  background-color: rgb(from var(--rc-color-dark, var(--rc-color-default, #888)) r g b / 0.15);
+/* ========================================
+   .prose Container Overrides
+   ======================================== */
+
+.prose blockquote[data-callout] {
+  max-width: 100%;
 }
 
-html.dark .callout-title {
-  color: var(--rc-color-dark, var(--rc-color-default, #888));
+/* ========================================
+   Backwards Compatibility - Normal Blockquote
+   ======================================== */
+
+blockquote:not([data-callout]) {
+  border-left: 4px solid var(--color-gray-300, #d1d5db);
+  background-color: var(--color-gray-50, #f9fafb);
+  padding: var(--space-4, 1rem);
+  margin: var(--space-4, 1rem) 0;
+  border-radius: var(--radius-md, 0.375rem);
+  color: var(--color-text-secondary, #6b7280);
 }
 
-html.dark .callout-content {
-  color: var(--color-text-primary);
+html.dark blockquote:not([data-callout]) {
+  border-left-color: var(--color-gray-600, #4b5563);
+  background-color: var(--color-gray-800, #1f2937);
+  color: var(--color-text-secondary, #9ca3af);
 }
 
-/* callout内のテキスト色を明るく */
-html.dark .callout p,
-html.dark .callout li,
-html.dark .callout code {
-  color: var(--color-text-primary);
-}
-
-html.dark .callout code {
-  background-color: var(--color-gray-700);
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) blockquote:not([data-callout]) {
+    border-left-color: var(--color-gray-600, #4b5563);
+    background-color: var(--color-gray-800, #1f2937);
+    color: var(--color-text-secondary, #9ca3af);
+  }
 }
