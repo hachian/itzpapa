@@ -413,44 +413,47 @@ const treeClasses = [
 
 <script>
   // タグツリーの展開/折りたたみ機能
-  document.addEventListener('DOMContentLoaded', () => {
+  // astro:page-load は初回ロードとView Transitions後の両方で発火する
+  function initTagTree() {
     const trees = document.querySelectorAll('.tag-tree');
-    
+
     // 初期状態で折りたたみ状態を設定
     trees.forEach(tree => {
+      // 既に初期化済みの場合はスキップ
+      if (tree.dataset.initialized === 'true') return;
+      tree.dataset.initialized = 'true';
+
       const nodes = tree.querySelectorAll('.tree-node');
       nodes.forEach(node => {
         const level = parseInt(node.dataset.level || '0');
         const hasChildren = node.dataset.hasChildren === 'true';
-        
+
         if (hasChildren) {
           // デフォルトで全て折りたたみ
           const isExpanded = false;
           node.setAttribute('aria-expanded', isExpanded.toString());
-          
+
           if (!isExpanded) {
             // 折りたたみ状態の場合、子タグを非表示
             hideChildrenNodes(node);
           }
         }
       });
-    });
-    
-    trees.forEach(tree => {
+
       tree.addEventListener('click', (event) => {
         const button = event.target.closest('.tree-toggle');
         if (!button) return;
-        
+
         const nodeId = button.dataset.toggleTarget;
         const node = document.getElementById(nodeId);
         if (!node) return;
-        
+
         const isExpanded = node.getAttribute('aria-expanded') === 'true';
         const newExpanded = !isExpanded;
-        
+
         // 展開状態を更新
         node.setAttribute('aria-expanded', newExpanded.toString());
-        
+
         if (newExpanded) {
           // 展開：直接の子タグのみ表示
           showDirectChildren(node);
@@ -458,11 +461,11 @@ const treeClasses = [
           // 折りたたみ：全ての子孫タグを非表示
           hideChildrenNodes(node);
         }
-        
+
         // アクセシビリティ用のアナウンス
         const tagName = node.querySelector('.tree-tag-badge')?.textContent?.trim();
         const action = newExpanded ? '展開' : '折りたたみ';
-        
+
         // スクリーンリーダー用の一時的な通知
         const announcement = document.createElement('div');
         announcement.setAttribute('aria-live', 'polite');
@@ -470,80 +473,18 @@ const treeClasses = [
         announcement.style.position = 'absolute';
         announcement.style.left = '-10000px';
         announcement.textContent = `${tagName}の子タグを${action}しました`;
-        
+
         document.body.appendChild(announcement);
         setTimeout(() => {
           document.body.removeChild(announcement);
         }, 1000);
       });
-    });
-    
-    // 直接の子タグのみ表示する関数
-    function showDirectChildren(parentNode) {
-      const parentLevel = parseInt(parentNode.dataset.level || '0');
-      const parentPath = parentNode.dataset.tagPath;
-      const targetLevel = parentLevel + 1;
-      
-      let nextNode = parentNode.nextElementSibling;
-      while (nextNode && nextNode.classList.contains('tree-node')) {
-        const nextLevel = parseInt(nextNode.dataset.level || '0');
-        const nextPath = nextNode.dataset.tagPath;
-        
-        // 同レベルまたは上のレベルに到達したら終了
-        if (nextLevel <= parentLevel) {
-          break;
-        }
-        
-        // 直接の子かどうかチェック
-        if (nextLevel === targetLevel && nextPath && nextPath.startsWith(parentPath + '/')) {
-          // 親のパス + "/" + 子の名前 の形式かどうかチェック
-          const childPart = nextPath.substring(parentPath.length + 1);
-          if (!childPart.includes('/')) {
-            // 直接の子（中間にスラッシュがない）
-            nextNode.style.display = 'block';
-            nextNode.classList.remove('initially-hidden');
-          }
-        }
-        
-        nextNode = nextNode.nextElementSibling;
-      }
-    }
-    
-    // 子孫タグを全て非表示する関数
-    function hideChildrenNodes(parentNode) {
-      const parentLevel = parseInt(parentNode.dataset.level || '0');
-      const parentPath = parentNode.dataset.tagPath;
-      
-      let nextNode = parentNode.nextElementSibling;
-      while (nextNode && nextNode.classList.contains('tree-node')) {
-        const nextLevel = parseInt(nextNode.dataset.level || '0');
-        const nextPath = nextNode.dataset.tagPath;
-        
-        // 同レベルまたは上のレベルに到達したら終了
-        if (nextLevel <= parentLevel) {
-          break;
-        }
-        
-        // このノードの子孫かどうかチェック
-        if (nextPath && nextPath.startsWith(parentPath + '/')) {
-          nextNode.style.display = 'none';
-          nextNode.classList.add('initially-hidden');
-          // 子ノードも折りたたみ状態に
-          if (nextNode.dataset.hasChildren === 'true') {
-            nextNode.setAttribute('aria-expanded', 'false');
-          }
-        }
-        
-        nextNode = nextNode.nextElementSibling;
-      }
-    }
-    
-    // キーボードナビゲーション
-    trees.forEach(tree => {
+
+      // キーボードナビゲーション
       tree.addEventListener('keydown', (event) => {
         const currentNode = event.target.closest('.tree-node');
         if (!currentNode) return;
-        
+
         switch (event.key) {
           case 'ArrowRight':
             event.preventDefault();
@@ -554,7 +495,7 @@ const treeClasses = [
               }
             }
             break;
-            
+
           case 'ArrowLeft':
             event.preventDefault();
             if (currentNode.getAttribute('aria-expanded') === 'true') {
@@ -564,7 +505,7 @@ const treeClasses = [
               }
             }
             break;
-            
+
           case 'ArrowDown':
             event.preventDefault();
             const nextVisibleNode = getNextVisibleNode(currentNode);
@@ -572,7 +513,7 @@ const treeClasses = [
               nextVisibleNode.focus();
             }
             break;
-            
+
           case 'ArrowUp':
             event.preventDefault();
             const prevVisibleNode = getPrevVisibleNode(currentNode);
@@ -583,7 +524,67 @@ const treeClasses = [
         }
       });
     });
-    
+
+    // 直接の子タグのみ表示する関数
+    function showDirectChildren(parentNode) {
+      const parentLevel = parseInt(parentNode.dataset.level || '0');
+      const parentPath = parentNode.dataset.tagPath;
+      const targetLevel = parentLevel + 1;
+
+      let nextNode = parentNode.nextElementSibling;
+      while (nextNode && nextNode.classList.contains('tree-node')) {
+        const nextLevel = parseInt(nextNode.dataset.level || '0');
+        const nextPath = nextNode.dataset.tagPath;
+
+        // 同レベルまたは上のレベルに到達したら終了
+        if (nextLevel <= parentLevel) {
+          break;
+        }
+
+        // 直接の子かどうかチェック
+        if (nextLevel === targetLevel && nextPath && nextPath.startsWith(parentPath + '/')) {
+          // 親のパス + "/" + 子の名前 の形式かどうかチェック
+          const childPart = nextPath.substring(parentPath.length + 1);
+          if (!childPart.includes('/')) {
+            // 直接の子（中間にスラッシュがない）
+            nextNode.style.display = 'block';
+            nextNode.classList.remove('initially-hidden');
+          }
+        }
+
+        nextNode = nextNode.nextElementSibling;
+      }
+    }
+
+    // 子孫タグを全て非表示する関数
+    function hideChildrenNodes(parentNode) {
+      const parentLevel = parseInt(parentNode.dataset.level || '0');
+      const parentPath = parentNode.dataset.tagPath;
+
+      let nextNode = parentNode.nextElementSibling;
+      while (nextNode && nextNode.classList.contains('tree-node')) {
+        const nextLevel = parseInt(nextNode.dataset.level || '0');
+        const nextPath = nextNode.dataset.tagPath;
+
+        // 同レベルまたは上のレベルに到達したら終了
+        if (nextLevel <= parentLevel) {
+          break;
+        }
+
+        // このノードの子孫かどうかチェック
+        if (nextPath && nextPath.startsWith(parentPath + '/')) {
+          nextNode.style.display = 'none';
+          nextNode.classList.add('initially-hidden');
+          // 子ノードも折りたたみ状態に
+          if (nextNode.dataset.hasChildren === 'true') {
+            nextNode.setAttribute('aria-expanded', 'false');
+          }
+        }
+
+        nextNode = nextNode.nextElementSibling;
+      }
+    }
+
     function getNextVisibleNode(currentNode) {
       let next = currentNode.nextElementSibling;
       while (next && next.classList.contains('tree-node')) {
@@ -594,7 +595,7 @@ const treeClasses = [
       }
       return null;
     }
-    
+
     function getPrevVisibleNode(currentNode) {
       let prev = currentNode.previousElementSibling;
       while (prev && prev.classList.contains('tree-node')) {
@@ -605,5 +606,11 @@ const treeClasses = [
       }
       return null;
     }
-  });
+  }
+
+  // 初回ロード時
+  document.addEventListener('DOMContentLoaded', initTagTree);
+
+  // View Transitions後（astro:page-loadは初回とナビゲーション両方で発火）
+  document.addEventListener('astro:page-load', initTagTree);
 </script>
