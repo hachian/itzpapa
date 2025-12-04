@@ -16,11 +16,65 @@ const colors = {
 
 // テスト設定
 const testSuites = [
+  // Fixture Loader
   {
-    name: 'Wikilink Core Tests',
+    name: 'Fixture Loader Tests',
+    command: 'node',
+    args: ['--test', 'test/fixture-loader-test.js'],
+    timeout: 30000
+  },
+  // Unit Tests
+  {
+    name: 'Wikilink Unit Tests',
+    command: 'node',
+    args: ['--test', 'test/wikilink-unit-test.js'],
+    timeout: 30000
+  },
+  {
+    name: 'Mark Highlight Unit Tests',
+    command: 'node',
+    args: ['--test', 'test/mark-highlight-unit-test.js'],
+    timeout: 30000
+  },
+  {
+    name: 'Tags Unit Tests',
+    command: 'node',
+    args: ['--test', 'test/tags-unit-test.js'],
+    timeout: 30000
+  },
+  {
+    name: 'Callout Unit Tests',
+    command: 'node',
+    args: ['--test', 'test/callout-test.js'],
+    timeout: 30000
+  },
+  // Integration Tests
+  {
+    name: 'Integration Tests',
+    command: 'node',
+    args: ['--test', 'test/integration-test.js'],
+    timeout: 60000
+  },
+  // E2E Tests
+  {
+    name: 'HTML Validator Tests',
+    command: 'node',
+    args: ['--test', 'test/html-validator-test.js'],
+    timeout: 30000
+  },
+  {
+    name: 'E2E Tests',
+    command: 'node',
+    args: ['--test', 'test/e2e-test.js'],
+    timeout: 60000
+  },
+  // Legacy Tests
+  {
+    name: 'Wikilink Core Tests (Legacy)',
     command: 'npm',
     args: ['run', 'test:wikilink'],
-    timeout: 30000
+    timeout: 30000,
+    optional: true
   },
   {
     name: 'Image Wikilink Tests',
@@ -38,7 +92,8 @@ const testSuites = [
     name: 'Performance Tests',
     command: 'npm',
     args: ['run', 'test:performance'],
-    timeout: 60000
+    timeout: 60000,
+    optional: true
   }
 ];
 
@@ -105,8 +160,8 @@ function runTestSuite(testSuite) {
 
 // メイン実行関数
 async function runAllTests() {
-  console.log(colors.bold('\n🧪 Wikilink Plugin Test Suite'));
-  console.log(colors.dim('Running all test suites...\n'));
+  console.log(colors.bold('\n🧪 Markdown Plugin Test Suite'));
+  console.log(colors.dim('Running all test suites (Unit, Integration, E2E)...\n'));
   console.log('='.repeat(60));
   
   const startTime = Date.now();

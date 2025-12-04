@@ -1,0 +1,49 @@
+{
+  "complete-markdown": {
+    "callouts": {
+      "count": 6,
+      "types": ["note", "warning", "tip", "info", "caution", "note"]
+    },
+    "wikilinks": {
+      "minCount": 8
+    },
+    "highlights": {
+      "minCount": 5
+    },
+    "tags": {
+      "minCount": 6
+    },
+    "selectors": [
+      "[data-callout='note']",
+      "[data-callout='warning']",
+      "mark",
+      "a[href*='/blog/']",
+      "a[href*='/tags/']"
+    ]
+  },
+  "callout-variants": {
+    "callouts": {
+      "count": 11,
+      "types": ["note", "tip", "warning", "danger", "info", "caution", "important"]
+    },
+    "selectors": [
+      "[data-callout='note']",
+      "[data-callout='tip']",
+      "[data-callout='warning']",
+      "[data-callout='danger']",
+      "[data-callout='info']",
+      "[data-callout='caution']",
+      "[data-callout='important']",
+      ".callout-title",
+      ".callout-content"
+    ]
+  },
+  "wikilink-variants": {
+    "wikilinks": {
+      "minCount": 10
+    },
+    "selectors": [
+      "a[href*='/blog/']"
+    ]
+  }
+}

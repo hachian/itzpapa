@@ -7,14 +7,18 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
+    "test": "node test/test-runner.js",
+    "test:unit": "node --test test/wikilink-unit-test.js test/mark-highlight-unit-test.js test/tags-unit-test.js test/callout-test.js",
+    "test:integration": "node --test test/integration-test.js",
+    "test:e2e": "node --test test/e2e-test.js test/html-validator-test.js",
     "test:wikilink": "node test/wikilink-test.js",
     "test:image": "node --test test/image-wikilink-test.js",
     "test:table": "node test/table-wikilink-test.js",
     "test:debug": "node test/debug-test.js",
     "test:performance": "node test/performance-test.js",
-    "test": "node test/test-runner.js",
     "test:all": "npm run test:wikilink && npm run test:image && npm run test:table",
-    "test:mark-highlight": "node test/mark-highlight-test-suite.js"
+    "test:mark-highlight": "node test/mark-highlight-test-suite.js",
+    "test:fixtures": "node --test test/fixture-loader-test.js"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.5",
@@ -24,6 +28,7 @@
     "sharp": "^0.34.2"
   },
   "devDependencies": {
+    "cheerio": "^1.1.2",
     "remark": "^15.0.1",
     "unified": "^11.0.5",
     "unist-util-visit": "^5.0.0"
