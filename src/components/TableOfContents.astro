@@ -190,7 +190,8 @@ const tocItems: TocItem[] = tocHeadings.map(heading => ({
 
 <script>
   // シンプルなスクロール連動ハイライト機能
-  document.addEventListener('DOMContentLoaded', () => {
+  // astro:page-load はDOMContentLoadedと異なり、View Transitions後にも発火する
+  document.addEventListener('astro:page-load', () => {
     const headings = document.querySelectorAll('h2[id], h3[id]');
 
     if (headings.length === 0) return;
@@ -274,7 +275,7 @@ const tocItems: TocItem[] = tocHeadings.map(heading => ({
   });
 
   // モバイル用折りたたみ機能
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('astro:page-load', () => {
     const tocSidebar = document.querySelector('.toc-sidebar');
     if (!tocSidebar) return;
 

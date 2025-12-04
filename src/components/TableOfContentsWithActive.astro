@@ -39,7 +39,8 @@ const { headings } = Astro.props;
 
 <script>
   // Intersection Observer によるアクティブ状態管理
-  document.addEventListener('DOMContentLoaded', () => {
+  // astro:page-load はDOMContentLoadedと異なり、View Transitions後にも発火する
+  document.addEventListener('astro:page-load', () => {
     // 見出し要素を取得
     const headings = document.querySelectorAll('h2[id], h3[id]');
 
@@ -129,7 +130,7 @@ const { headings } = Astro.props;
   });
 
   // モバイル用折りたたみ機能
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('astro:page-load', () => {
     const tocSidebar = document.querySelector('.toc-sidebar');
     if (!tocSidebar) return;
 
