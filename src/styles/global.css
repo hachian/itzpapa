@@ -275,6 +275,10 @@ html.dark code {
 	color: var(--color-gray-100);
 }
 
+html.dark pre > code {
+	background-color: transparent;
+}
+
 html.dark hr {
 	border-top-color: var(--color-gray-700);
 }
@@ -298,6 +302,10 @@ html.dark blockquote:not(.callout) {
 	:root:not(.light) code {
 		background-color: var(--color-gray-700);
 		color: var(--color-gray-100);
+	}
+
+	:root:not(.light) pre > code {
+		background-color: transparent;
 	}
 
 	:root:not(.light) hr {
