@@ -23,7 +23,7 @@ const latestPosts = allPosts
 		<Header />
 		<main style="view-transition-name: main-content;">
 			<!-- ヒーローセクション -->
-			<section class="hero" aria-labelledby="site-title">
+			<section class="hero hero--animated" aria-labelledby="site-title">
 				<div class="hero__container">
 					<div class="hero__banner">
 						<Image
@@ -108,6 +108,30 @@ const latestPosts = allPosts
 </html>
 
 <style>
+	/* ヒーローセクション フェードインアニメーション */
+	@keyframes hero-fade-in {
+		from {
+			opacity: 0;
+			transform: translateY(20px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	.hero--animated {
+		animation: hero-fade-in var(--duration-slow) var(--easing-out) both;
+		animation-delay: 100ms; /* LCP測定後に開始 */
+	}
+
+	/* prefers-reduced-motion でアニメーション無効化 */
+	@media (prefers-reduced-motion: reduce) {
+		.hero--animated {
+			animation: none;
+		}
+	}
+
 	/* ヒーローセクション */
 	.hero {
 		padding: var(--space-12) var(--space-4);
@@ -140,11 +164,14 @@ const latestPosts = allPosts
 		object-fit: contain;
 		border-radius: var(--radius-xl);
 		box-shadow: var(--shadow-lg);
-		transition: transform var(--duration-normal) var(--easing-default);
+		transition:
+			transform var(--duration-normal) var(--easing-default),
+			box-shadow var(--duration-normal) var(--easing-default);
 	}
 
 	.hero__image:hover {
-		transform: scale(1.05);
+		transform: scale(1.08);
+		box-shadow: var(--shadow-xl);
 	}
 
 	.hero__text {
@@ -178,6 +205,9 @@ const latestPosts = allPosts
 	.nav-section {
 		padding: var(--space-16) var(--space-4);
 		background: var(--color-surface);
+		border-radius: var(--radius-2xl);
+		margin: var(--space-4);
+		box-shadow: var(--shadow-sm);
 	}
 
 	.nav-section__container {
@@ -206,6 +236,9 @@ const latestPosts = allPosts
 	.posts-section {
 		padding: var(--space-16) var(--space-4);
 		background: var(--color-gray-50);
+		border-radius: var(--radius-2xl);
+		margin: var(--space-4);
+		box-shadow: var(--shadow-sm);
 	}
 
 	.posts-section__container {
@@ -286,6 +319,18 @@ const latestPosts = allPosts
 		}
 	}
 
+	/* 768px未満：縦方向レイアウト、テキスト中央揃え */
+	@media (max-width: 767px) {
+		.hero__container {
+			text-align: center;
+		}
+
+		.hero__text {
+			text-align: center;
+		}
+	}
+
+	/* 480px以下：モバイル最適化 */
 	@media (max-width: 480px) {
 		.hero {
 			padding: var(--space-8) var(--space-4);
@@ -315,6 +360,36 @@ const latestPosts = allPosts
 		}
 	}
 
+	/* 320px〜：極小画面対応 */
+	@media (max-width: 359px) {
+		.hero {
+			padding: var(--space-6) var(--space-3);
+			margin: var(--space-1);
+		}
+
+		.hero__title {
+			font-size: var(--font-size-2xl);
+		}
+
+		.hero__description {
+			font-size: var(--font-size-sm);
+		}
+
+		.hero__image {
+			width: 64px;
+			height: 64px;
+		}
+
+		.section-title {
+			font-size: var(--font-size-xl);
+		}
+
+		.nav-section,
+		.posts-section {
+			padding: var(--space-8) var(--space-2);
+		}
+	}
+
 	/* ダークモード */
 	html.dark .hero {
 		background: linear-gradient(
@@ -324,7 +399,13 @@ const latestPosts = allPosts
 		);
 	}
 
+	html.dark .nav-section {
+		background: var(--color-gray-800);
+		box-shadow: var(--shadow-md);
+	}
+
 	html.dark .posts-section {
 		background: var(--color-gray-900);
+		box-shadow: var(--shadow-md);
 	}
 </style>
