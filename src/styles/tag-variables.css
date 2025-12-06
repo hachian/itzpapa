@@ -86,14 +86,14 @@
   --tag-more-mobile-padding-y: 0.15em;
   --tag-more-mobile-padding-x: 0.5em;
   
-  /* TagTree要素用変数 */
-  --tree-bg: #ffffff;
-  --tree-border: #e5e7eb;
-  --tree-hover-bg: rgba(243, 244, 246, 0.5);
-  --tree-guide-color: #e5e7eb;
-  --tree-toggle-color: #6b7280;
-  --tree-toggle-hover-bg: rgba(243, 244, 246, 0.8);
-  --tree-toggle-hover-color: #374151;
+  /* TagTree要素用変数 - デザイントークンに統一 */
+  --tree-bg: var(--color-surface);
+  --tree-border: var(--color-gray-200);
+  --tree-hover-bg: var(--color-gray-100);
+  --tree-guide-color: var(--color-gray-200);
+  --tree-toggle-color: var(--color-gray-500);
+  --tree-toggle-hover-bg: var(--color-gray-100);
+  --tree-toggle-hover-color: var(--color-gray-700);
 }
 
 /* ダークモード対応 - デザイントークンのOKLCHパレットから参照 */
@@ -115,14 +115,14 @@ html.dark {
   --tag-more-color: #cbd5e1;
   --tag-more-border: #475569;
   
-  /* TagTree要素ダークモード */
-  --tree-bg: #1f2937;
-  --tree-border: #374151;
-  --tree-hover-bg: rgba(55, 65, 81, 0.5);
-  --tree-guide-color: #374151;
-  --tree-toggle-color: #9ca3af;
-  --tree-toggle-hover-bg: rgba(55, 65, 81, 0.8);
-  --tree-toggle-hover-color: #d1d5db;
+  /* TagTree要素ダークモード - デザイントークンに統一 */
+  --tree-bg: var(--color-gray-800);
+  --tree-border: var(--color-gray-700);
+  --tree-hover-bg: var(--color-gray-700);
+  --tree-guide-color: var(--color-gray-700);
+  --tree-toggle-color: var(--color-gray-400);
+  --tree-toggle-hover-bg: var(--color-gray-700);
+  --tree-toggle-hover-color: var(--color-gray-200);
 }
 
 /* 階層タグ用の追加変数（廃止予定 - 統一スタイルに移行） */

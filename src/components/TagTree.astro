@@ -347,22 +347,22 @@ const treeClasses = [
     display: none;
   }
   
-  /* ダークモード対応 - CSS変数を使用 */
+  /* ダークモード対応 - CSS変数を使用（デザイントークンに統一） */
   html.dark .tag-tree {
-    background: var(--tree-bg, #1f2937);
-    border-color: var(--tree-border, #374151);
+    background: var(--tree-bg);
+    border-color: var(--tree-border);
   }
 
   html.dark .tree-node-content:hover {
-    background-color: var(--tree-hover-bg, rgba(55, 65, 81, 0.5));
+    background-color: var(--tree-hover-bg);
   }
 
   html.dark .tree-toggle:hover {
-    background-color: var(--tree-toggle-hover-bg, rgba(55, 65, 81, 0.8));
+    background-color: var(--tree-toggle-hover-bg);
   }
 
   html.dark .indent-guide::before {
-    background-color: var(--tree-guide-color, #374151);
+    background-color: var(--tree-guide-color);
   }
   
   /* アニメーション */

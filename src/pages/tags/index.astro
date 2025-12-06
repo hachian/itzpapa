@@ -212,14 +212,14 @@ const pageDescription = `${tagStatistics.totalTags}個のタグで記事を分�
         margin: 0;
       }
 
-      /* ダークモード */
+      /* ダークモード - デザイントークンに統一 */
       html.dark .flat-tags-tree {
-        background: var(--tree-bg, #1f2937);
-        border-color: var(--tree-border, #374151);
+        background: var(--tree-bg);
+        border-color: var(--tree-border);
       }
 
       html.dark .flat-tags-tree .tree-node-content:hover {
-        background-color: var(--tree-hover-bg, rgba(55, 65, 81, 0.5));
+        background-color: var(--tree-hover-bg);
       }
 
       /* レスポンシブ対応 */

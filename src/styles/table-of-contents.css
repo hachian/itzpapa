@@ -255,10 +255,14 @@ html {
 /* 目次コンテナの追加スタイル調整 */
 .table-of-contents {
   background-color: var(--color-gray-50);
+  border: 1px solid var(--color-gray-200);
   border-radius: var(--radius-xl);
   padding: var(--space-6);
   box-shadow: var(--shadow-sm);
-  transition: box-shadow var(--duration-fast) var(--easing-default);
+  transition:
+    background-color var(--duration-normal) var(--easing-default),
+    border-color var(--duration-normal) var(--easing-default),
+    box-shadow var(--duration-fast) var(--easing-default);
 }
 
 .table-of-contents:hover {
@@ -268,7 +272,17 @@ html {
 /* ダークモード対応 */
 html.dark .table-of-contents {
   background-color: var(--color-gray-800);
-  border: 1px solid var(--color-gray-700);
+  border-color: var(--color-gray-700);
+}
+
+/* ライトモード目次リンクのホバー状態 */
+.toc-link:hover {
+  background-color: var(--color-gray-100);
+}
+
+/* ライトモード目次リンクのアクティブ状態 */
+.toc-link.active {
+  background-color: var(--color-primary-50);
 }
 
 html.dark .toc-link {
@@ -283,6 +297,24 @@ html.dark .toc-link:hover {
 html.dark .toc-link.active {
   color: var(--color-primary-400);
   background-color: oklch(30% 0.08 293);
+}
+
+/* OSプリファレンス対応 */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) .table-of-contents {
+    background-color: var(--color-gray-800);
+    border-color: var(--color-gray-700);
+  }
+
+  :root:not(.light) .toc-link:hover {
+    color: var(--color-primary-400);
+    background-color: oklch(30% 0.08 293);
+  }
+
+  :root:not(.light) .toc-link.active {
+    color: var(--color-primary-400);
+    background-color: oklch(30% 0.08 293);
+  }
 }
 
 /* モバイルダークモード */

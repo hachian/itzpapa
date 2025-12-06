@@ -103,9 +103,18 @@ html.dark mark.highlight-pink {
 
 /* Selection styling to ensure visibility */
 mark::selection {
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: oklch(0% 0 0 / 0.2);
 }
 
 mark::-moz-selection {
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: oklch(0% 0 0 / 0.2);
+}
+
+/* ダークモードでは白い選択色を使用 */
+html.dark mark::selection {
+  background-color: oklch(100% 0 0 / 0.3);
+}
+
+html.dark mark::-moz-selection {
+  background-color: oklch(100% 0 0 / 0.3);
 }
