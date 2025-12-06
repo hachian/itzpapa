@@ -337,7 +337,7 @@ blockquote[data-callout-foldable="true"] .callout-title-overlay:hover {
 }
 
 blockquote[data-callout-foldable="true"] .callout-title-overlay:focus {
-  outline: 2px solid var(--color-primary-500, oklch(55% 0.24 293));
+  outline: 2px solid var(--color-primary-500);
   outline-offset: -2px;
 }
 

@@ -55,20 +55,24 @@
    OKLCH Color System
    ========================================= */
 :root {
-  /* Primary Purple Palette (OKLCH)
-   * Base: #7c3aed → oklch(55% 0.24 293)
+  /* Primary Hue - Change this value to change the entire color scheme
+   * 293 = Purple, 150 = Green, 220 = Blue, 30 = Orange, etc.
+   */
+  --primary-hue: 293;
+
+  /* Primary Palette (OKLCH)
    * Lightness varies from 97% (50) to 25% (900)
    */
-  --color-primary-50: oklch(97% 0.02 293);
-  --color-primary-100: oklch(94% 0.05 293);
-  --color-primary-200: oklch(88% 0.10 293);
-  --color-primary-300: oklch(78% 0.16 293);
-  --color-primary-400: oklch(68% 0.20 293);
-  --color-primary-500: oklch(55% 0.24 293);
-  --color-primary-600: oklch(48% 0.22 293);
-  --color-primary-700: oklch(40% 0.19 293);
-  --color-primary-800: oklch(32% 0.15 293);
-  --color-primary-900: oklch(25% 0.12 293);
+  --color-primary-50: oklch(97% 0.02 var(--primary-hue));
+  --color-primary-100: oklch(94% 0.05 var(--primary-hue));
+  --color-primary-200: oklch(88% 0.10 var(--primary-hue));
+  --color-primary-300: oklch(78% 0.16 var(--primary-hue));
+  --color-primary-400: oklch(68% 0.20 var(--primary-hue));
+  --color-primary-500: oklch(55% 0.24 var(--primary-hue));
+  --color-primary-600: oklch(48% 0.22 var(--primary-hue));
+  --color-primary-700: oklch(40% 0.19 var(--primary-hue));
+  --color-primary-800: oklch(32% 0.15 var(--primary-hue));
+  --color-primary-900: oklch(25% 0.12 var(--primary-hue));
 
   /* Neutral Gray Palette (OKLCH)
    * Subtle purple hue (280) for cohesion with primary
@@ -92,6 +96,22 @@
   --color-accent: var(--color-primary-500);
   --color-link: var(--color-primary-600);
   --color-link-hover: var(--color-primary-700);
+
+  /* Component-specific color utilities */
+  --color-primary-hover-dark: oklch(30% 0.08 var(--primary-hue));
+  --color-primary-500-alpha05: oklch(55% 0.24 var(--primary-hue) / 0.05);
+  --color-primary-500-alpha08: oklch(55% 0.24 var(--primary-hue) / 0.08);
+  --color-primary-500-alpha10: oklch(55% 0.24 var(--primary-hue) / 0.1);
+  --color-primary-500-alpha12: oklch(55% 0.24 var(--primary-hue) / 0.12);
+  --color-primary-500-alpha20: oklch(55% 0.24 var(--primary-hue) / 0.2);
+  --color-primary-500-alpha30: oklch(55% 0.24 var(--primary-hue) / 0.3);
+  --color-primary-500-alpha40: oklch(55% 0.24 var(--primary-hue) / 0.4);
+  --color-primary-500-alpha50: oklch(55% 0.24 var(--primary-hue) / 0.5);
+  --color-primary-dark-alpha20: oklch(65% 0.20 var(--primary-hue) / 0.2);
+  --color-primary-dark-alpha30: oklch(65% 0.20 var(--primary-hue) / 0.3);
+  --color-primary-dark-alpha50: oklch(65% 0.20 var(--primary-hue) / 0.5);
+  --color-dark-surface-97: oklch(20% 0.02 var(--primary-hue) / 0.97);
+  --color-dark-surface-98: oklch(20% 0.02 var(--primary-hue) / 0.98);
 
   /* =========================================
      Spacing Scale (4px base)
@@ -225,10 +245,10 @@ html.dark {
   --color-text-secondary: var(--color-gray-400);
 
   /* Primary Adjustment (increase lightness for dark backgrounds) */
-  --color-primary-500: oklch(65% 0.20 293);
+  --color-primary-500: oklch(65% 0.20 var(--primary-hue));
   --color-accent: var(--color-primary-500);
-  --color-link: oklch(72% 0.18 293);
-  --color-link-hover: oklch(78% 0.16 293);
+  --color-link: oklch(72% 0.18 var(--primary-hue));
+  --color-link-hover: oklch(78% 0.16 var(--primary-hue));
 
   /* Shadows - Darker and more diffused for dark mode */
   --shadow-sm: 0 1px 2px oklch(0% 0 0 / 0.2);
@@ -239,7 +259,7 @@ html.dark {
   --shadow-inner: inset 0 2px 4px oklch(0% 0 0 / 0.2);
 
   /* Focus ring adjustment for dark mode */
-  --focus-ring-color: oklch(72% 0.18 293);
+  --focus-ring-color: oklch(72% 0.18 var(--primary-hue));
 }
 
 /* =========================================
@@ -252,17 +272,17 @@ html.dark {
     --color-surface: var(--color-gray-800);
     --color-text-primary: var(--color-gray-100);
     --color-text-secondary: var(--color-gray-400);
-    --color-primary-500: oklch(65% 0.20 293);
+    --color-primary-500: oklch(65% 0.20 var(--primary-hue));
     --color-accent: var(--color-primary-500);
-    --color-link: oklch(72% 0.18 293);
-    --color-link-hover: oklch(78% 0.16 293);
+    --color-link: oklch(72% 0.18 var(--primary-hue));
+    --color-link-hover: oklch(78% 0.16 var(--primary-hue));
 
     --shadow-sm: 0 1px 2px oklch(0% 0 0 / 0.2);
     --shadow-md: 0 4px 6px oklch(0% 0 0 / 0.25), 0 2px 4px oklch(0% 0 0 / 0.2);
     --shadow-lg: 0 10px 15px oklch(0% 0 0 / 0.3), 0 4px 6px oklch(0% 0 0 / 0.2);
     --shadow-xl: 0 20px 25px oklch(0% 0 0 / 0.35), 0 8px 10px oklch(0% 0 0 / 0.25);
 
-    --focus-ring-color: oklch(72% 0.18 293);
+    --focus-ring-color: oklch(72% 0.18 var(--primary-hue));
   }
 }
 

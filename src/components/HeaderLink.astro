@@ -64,11 +64,11 @@ const isActive = href === pathname || href === '/' + (subpath?.[0] || '');
 
 	/* ダークモード */
 	html.dark a:hover {
-		background-color: oklch(30% 0.08 293);
+		background-color: var(--color-primary-hover-dark);
 	}
 
 	html.dark a.active {
 		color: var(--color-primary-400);
-		background-color: oklch(30% 0.08 293);
+		background-color: var(--color-primary-hover-dark);
 	}
 </style>

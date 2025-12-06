@@ -79,9 +79,9 @@ const accessibility = {
     gap: 0.25em;
     padding: var(--tag-padding-y, 0.2em) var(--tag-padding-x, 0.6em);
     margin: 0 var(--tag-margin-x, 0.2em) var(--tag-margin-y, 0.2em) 0;
-    background-color: var(--tag-bg, oklch(97% 0.02 293));
-    color: var(--tag-color, oklch(48% 0.22 293));
-    border: 1px solid var(--tag-border, oklch(88% 0.10 293));
+    background-color: var(--tag-bg, var(--color-primary-50));
+    color: var(--tag-color, var(--color-primary-600));
+    border: 1px solid var(--tag-border, var(--color-primary-200));
     border-radius: var(--tag-border-radius, 1rem);
     font-size: var(--tag-font-size, 0.875rem);
     font-weight: var(--tag-font-weight, 500);
@@ -100,16 +100,16 @@ const accessibility = {
   /* ホバー効果 - 統一スタイル */
   .tag:where(a):hover,
   .tag:where(a):focus {
-    background-color: var(--tag-hover-bg, oklch(55% 0.24 293));
+    background-color: var(--tag-hover-bg, var(--color-primary-500));
     color: var(--tag-hover-color, oklch(100% 0 0));
-    border-color: var(--tag-hover-border, oklch(55% 0.24 293));
+    border-color: var(--tag-hover-border, var(--color-primary-500));
     transform: var(--tag-hover-transform, translateY(-1px));
     box-shadow: var(--tag-hover-shadow, 0 2px 4px oklch(0% 0 0 / 0.1));
   }
 
   /* フォーカス表示 */
   .tag:where(a):focus {
-    outline: 2px solid var(--tag-focus-color, oklch(55% 0.24 293));
+    outline: 2px solid var(--tag-focus-color, var(--color-primary-500));
     outline-offset: var(--tag-focus-offset, 2px);
   }
   
@@ -130,16 +130,16 @@ const accessibility = {
   
   /* ダークモード対応 - 統一スタイル */
   html.dark .tag {
-    background-color: var(--tag-bg, oklch(25% 0.12 293));
-    color: var(--tag-color, oklch(88% 0.10 293));
-    border-color: var(--tag-border, oklch(32% 0.15 293));
+    background-color: var(--tag-bg, var(--color-primary-900));
+    color: var(--tag-color, var(--color-primary-200));
+    border-color: var(--tag-border, var(--color-primary-800));
   }
 
   html.dark .tag:where(a):hover,
   html.dark .tag:where(a):focus {
-    background-color: var(--tag-hover-bg, oklch(65% 0.20 293));
+    background-color: var(--tag-hover-bg, var(--color-primary-500));
     color: var(--tag-hover-color, oklch(100% 0 0));
-    border-color: var(--tag-hover-border, oklch(65% 0.20 293));
+    border-color: var(--tag-hover-border, var(--color-primary-500));
   }
   
   /* 小さい画面での調整 - CSS変数使用 */

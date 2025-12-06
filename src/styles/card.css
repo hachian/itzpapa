@@ -203,7 +203,7 @@ html.dark .card--feature {
   background: linear-gradient(
     135deg,
     var(--color-surface) 0%,
-    oklch(25% 0.08 293) 100%
+    oklch(25% 0.08 var(--primary-hue)) 100%
   );
 }
 

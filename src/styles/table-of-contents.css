@@ -97,21 +97,21 @@
     z-index: calc(var(--z-modal) + 1);
     transition: all var(--duration-fast) var(--easing-default);
     letter-spacing: 0.3px;
-    box-shadow: 0 2px 8px oklch(55% 0.24 293 / 0.3);
+    box-shadow: 0 2px 8px var(--color-primary-500-alpha30);
   }
 
   /* 展開時のボタン */
   .toc-sidebar.expanded::before {
     content: '📖 目次';
     border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
-    box-shadow: 0 2px 8px oklch(55% 0.24 293 / 0.2);
+    box-shadow: 0 2px 8px var(--color-primary-500-alpha20);
   }
 
   /* ホバー効果 */
   .toc-sidebar::before:hover {
     background: linear-gradient(135deg, var(--color-primary-600), var(--color-primary-700));
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px oklch(55% 0.24 293 / 0.4);
+    box-shadow: 0 4px 12px var(--color-primary-500-alpha40);
   }
 
   /* 目次コンテンツ */
@@ -143,7 +143,7 @@
     color: var(--color-primary-500);
     margin-bottom: var(--space-4);
     padding-bottom: var(--space-2);
-    border-bottom: 2px solid oklch(55% 0.24 293 / 0.1);
+    border-bottom: 2px solid var(--color-primary-500-alpha10);
   }
 
   /* スクロールコンテナ */
@@ -158,7 +158,7 @@
   }
 
   .toc-sidebar .toc-scroll-container::-webkit-scrollbar-track {
-    background: oklch(55% 0.24 293 / 0.05);
+    background: var(--color-primary-500-alpha05);
     border-radius: var(--radius-sm);
   }
 
@@ -178,13 +178,13 @@
   }
 
   .toc-sidebar .toc-link:hover {
-    background: oklch(55% 0.24 293 / 0.08);
+    background: var(--color-primary-500-alpha08);
     color: var(--color-primary-500);
     transform: translateX(4px);
   }
 
   .toc-sidebar .toc-link.active {
-    background: oklch(55% 0.24 293 / 0.12);
+    background: var(--color-primary-500-alpha12);
     color: var(--color-primary-500);
     font-weight: var(--font-weight-semibold);
   }
@@ -291,12 +291,12 @@ html.dark .toc-link {
 
 html.dark .toc-link:hover {
   color: var(--color-primary-400);
-  background-color: oklch(30% 0.08 293);
+  background-color: var(--color-primary-hover-dark);
 }
 
 html.dark .toc-link.active {
   color: var(--color-primary-400);
-  background-color: oklch(30% 0.08 293);
+  background-color: var(--color-primary-hover-dark);
 }
 
 /* OSプリファレンス対応 */
@@ -308,28 +308,28 @@ html.dark .toc-link.active {
 
   :root:not(.light) .toc-link:hover {
     color: var(--color-primary-400);
-    background-color: oklch(30% 0.08 293);
+    background-color: var(--color-primary-hover-dark);
   }
 
   :root:not(.light) .toc-link.active {
     color: var(--color-primary-400);
-    background-color: oklch(30% 0.08 293);
+    background-color: var(--color-primary-hover-dark);
   }
 }
 
 /* モバイルダークモード */
 @media (max-width: 767px) {
   html.dark .toc-sidebar {
-    background: oklch(20% 0.02 293 / 0.97);
+    background: var(--color-dark-surface-97);
     border-color: var(--color-gray-700);
   }
 
   html.dark .toc-sidebar.expanded {
-    background: oklch(20% 0.02 293 / 0.98);
+    background: var(--color-dark-surface-98);
   }
 
   html.dark .toc-sidebar .table-of-contents .toc-title {
     color: var(--color-primary-400);
-    border-bottom-color: oklch(65% 0.20 293 / 0.2);
+    border-bottom-color: var(--color-primary-dark-alpha20);
   }
 }

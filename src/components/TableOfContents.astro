@@ -76,7 +76,7 @@ const tocItems: TocItem[] = tocHeadings.map(heading => ({
     overflow-y: auto;
     padding-right: var(--space-2);
     scrollbar-width: thin;
-    scrollbar-color: oklch(55% 0.24 293 / 0.3) transparent;
+    scrollbar-color: var(--color-primary-500-alpha30) transparent;
   }
 
   /* Webkitブラウザ用のスクロールバー */
@@ -89,12 +89,12 @@ const tocItems: TocItem[] = tocHeadings.map(heading => ({
   }
 
   .toc-scroll-container::-webkit-scrollbar-thumb {
-    background-color: oklch(55% 0.24 293 / 0.3);
+    background-color: var(--color-primary-500-alpha30);
     border-radius: var(--radius-sm);
   }
 
   .toc-scroll-container::-webkit-scrollbar-thumb:hover {
-    background-color: oklch(55% 0.24 293 / 0.5);
+    background-color: var(--color-primary-500-alpha50);
   }
 
   .toc-list {
@@ -167,24 +167,24 @@ const tocItems: TocItem[] = tocHeadings.map(heading => ({
 
   html.dark .toc-link:hover {
     color: var(--color-primary-400);
-    background-color: oklch(30% 0.08 293);
+    background-color: var(--color-primary-hover-dark);
   }
 
   html.dark .toc-link.active {
     color: var(--color-primary-400);
-    background-color: oklch(30% 0.08 293);
+    background-color: var(--color-primary-hover-dark);
   }
 
   html.dark .toc-scroll-container {
-    scrollbar-color: oklch(65% 0.20 293 / 0.3) transparent;
+    scrollbar-color: var(--color-primary-dark-alpha30) transparent;
   }
 
   html.dark .toc-scroll-container::-webkit-scrollbar-thumb {
-    background-color: oklch(65% 0.20 293 / 0.3);
+    background-color: var(--color-primary-dark-alpha30);
   }
 
   html.dark .toc-scroll-container::-webkit-scrollbar-thumb:hover {
-    background-color: oklch(65% 0.20 293 / 0.5);
+    background-color: var(--color-primary-dark-alpha50);
   }
 </style>
 

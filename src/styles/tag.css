@@ -5,8 +5,8 @@
   display: inline-block;
   padding: 0.2em 0.5em;
   margin: 0 0.2em;
-  background-color: var(--tag-bg, oklch(97% 0.02 293));
-  color: var(--tag-color, oklch(48% 0.22 293));
+  background-color: var(--tag-bg, var(--color-primary-50));
+  color: var(--tag-color, var(--color-primary-600));
   border-radius: 0.25em;
   font-size: 0.9em;
   font-weight: 500;

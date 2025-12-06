@@ -207,7 +207,7 @@ html.dark .btn--secondary {
 }
 
 html.dark .btn--secondary:hover {
-  background: oklch(30% 0.08 293);
+  background: var(--color-primary-hover-dark);
   border-color: var(--color-primary-300);
   color: var(--color-primary-300);
 }
@@ -221,7 +221,7 @@ html.dark .btn--ghost:active {
 }
 
 html.dark .btn--text:hover {
-  background: oklch(30% 0.06 293);
+  background: var(--color-primary-hover-dark);
 }
 
 /* =========================================

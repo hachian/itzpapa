@@ -267,7 +267,7 @@ const treeClasses = [
   }
   
   .tree-toggle:focus {
-    outline: 2px solid var(--tag-focus-color, oklch(55% 0.24 293));
+    outline: 2px solid var(--tag-focus-color, var(--color-primary-500));
     outline-offset: var(--tag-focus-offset, 2px);
   }
   
@@ -291,7 +291,7 @@ const treeClasses = [
   }
 
   .tree-node.has-children .tree-icon {
-    color: var(--color-accent, oklch(55% 0.24 293));
+    color: var(--color-accent, var(--color-primary-500));
   }
   
   .tree-tag {

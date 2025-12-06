@@ -26,7 +26,7 @@ mark {
 
 /* Focus state for accessibility */
 mark:focus {
-  outline: 2px solid var(--accent, oklch(55% 0.24 293));
+  outline: 2px solid var(--color-accent, var(--color-primary-500));
   outline-offset: 1px;
 }
 
