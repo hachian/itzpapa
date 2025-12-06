@@ -189,8 +189,8 @@ const treeClasses = [
     font-family: var(--font-mono, 'Monaco', 'Consolas', monospace);
     font-size: 0.9rem;
     line-height: 1.4;
-    background: var(--tree-bg, #ffffff);
-    border: 1px solid var(--tree-border, #e5e7eb);
+    background: var(--tree-bg, oklch(100% 0 0));
+    border: 1px solid var(--tree-border, oklch(92% 0.010 280));
     border-radius: 8px;
     padding: 1rem;
     margin: 1rem 0;
@@ -220,7 +220,7 @@ const treeClasses = [
   }
   
   .tree-node-content:hover {
-    background-color: var(--tree-hover-bg, rgba(243, 244, 246, 0.5));
+    background-color: var(--tree-hover-bg, oklch(96% 0.008 280 / 0.5));
   }
   
   .tree-indent {
@@ -242,7 +242,7 @@ const treeClasses = [
     top: 0;
     bottom: 0;
     width: 1px;
-    background-color: var(--tree-guide-color, #e5e7eb);
+    background-color: var(--tree-guide-color, oklch(92% 0.010 280));
   }
   
   .tree-toggle {
@@ -253,7 +253,7 @@ const treeClasses = [
     height: 1.5rem;
     border: none;
     background: none;
-    color: var(--tree-toggle-color, #6b7280);
+    color: var(--tree-toggle-color, oklch(55% 0.015 280));
     cursor: pointer;
     border-radius: 3px;
     transition: all 0.15s ease;
@@ -262,12 +262,12 @@ const treeClasses = [
   }
 
   .tree-toggle:hover {
-    background-color: var(--tree-toggle-hover-bg, rgba(243, 244, 246, 0.8));
-    color: var(--tree-toggle-hover-color, #374151);
+    background-color: var(--tree-toggle-hover-bg, oklch(96% 0.008 280 / 0.8));
+    color: var(--tree-toggle-hover-color, oklch(35% 0.015 280));
   }
   
   .tree-toggle:focus {
-    outline: 2px solid var(--tag-focus-color, #2196f3);
+    outline: 2px solid var(--tag-focus-color, oklch(55% 0.24 293));
     outline-offset: var(--tag-focus-offset, 2px);
   }
   
@@ -285,13 +285,13 @@ const treeClasses = [
     justify-content: center;
     width: 1.5rem;
     height: 1.5rem;
-    color: var(--color-text-secondary, #6b7280);
+    color: var(--color-text-secondary, oklch(55% 0.015 280));
     flex-shrink: 0;
     margin-right: 0.5rem;
   }
 
   .tree-node.has-children .tree-icon {
-    color: var(--color-accent, #0277bd);
+    color: var(--color-accent, oklch(55% 0.24 293));
   }
   
   .tree-tag {
@@ -332,7 +332,7 @@ const treeClasses = [
   .tree-empty {
     text-align: center;
     padding: 2rem 1rem;
-    color: var(--color-text-secondary, #6b7280);
+    color: var(--color-text-secondary, oklch(55% 0.015 280));
     font-style: italic;
   }
   

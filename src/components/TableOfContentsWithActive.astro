@@ -14,7 +14,7 @@ const { headings } = Astro.props;
 <style>
   /* アクティブ状態のスタイル */
   :global(.toc-link.active) {
-    color: var(--accent, #7611a6);
+    color: var(--accent, oklch(55% 0.24 293));
     font-weight: bold;
     position: relative;
   }
@@ -27,7 +27,7 @@ const { headings } = Astro.props;
     transform: translateY(-50%);
     width: 4px;
     height: 1.5em;
-    background-color: var(--accent, #7611a6);
+    background-color: var(--accent, oklch(55% 0.24 293));
     border-radius: 2px;
   }
 

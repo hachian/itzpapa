@@ -10,26 +10,27 @@
 :root {
   /* グローバルカラーシステム - design-tokensと統合
    * レガシー互換性のためrgb形式も維持 */
-  --accent: var(--color-link, #2337ff);
-  --accent-dark: var(--color-link-hover, #000d8a);
+  --accent: var(--color-link, oklch(48% 0.22 293));
+  --accent-dark: var(--color-link-hover, oklch(40% 0.19 293));
+  /* レガシー変数（後方互換性のため維持） */
   --black: 15, 18, 25;
   --gray: 96, 115, 159;
   --gray-light: 229, 233, 240;
   --gray-dark: 34, 41, 57;
-  --gray-gradient: rgba(var(--gray-light), 50%), #fff;
+  --gray-gradient: oklch(92% 0.010 280 / 0.5), oklch(100% 0 0);
   
   /* 基本カラー - デザイントークンのOKLCHパレットから参照 */
-  --tag-bg: var(--color-primary-50, #e1f5fe);
-  --tag-color: var(--color-primary-600, #0277bd);
-  --tag-border: var(--color-primary-200, #b3e5fc);
+  --tag-bg: var(--color-primary-50, oklch(97% 0.02 293));
+  --tag-color: var(--color-primary-600, oklch(48% 0.22 293));
+  --tag-border: var(--color-primary-200, oklch(88% 0.10 293));
 
   /* ホバー状態 */
-  --tag-hover-bg: var(--color-primary-500, #0277bd);
+  --tag-hover-bg: var(--color-primary-500, oklch(55% 0.24 293));
   --tag-hover-color: oklch(100% 0 0);
-  --tag-hover-border: var(--color-primary-500, #0277bd);
+  --tag-hover-border: var(--color-primary-500, oklch(55% 0.24 293));
 
   /* フォーカス状態 */
-  --tag-focus-color: var(--focus-ring-color, #2196f3);
+  --tag-focus-color: var(--focus-ring-color, oklch(55% 0.24 293));
   --tag-focus-offset: var(--focus-ring-offset, 2px);
   
   /* サイズとスペーシング */
@@ -43,7 +44,7 @@
   --tag-line-height: 1.2;
   
   /* タグカウント表示 */
-  --tag-count-bg: rgba(255, 255, 255, 0.3);
+  --tag-count-bg: oklch(100% 0 0 / 0.3);
   --tag-count-padding-y: 0.1em;
   --tag-count-padding-x: 0.4em;
   --tag-count-border-radius: 0.75rem;
@@ -55,19 +56,19 @@
   --tag-transition-duration: var(--duration-fast, 0.2s);
   --tag-transition-easing: var(--easing-default, ease);
   --tag-hover-transform: translateY(-1px);
-  --tag-hover-shadow: var(--shadow-sm, 0 2px 4px rgba(0, 0, 0, 0.1));
+  --tag-hover-shadow: var(--shadow-sm, 0 2px 4px oklch(0% 0 0 / 0.1));
 
   /* アクセシビリティ - design-tokensを参照 */
   --tag-min-tap-size: var(--touch-target-min, 44px);
   
   /* Mark要素用グラデーション変数 */
-  --mark-bg: rgba(255, 235, 59, 0.6);
-  --mark-bg-dark: rgba(255, 193, 7, 0.4);
+  --mark-bg: oklch(90% 0.20 100 / 0.6);
+  --mark-bg-dark: oklch(85% 0.18 85 / 0.4);
   
   /* tag-more要素用変数 */
-  --tag-more-bg: #f8fafc;
-  --tag-more-color: #64748b;
-  --tag-more-border: #e2e8f0;
+  --tag-more-bg: oklch(98% 0.005 280);
+  --tag-more-color: oklch(55% 0.015 280);
+  --tag-more-border: oklch(92% 0.010 280);
   --tag-more-padding-y: 0.2em;
   --tag-more-padding-x: 0.6em;
   --tag-more-font-size: 0.875rem;
@@ -98,22 +99,22 @@
 
 /* ダークモード対応 - デザイントークンのOKLCHパレットから参照 */
 html.dark {
-  --tag-bg: var(--color-primary-900, #1e3a8a);
-  --tag-color: var(--color-primary-200, #93c5fd);
-  --tag-border: var(--color-primary-800, #1e40af);
+  --tag-bg: var(--color-primary-900, oklch(25% 0.12 293));
+  --tag-color: var(--color-primary-200, oklch(88% 0.10 293));
+  --tag-border: var(--color-primary-800, oklch(32% 0.15 293));
 
-  --tag-hover-bg: var(--color-primary-500, #3b82f6);
+  --tag-hover-bg: var(--color-primary-500, oklch(65% 0.20 293));
   --tag-hover-color: oklch(100% 0 0);
-  --tag-hover-border: var(--color-primary-500, #3b82f6);
+  --tag-hover-border: var(--color-primary-500, oklch(65% 0.20 293));
 
-  --tag-focus-color: var(--focus-ring-color, #60a5fa);
+  --tag-focus-color: var(--focus-ring-color, oklch(72% 0.18 293));
 
   --tag-count-bg: oklch(0% 0 0 / 0.3);
   
   /* tag-more要素ダークモード */
-  --tag-more-bg: #334155;
-  --tag-more-color: #cbd5e1;
-  --tag-more-border: #475569;
+  --tag-more-bg: oklch(35% 0.015 280);
+  --tag-more-color: oklch(85% 0.012 280);
+  --tag-more-border: oklch(45% 0.015 280);
   
   /* TagTree要素ダークモード - デザイントークンに統一 */
   --tree-bg: var(--color-gray-800);

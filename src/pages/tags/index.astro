@@ -165,8 +165,8 @@ const pageDescription = `${tagStatistics.totalTags}個のタグで記事を分�
         font-family: var(--font-mono, 'Monaco', 'Consolas', monospace);
         font-size: 0.9rem;
         line-height: 1.4;
-        background: var(--tree-bg, #ffffff);
-        border: 1px solid var(--tree-border, #e5e7eb);
+        background: var(--tree-bg, oklch(100% 0 0));
+        border: 1px solid var(--tree-border, oklch(92% 0.010 280));
         border-radius: 8px;
         padding: 1rem;
       }
@@ -187,7 +187,7 @@ const pageDescription = `${tagStatistics.totalTags}個のタグで記事を分�
       }
 
       .flat-tags-tree .tree-node-content:hover {
-        background-color: var(--tree-hover-bg, rgba(243, 244, 246, 0.5));
+        background-color: var(--tree-hover-bg, oklch(96% 0.008 280 / 0.5));
       }
 
       .flat-tags-tree .tree-icon {
@@ -196,7 +196,7 @@ const pageDescription = `${tagStatistics.totalTags}個のタグで記事を分�
         justify-content: center;
         width: 1.5rem;
         height: 1.5rem;
-        color: var(--color-text-secondary, #6b7280);
+        color: var(--color-text-secondary, oklch(55% 0.015 280));
         flex-shrink: 0;
         margin-right: 0.5rem;
       }

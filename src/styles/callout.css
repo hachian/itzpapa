@@ -189,7 +189,7 @@ blockquote[data-callout] pre {
 
 blockquote[data-callout] code {
   font-size: 0.875em;
-  background-color: var(--color-gray-100, #f3f4f6);
+  background-color: var(--color-gray-100, oklch(96% 0.008 280));
   padding: 0.125rem 0.25rem;
   border-radius: var(--radius-sm, 0.25rem);
 }
@@ -333,11 +333,11 @@ blockquote[data-callout-foldable="true"] .callout-title-overlay {
 }
 
 blockquote[data-callout-foldable="true"] .callout-title-overlay:hover {
-  background-color: rgba(0, 0, 0, 0.03);
+  background-color: oklch(0% 0 0 / 0.03);
 }
 
 blockquote[data-callout-foldable="true"] .callout-title-overlay:focus {
-  outline: 2px solid var(--color-primary-500, #6366f1);
+  outline: 2px solid var(--color-primary-500, oklch(55% 0.24 293));
   outline-offset: -2px;
 }
 
@@ -401,13 +401,13 @@ blockquote[data-callout][data-nest-level="2"] {
    ======================================== */
 
 html.dark blockquote[data-callout] code {
-  background-color: var(--color-gray-700, #374151);
+  background-color: var(--color-gray-700, oklch(35% 0.015 280));
 }
 
 /* OS dark mode preference */
 @media (prefers-color-scheme: dark) {
   :root:not(.light) blockquote[data-callout] code {
-    background-color: var(--color-gray-700, #374151);
+    background-color: var(--color-gray-700, oklch(35% 0.015 280));
   }
 }
 
@@ -468,24 +468,24 @@ html.dark blockquote[data-callout] code {
    ======================================== */
 
 blockquote:not([data-callout]) {
-  border-left: 4px solid var(--color-gray-300, #d1d5db);
-  background-color: var(--color-gray-50, #f9fafb);
+  border-left: 4px solid var(--color-gray-300, oklch(85% 0.012 280));
+  background-color: var(--color-gray-50, oklch(98% 0.005 280));
   padding: var(--space-4, 1rem);
   margin: var(--space-4, 1rem) 0;
   border-radius: var(--radius-md, 0.375rem);
-  color: var(--color-text-secondary, #6b7280);
+  color: var(--color-text-secondary, oklch(55% 0.015 280));
 }
 
 html.dark blockquote:not([data-callout]) {
-  border-left-color: var(--color-gray-600, #4b5563);
-  background-color: var(--color-gray-800, #1f2937);
-  color: var(--color-text-secondary, #9ca3af);
+  border-left-color: var(--color-gray-600, oklch(45% 0.015 280));
+  background-color: var(--color-gray-800, oklch(25% 0.012 280));
+  color: var(--color-text-secondary, oklch(70% 0.015 280));
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not(.light) blockquote:not([data-callout]) {
-    border-left-color: var(--color-gray-600, #4b5563);
-    background-color: var(--color-gray-800, #1f2937);
-    color: var(--color-text-secondary, #9ca3af);
+    border-left-color: var(--color-gray-600, oklch(45% 0.015 280));
+    background-color: var(--color-gray-800, oklch(25% 0.012 280));
+    color: var(--color-text-secondary, oklch(70% 0.015 280));
   }
 }
