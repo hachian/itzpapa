@@ -189,6 +189,9 @@ const posts = (await getCollection('blog')).sort(
 											src={post.data.heroImage}
 											alt=""
 											class="post-card__image"
+											loading="lazy"
+											decoding="async"
+											format="webp"
 										/>
 									)}
 								</div>

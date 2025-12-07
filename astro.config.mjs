@@ -11,6 +11,18 @@ import remarkCallout from './src/plugins/remark-callout/index.js';
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://example.com',
+	// 画像最適化設定
+	image: {
+		// WebP形式を優先して配信
+		experimentalLayout: 'responsive',
+	},
+	// Viteビルド設定
+	vite: {
+		build: {
+			// CSS・JSのコード分割を有効化
+			cssCodeSplit: true,
+		},
+	},
 	integrations: [
 		mdx({
 			remarkPlugins: [
