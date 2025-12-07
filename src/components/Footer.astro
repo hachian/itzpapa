@@ -4,7 +4,8 @@ import SocialIcon from './SocialIcon.astro';
 import type { SocialType } from './SocialIcon.astro';
 
 // 設定から必要な情報を取得
-const { navigation, social, footer } = siteConfig;
+const { site, navigation, social, footer } = siteConfig;
+const { author } = site;
 const { copyrightText, startYear } = footer;
 
 // 現在の年
@@ -47,7 +48,7 @@ const enabledSocialLinks = Object.entries(social)
 		)}
 
 		<p class="footer__copyright">
-			&copy; {yearDisplay} {SITE_TITLE}. {copyrightText || 'All rights reserved.'}
+			&copy; {yearDisplay} {author || SITE_TITLE}. {copyrightText || 'All rights reserved.'}
 		</p>
 	</div>
 </footer>
