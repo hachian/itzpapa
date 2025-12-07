@@ -1,77 +1,328 @@
 ---
-import itzpapaImage from '../assets/banner.png';
+import bannerImage from '../assets/banner.png';
 import Layout from '../layouts/BlogPost.astro';
 ---
 
 <Layout
 	title="About itzpapa"
-	description="ObsidianとAstroで構築されたデジタルガーデンプラットフォーム"
+	description="Obsidian記事をそのまま公開できるAstroブログテンプレート"
 	pubDate={new Date('2025-01-15')}
-	heroImage={itzpapaImage}
+	heroImage={bannerImage}
 >
-	<h2>itzpapaとは</h2>
-	<p>
-		<strong>itzpapa</strong>は、ObsidianユーザーがシームレスにWebサイトを公開できるよう設計された、モダンなブログソリューションです。
-		あなたの知識管理システムを、美しいデジタルガーデンへと変換します。
-	</p>
+	<section class="about-intro">
+		<h2>itzpapaとは</h2>
+		<p class="lead">
+			Obsidianで書いたMarkdown記事を、そのままWebサイトとして公開できるブログテンプレートです。
+			WikiLinkやCalloutなど、Obsidian独自の記法をそのまま使えるので、
+			執筆環境を変えることなくブログを運営できます。
+		</p>
+	</section>
 
-	<h2>✨ 主な特徴</h2>
-	<ul>
-		<li><strong>📝 Obsidianネイティブ</strong>: 使い慣れたマークダウン環境で執筆し、そのまま公開</li>
-		<li><strong>⚡ 超高速</strong>: Astroの静的サイト生成により、爆速な表示速度を実現</li>
-		<li><strong>🔗 Wikilink対応</strong>: Obsidianの内部リンク（[[記事名]]）を自動的にWebリンクへ変換</li>
-		<li><strong>📦 Callout対応</strong>: Obsidianのcallout記法をそのまま美しく表示</li>
-		<li><strong>🎨 美しいデザイン</strong>: レスポンシブ対応、アクセシビリティ配慮済みのモダンなテーマ</li>
-		<li><strong>🚀 簡単デプロイ</strong>: GitHub PagesやNetlifyへワンクリックでデプロイ可能</li>
-	</ul>
+	<section class="about-name">
+		<h2>名前の由来</h2>
+		<div class="name-card">
+			<div class="name-card__title">Itzpapalotl</div>
+			<div class="name-card__pronunciation">イツパパロトル</div>
+			<p class="name-card__description">
+				アステカ神話に登場する女神の名前に由来しています。
+				ナワトル語で「黒曜石（ītztli）の蝶（pāpālotl）」という意味を持ちます。
+			</p>
+			<p class="name-card__metaphor">
+				Obsidian（黒曜石）で書いた記事が、蝶のようにWebへ羽ばたいていく——
+				そんなイメージを込めています。
+			</p>
+		</div>
+	</section>
 
-	<h2>🛠️ 技術スタック</h2>
-	<p>
-		itzpapaは最新のWeb技術を活用して構築されています：
-	</p>
-	<ul>
-		<li><strong>Astro</strong> - 高速な静的サイト生成フレームワーク</li>
-		<li><strong>TypeScript</strong> - 型安全な開発環境</li>
-		<li><strong>MDX</strong> - マークダウンの拡張記法に対応</li>
-		<li><strong>rehype-callouts</strong> - Obsidian互換のcallout表示</li>
-		<li><strong>カスタムWikilinkパーサー</strong> - Obsidianの内部リンクを自動変換</li>
-	</ul>
+	<section class="about-features">
+		<h2>特徴</h2>
+		<div class="feature-grid">
+			<div class="feature-card">
+				<div class="feature-card__icon">🔗</div>
+				<h3 class="feature-card__title">Obsidian互換</h3>
+				<p class="feature-card__text">
+					WikiLink、Callout、階層タグ、マークハイライトなど、
+					Obsidianの主要な記法に対応しています。
+				</p>
+			</div>
+			<div class="feature-card">
+				<div class="feature-card__icon">⚡</div>
+				<h3 class="feature-card__title">高速表示</h3>
+				<p class="feature-card__text">
+					Astroの静的サイト生成により、
+					JavaScriptを最小限に抑えた軽量なページを生成します。
+				</p>
+			</div>
+			<div class="feature-card">
+				<div class="feature-card__icon">📱</div>
+				<h3 class="feature-card__title">レスポンシブ</h3>
+				<p class="feature-card__text">
+					PC、タブレット、スマートフォンなど、
+					どのデバイスでも快適に閲覧できます。
+				</p>
+			</div>
+		</div>
+	</section>
 
-	<h2>🎯 こんな方におすすめ</h2>
-	<ul>
-		<li>Obsidianで知識管理をしている方</li>
-		<li>マークダウンでブログを書きたい方</li>
-		<li>知識をデジタルガーデンとして公開したい方</li>
-		<li>高速で美しいブログサイトを構築したい方</li>
-		<li>技術的な知識なしでブログを始めたい方</li>
-	</ul>
+	<section class="about-stack">
+		<h2>技術スタック</h2>
+		<ul class="stack-list">
+			<li><span class="stack-name">Astro v5</span><span class="stack-desc">静的サイト生成フレームワーク</span></li>
+			<li><span class="stack-name">TypeScript</span><span class="stack-desc">型安全な開発環境</span></li>
+			<li><span class="stack-name">Remarkプラグイン</span><span class="stack-desc">Obsidian記法の変換処理</span></li>
+			<li><span class="stack-name">CSS変数</span><span class="stack-desc">柔軟なテーマカスタマイズ</span></li>
+		</ul>
+	</section>
 
-	<h2>🚀 はじめ方</h2>
-	<p>
-		itzpapaを使い始めるのは簡単です：
-	</p>
-	<ol>
-		<li>このリポジトリをクローンまたはフォーク</li>
-		<li>Obsidianで記事を書く（<code>src/content/blog/</code>フォルダに配置）</li>
-		<li><code>npm run build</code>でサイトをビルド</li>
-		<li>お好みのホスティングサービスにデプロイ</li>
-	</ol>
+	<section class="about-start">
+		<h2>はじめ方</h2>
+		<ol class="start-steps">
+			<li>
+				<span class="step-number">1</span>
+				<span class="step-text">GitHubからリポジトリをクローン</span>
+			</li>
+			<li>
+				<span class="step-number">2</span>
+				<span class="step-text"><code>src/content/blog/</code> に記事を配置</span>
+			</li>
+			<li>
+				<span class="step-number">3</span>
+				<span class="step-text"><code>npm run build</code> でビルド</span>
+			</li>
+			<li>
+				<span class="step-number">4</span>
+				<span class="step-text">お好みのホスティングサービスにデプロイ</span>
+			</li>
+		</ol>
+	</section>
 
-	<h2>📚 ドキュメント</h2>
-	<p>
-		詳しい使い方やカスタマイズ方法については、
-		<a href="https://github.com/hachian/itzpapa">GitHubリポジトリ</a>
-		のREADMEをご覧ください。
-	</p>
+	<footer class="about-footer">
+		<a href="https://github.com/hachian/itzpapa" class="footer-link">GitHub</a>
+		<span class="footer-divider">|</span>
+		<span class="footer-license">MIT License</span>
+	</footer>
 
-	<h2>🤝 コントリビューション</h2>
-	<p>
-		itzpapaはオープンソースプロジェクトです。
-		バグ報告、機能リクエスト、プルリクエストを歓迎します！
-	</p>
+	<style>
+		/* セクション共通 */
+		section {
+			margin-bottom: var(--space-12);
+		}
 
-	<h2>📄 ライセンス</h2>
-	<p>
-		MIT License - 自由にお使いください。
-	</p>
+		section h2 {
+			margin-bottom: var(--space-6);
+			padding-bottom: var(--space-2);
+			border-bottom: 2px solid var(--color-primary-200);
+		}
+
+		/* イントロ */
+		.lead {
+			font-size: var(--font-size-xl);
+			line-height: var(--line-height-relaxed);
+			color: var(--color-text-secondary);
+		}
+
+		/* 名前の由来カード */
+		.name-card {
+			background: linear-gradient(135deg, var(--color-primary-50), var(--color-gray-50));
+			border: 1px solid var(--color-primary-100);
+			border-radius: var(--radius-xl);
+			padding: var(--space-6);
+		}
+
+		.name-card__title {
+			font-size: var(--font-size-2xl);
+			font-weight: var(--font-weight-bold);
+			color: var(--color-primary-600);
+			letter-spacing: 0.05em;
+		}
+
+		.name-card__pronunciation {
+			font-size: var(--font-size-sm);
+			color: var(--color-text-secondary);
+			margin-bottom: var(--space-4);
+		}
+
+		.name-card__description {
+			margin-bottom: var(--space-2);
+		}
+
+		.name-card__metaphor {
+			font-style: italic;
+			color: var(--color-text-secondary);
+		}
+
+		/* 特徴グリッド */
+		.feature-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+			gap: var(--space-4);
+		}
+
+		.feature-card {
+			background: var(--color-surface);
+			border: 1px solid var(--color-gray-200);
+			border-radius: var(--radius-lg);
+			padding: var(--space-5);
+			transition: box-shadow var(--duration-fast) var(--easing-default),
+						transform var(--duration-fast) var(--easing-default);
+		}
+
+		.feature-card:hover {
+			box-shadow: var(--shadow-md);
+			transform: translateY(-2px);
+		}
+
+		.feature-card__icon {
+			font-size: var(--font-size-3xl);
+			margin-bottom: var(--space-2);
+		}
+
+		.feature-card__title {
+			font-size: var(--font-size-lg);
+			font-weight: var(--font-weight-semibold);
+			margin-bottom: var(--space-2);
+			color: var(--color-text-primary);
+		}
+
+		.feature-card__text {
+			font-size: var(--font-size-sm);
+			color: var(--color-text-secondary);
+			margin: 0;
+			line-height: var(--line-height-relaxed);
+		}
+
+		/* 技術スタック */
+		.stack-list {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+		}
+
+		.stack-list li {
+			display: flex;
+			align-items: baseline;
+			gap: var(--space-3);
+			padding: var(--space-3) 0;
+			border-bottom: 1px solid var(--color-gray-100);
+		}
+
+		.stack-list li:last-child {
+			border-bottom: none;
+		}
+
+		.stack-name {
+			font-weight: var(--font-weight-semibold);
+			color: var(--color-primary-600);
+			min-width: 160px;
+		}
+
+		.stack-desc {
+			color: var(--color-text-secondary);
+			font-size: var(--font-size-base);
+		}
+
+		/* はじめ方ステップ */
+		.start-steps {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+			counter-reset: none;
+		}
+
+		.start-steps li {
+			display: flex;
+			align-items: center;
+			gap: var(--space-4);
+			padding: var(--space-4) 0;
+		}
+
+		.step-number {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 32px;
+			height: 32px;
+			background: var(--color-primary-500);
+			color: white;
+			border-radius: 50%;
+			font-weight: var(--font-weight-bold);
+			font-size: var(--font-size-sm);
+			flex-shrink: 0;
+		}
+
+		.step-text {
+			font-size: var(--font-size-base);
+		}
+
+		.step-text code {
+			background: var(--color-gray-100);
+			padding: var(--space-1) var(--space-2);
+			border-radius: var(--radius-sm);
+			font-size: var(--font-size-sm);
+		}
+
+		/* フッター */
+		.about-footer {
+			margin-top: var(--space-12);
+			padding-top: var(--space-6);
+			border-top: 1px solid var(--color-gray-200);
+			text-align: center;
+			color: var(--color-text-secondary);
+		}
+
+		.footer-link {
+			color: var(--color-primary-500);
+			text-decoration: none;
+			font-weight: var(--font-weight-medium);
+		}
+
+		.footer-link:hover {
+			text-decoration: underline;
+		}
+
+		.footer-divider {
+			margin: 0 var(--space-3);
+			color: var(--color-gray-300);
+		}
+
+		/* ダークモード対応 */
+		:global(html.dark) .name-card {
+			background: linear-gradient(135deg, var(--color-gray-800), var(--color-gray-900));
+			border-color: var(--color-gray-700);
+		}
+
+		:global(html.dark) .feature-card {
+			background: var(--color-gray-800);
+			border-color: var(--color-gray-700);
+		}
+
+		:global(html.dark) .stack-list li {
+			border-bottom-color: var(--color-gray-700);
+		}
+
+		:global(html.dark) .step-text code {
+			background: var(--color-gray-700);
+		}
+
+		:global(html.dark) .about-footer {
+			border-top-color: var(--color-gray-700);
+		}
+
+		/* レスポンシブ */
+		@media (max-width: 640px) {
+			.feature-grid {
+				grid-template-columns: 1fr;
+			}
+
+			.stack-list li {
+				flex-direction: column;
+				align-items: flex-start;
+				gap: var(--space-1);
+			}
+
+			.stack-name {
+				min-width: auto;
+			}
+		}
+	</style>
 </Layout>
