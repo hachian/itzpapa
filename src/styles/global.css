@@ -30,6 +30,9 @@
 @import './button.css';
 @import './skeleton.css';
 
+/* Import table styles */
+@import './table.css';
+
 :root {
 	--box-shadow:
 		0 2px 6px oklch(0% 0 0 / 0.08),
@@ -137,9 +140,7 @@ input {
 	font-size: var(--font-size-base);
 	font-family: inherit;
 }
-table {
-	width: 100%;
-}
+/* Table styles moved to table.css */
 img {
 	max-width: 100%;
 	height: auto;

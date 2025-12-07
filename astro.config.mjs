@@ -7,6 +7,7 @@ import remarkWikilink from './src/plugins/remark-wikilink/index.js';
 import remarkTags from './src/plugins/remark-tags/index.js';
 import remarkMarkHighlight from './src/plugins/remark-mark-highlight/index.js';
 import remarkCallout from './src/plugins/remark-callout/index.js';
+import rehypeTableWrapper from './src/plugins/rehype-table-wrapper/index.js';
 
 // https://astro.build/config
 export default defineConfig({
@@ -58,6 +59,10 @@ export default defineConfig({
 			[remarkTags, { convertToLinks: true }],
 			// コールアウトパース（データ属性を追加、CSSでスタイリング）
 			[remarkCallout, { maxNestingDepth: 3 }]
+		],
+		rehypePlugins: [
+			// テーブルをdiv.table-wrapperでラップ（水平スクロール対応）
+			rehypeTableWrapper
 		],
 		// GFMを明示的に設定（remarkPluginsより前に処理される）
 		gfm: true
