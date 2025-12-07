@@ -104,7 +104,22 @@ const googleAnalyticsId = seo.googleAnalyticsId || '';
 	// 初回ロード時に実行
 	applyTheme();
 
-	// View Transitions後に再適用
+	// View Transitions: DOM入れ替え前に新しいドキュメントにテーマクラスをコピー
+	// これによりページ遷移時のちらつきを防止
+	document.addEventListener('astro:before-swap', (e) => {
+		const storedTheme = localStorage.getItem('theme');
+		const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+		if (storedTheme === 'dark' || (!storedTheme && prefersDark)) {
+			e.newDocument.documentElement.classList.add('dark');
+			e.newDocument.documentElement.classList.remove('light');
+		} else if (storedTheme === 'light') {
+			e.newDocument.documentElement.classList.remove('dark');
+			e.newDocument.documentElement.classList.add('light');
+		}
+	});
+
+	// View Transitions後に再適用（念のため）
 	document.addEventListener('astro:after-swap', applyTheme);
 
 	// OS設定の変更を監視
