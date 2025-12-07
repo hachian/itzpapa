@@ -219,7 +219,7 @@ const showTableOfContents = features.tableOfContents;
 				<div class="hero-image">
 					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
 				</div>
-				<div class={headings && headings.length > 0 ? "blog-layout-with-toc" : ""}>
+				<div class={showTableOfContents && headings && headings.length > 0 ? "blog-layout-with-toc" : ""}>
 					<div class="prose blog-content">
 						<header class="article-header">
 							<div class="article-meta">
