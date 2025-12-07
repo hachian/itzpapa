@@ -11,6 +11,11 @@ import Footer from '../../components/Footer.astro';
 import TagBadge from '../../components/TagBadge.astro';
 import TagTree from '../../components/TagTree.astro';
 import { TagService } from '../../utils/tag/service';
+import { siteConfig } from '../../site.config';
+
+// 機能フラグを取得
+const { features } = siteConfig;
+const showTagCloud = features.tagCloud;
 
 // 全ブログ記事を取得
 const posts = await getCollection('blog');
@@ -273,72 +278,80 @@ const pageDescription = `${tagStatistics.totalTags}個のタグで記事を分�
           <p class="page-description">{pageDescription}</p>
         </header>
 
-        {allTags.length > 0 ? (
-          <>
-            <!-- 統計情報 -->
-            <section class="tags-stats">
-              <div class="stat-item">
-                <span class="stat-number">{tagStatistics.totalTags}</span>
-                <div class="stat-label">総タグ数</div>
-              </div>
-              <div class="stat-item">
-                <span class="stat-number">{posts.length}</span>
-                <div class="stat-label">記事数</div>
-              </div>
-              <div class="stat-item">
-                <span class="stat-number">{allTags[0]?.count || 0}</span>
-                <div class="stat-label">最大使用回数</div>
-              </div>
-            </section>
-
-            {/* 階層タグセクション - 階層タグがある場合のみ表示 */}
-            {hierarchicalRootTags.length > 0 && (
-              <section class="tree-section">
-                <h2 class="section-title">階層タグ</h2>
-                <TagTree
-                  hierarchy={hierarchicalOnlyHierarchy}
-                  showCount={true}
-                  expandAll={false}
-                  initialDisplayLevel={0}
-                  className="tags-tree"
-                />
-              </section>
-            )}
-
-            {/* フラットタグセクション */}
-            {flatTags.length > 0 && (
-              <section class="tree-section">
-                <h2 class="section-title">タグ</h2>
-                <div class="flat-tags-tree" role="tree" aria-label="タグ一覧">
-                  {flatTags.map(tag => (
-                    <div class="tree-node leaf-node" role="treeitem">
-                      <div class="tree-node-content">
-                        <div class="tree-icon" aria-hidden="true">
-                          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                            <path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"/>
-                          </svg>
-                        </div>
-                        <div class="tree-tag">
-                          <TagBadge
-                            tag={tag.name}
-                            href={`/tags/${tag.name.toLowerCase()}`}
-                            count={tag.count}
-                            className="tree-tag-badge"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+        {showTagCloud ? (
+          allTags.length > 0 ? (
+            <>
+              <!-- 統計情報 -->
+              <section class="tags-stats">
+                <div class="stat-item">
+                  <span class="stat-number">{tagStatistics.totalTags}</span>
+                  <div class="stat-label">総タグ数</div>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-number">{posts.length}</span>
+                  <div class="stat-label">記事数</div>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-number">{allTags[0]?.count || 0}</span>
+                  <div class="stat-label">最大使用回数</div>
                 </div>
               </section>
-            )}
 
-          </>
+              {/* 階層タグセクション - 階層タグがある場合のみ表示 */}
+              {hierarchicalRootTags.length > 0 && (
+                <section class="tree-section">
+                  <h2 class="section-title">階層タグ</h2>
+                  <TagTree
+                    hierarchy={hierarchicalOnlyHierarchy}
+                    showCount={true}
+                    expandAll={false}
+                    initialDisplayLevel={0}
+                    className="tags-tree"
+                  />
+                </section>
+              )}
+
+              {/* フラットタグセクション */}
+              {flatTags.length > 0 && (
+                <section class="tree-section">
+                  <h2 class="section-title">タグ</h2>
+                  <div class="flat-tags-tree" role="tree" aria-label="タグ一覧">
+                    {flatTags.map(tag => (
+                      <div class="tree-node leaf-node" role="treeitem">
+                        <div class="tree-node-content">
+                          <div class="tree-icon" aria-hidden="true">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                              <path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"/>
+                            </svg>
+                          </div>
+                          <div class="tree-tag">
+                            <TagBadge
+                              tag={tag.name}
+                              href={`/tags/${tag.name.toLowerCase()}`}
+                              count={tag.count}
+                              className="tree-tag-badge"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              )}
+
+            </>
+          ) : (
+            <!-- 空の状態 -->
+            <section class="empty-state">
+              <h2>タグが見つかりません</h2>
+              <p>まだタグが付けられた記事がありません。</p>
+            </section>
+          )
         ) : (
-          <!-- 空の状態 -->
+          <!-- タグクラウド無効 -->
           <section class="empty-state">
-            <h2>タグが見つかりません</h2>
-            <p>まだタグが付けられた記事がありません。</p>
+            <h2>タグクラウドは無効です</h2>
+            <p>この機能は現在無効になっています。</p>
           </section>
         )}
       </div>

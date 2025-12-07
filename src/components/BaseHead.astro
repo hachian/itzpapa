@@ -4,7 +4,7 @@
 import '../styles/global.css';
 import type { ImageMetadata } from 'astro';
 import FallbackImage from '../assets/blog-placeholder-1.jpg';
-import { SITE_TITLE } from '../consts';
+import { siteConfig, SITE_TITLE } from '../site.config';
 import { ClientRouter } from 'astro:transitions';
 
 interface Props {
@@ -16,6 +16,17 @@ interface Props {
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
 const { title, description, image = FallbackImage } = Astro.props;
+
+// テーマ設定を取得
+const { theme, seo } = siteConfig;
+
+// primaryHue の検証（0-360 の範囲外ならデフォルト値 293 にフォールバック）
+const primaryHue = (theme.primaryHue >= 0 && theme.primaryHue <= 360)
+  ? theme.primaryHue
+  : 293;
+
+// Google Analytics ID（空でない場合のみ使用）
+const googleAnalyticsId = seo.googleAnalyticsId || '';
 ---
 
 <!-- Global Metadata -->
@@ -110,3 +121,19 @@ const { title, description, image = FallbackImage } = Astro.props;
 		}
 	});
 </script>
+
+<!-- Theme Color Configuration -->
+<Fragment set:html={`<style>:root { --primary-hue: ${primaryHue}; }</style>`} />
+
+{googleAnalyticsId && (
+	<Fragment>
+		<!-- Google Analytics -->
+		<script async src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`}></script>
+		<script is:inline define:vars={{ googleAnalyticsId }}>
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+			gtag('config', googleAnalyticsId);
+		</script>
+	</Fragment>
+)}

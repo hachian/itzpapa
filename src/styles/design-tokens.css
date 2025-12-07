@@ -55,10 +55,10 @@
    OKLCH Color System
    ========================================= */
 :root {
-  /* Primary Hue - Change this value to change the entire color scheme
-   * 293 = Purple, 150 = Green, 220 = Blue, 30 = Orange, etc.
+  /* Primary Hue - This value is set by site.config.ts
+   * Default: 293 (Purple)
+   * See site.config.ts theme.primaryHue to change the color scheme
    */
-  --primary-hue: 293;
 
   /* Primary Palette (OKLCH)
    * Lightness varies from 97% (50) to 25% (900)
