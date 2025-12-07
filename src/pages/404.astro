@@ -1,0 +1,155 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_TITLE } from '../site.config';
+---
+
+<!doctype html>
+<html lang="ja">
+	<head>
+		<BaseHead title={`ページが見つかりません | ${SITE_TITLE}`} description="お探しのページは見つかりませんでした。" />
+	</head>
+	<body>
+		<Header />
+		<main class="error-page" style="view-transition-name: main-content;">
+			<section class="error-section" aria-labelledby="error-title">
+				<div class="error-container">
+					<div class="error-icon" aria-hidden="true">404</div>
+					<h1 id="error-title" class="error-title">ページが見つかりません</h1>
+					<p class="error-description">
+						お探しのページは存在しないか、移動した可能性があります。
+					</p>
+					<div class="error-actions">
+						<a href="/" class="btn btn--primary">トップページへ戻る</a>
+						<a href="/blog" class="btn btn--secondary">ブログ記事を見る</a>
+					</div>
+				</div>
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	/* エラーページ全体 */
+	.error-page {
+		display: flex;
+		flex-direction: column;
+		min-height: calc(100vh - 200px);
+		justify-content: center;
+		align-items: center;
+	}
+
+	/* エラーセクション */
+	.error-section {
+		padding: var(--space-12) var(--space-4);
+		text-align: center;
+		width: 100%;
+	}
+
+	.error-container {
+		max-width: 600px;
+		margin: 0 auto;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: var(--space-6);
+	}
+
+	/* 404アイコン */
+	.error-icon {
+		font-size: clamp(6rem, 20vw, 10rem);
+		font-weight: var(--font-weight-bold);
+		line-height: 1;
+		background: linear-gradient(
+			135deg,
+			var(--color-primary-400) 0%,
+			var(--color-primary-600) 100%
+		);
+		-webkit-background-clip: text;
+		background-clip: text;
+		-webkit-text-fill-color: transparent;
+		text-shadow: 0 4px 20px rgba(var(--color-primary-500-rgb, 147, 51, 234), 0.3);
+		animation: float 3s ease-in-out infinite;
+	}
+
+	@keyframes float {
+		0%, 100% {
+			transform: translateY(0);
+		}
+		50% {
+			transform: translateY(-10px);
+		}
+	}
+
+	/* prefers-reduced-motion でアニメーション無効化 */
+	@media (prefers-reduced-motion: reduce) {
+		.error-icon {
+			animation: none;
+		}
+	}
+
+	/* タイトル */
+	.error-title {
+		font-size: var(--font-size-3xl);
+		font-weight: var(--font-weight-bold);
+		color: var(--color-text-primary);
+		margin: 0;
+		line-height: var(--line-height-tight);
+	}
+
+	/* 説明文 */
+	.error-description {
+		font-size: var(--font-size-lg);
+		color: var(--color-text-secondary);
+		line-height: var(--line-height-relaxed);
+		margin: 0;
+		max-width: 400px;
+	}
+
+	/* アクションボタン */
+	.error-actions {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: var(--space-4);
+		margin-top: var(--space-4);
+	}
+
+	/* レスポンシブデザイン */
+	@media (max-width: 480px) {
+		.error-section {
+			padding: var(--space-8) var(--space-4);
+		}
+
+		.error-title {
+			font-size: var(--font-size-2xl);
+		}
+
+		.error-description {
+			font-size: var(--font-size-base);
+		}
+
+		.error-actions {
+			flex-direction: column;
+			width: 100%;
+			max-width: 280px;
+		}
+
+		.error-actions .btn {
+			width: 100%;
+		}
+	}
+
+	/* ダークモード */
+	html.dark .error-icon {
+		background: linear-gradient(
+			135deg,
+			var(--color-primary-300) 0%,
+			var(--color-primary-500) 100%
+		);
+		-webkit-background-clip: text;
+		background-clip: text;
+	}
+</style>
