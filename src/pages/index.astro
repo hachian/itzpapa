@@ -11,7 +11,7 @@ import itzpapaImage from '../assets/itzpapa.png';
 const allPosts = await getCollection('blog');
 const latestPosts = allPosts
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-	.slice(0, 3);
+	.slice(0, 6);
 ---
 
 <!doctype html>
@@ -252,10 +252,17 @@ const latestPosts = allPosts
 	}
 
 	/* 記事カード */
+	.card-grid--3 .card {
+		display: flex;
+		flex-direction: column;
+		padding: 0;
+		overflow: hidden;
+	}
+
 	.post-card {
 		display: flex;
 		flex-direction: column;
-		height: 100%;
+		flex: 1;
 		text-decoration: none;
 		color: inherit;
 	}
@@ -268,10 +275,10 @@ const latestPosts = allPosts
 	}
 
 	.post-card__content {
-		flex: 1;
 		display: flex;
 		flex-direction: column;
-		padding: var(--space-6);
+		flex-grow: 1;
+		padding: var(--space-5);
 	}
 
 	.post-card__title {
@@ -280,26 +287,32 @@ const latestPosts = allPosts
 		color: var(--color-text-primary);
 		margin: 0 0 var(--space-2) 0;
 		line-height: var(--line-height-snug);
+		/* 2行分の固定高さ */
+		height: calc(var(--font-size-xl) * var(--line-height-snug) * 2);
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
 	}
 
 	.post-card__description {
-		flex: 1;
 		font-size: var(--font-size-base);
 		color: var(--color-text-secondary);
 		line-height: var(--line-height-relaxed);
 		margin: 0 0 var(--space-4) 0;
+		/* 2行分の固定高さ */
+		height: calc(var(--font-size-base) * var(--line-height-relaxed) * 2);
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
 	}
 
 	.post-card__date {
 		font-size: var(--font-size-sm);
 		font-weight: var(--font-weight-medium);
 		color: var(--color-primary-500);
-	}
-
-	/* カードのpadding調整（サムネイルがある場合） */
-	.card:has(.post-card__thumbnail) {
-		padding: 0;
-		overflow: hidden;
+		margin-top: auto;
 	}
 
 	/* レスポンシブデザイン */
