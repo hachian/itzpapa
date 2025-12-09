@@ -4,6 +4,7 @@ description: 'タグ機能の動作確認用テストページ'
 pubDate: 'Dec 17 2024'
 heroImage: './itzpapa-tag-test.jpg'
 tags: [programming, astro, 日本語タグ]
+draft: true
 ---
 
 # タグ機能の総合テスト

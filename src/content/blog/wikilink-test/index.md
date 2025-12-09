@@ -9,6 +9,7 @@ tags:
   - wikilink
   - markdown
   - test
+draft: true
 ---
 
 # WikiLink記法のテスト
@@ -166,7 +167,7 @@ tags:
 |---------|---------|---------|
 | [[../markdown-basic-test/index.md\|リンク1]] | 通常テキスト | [[../callout-comprehensive-test/index.md\|リンク2]] |
 | テキスト | [[../math-test/index.md\|表示名]] | [[../mermaid-test/index.md#1. フローチャート\|見出しリンク]] |
-| [[../test page/index.md\|スペース含有ページ]] | [[../my test page/index.md\|複数単語ページ]] | [[../test page/index.md#Test Heading\|スペース含有見出し]] |
+| [[../test-page/index.md\|スペース含有ページ]] | [[../my-test-page/index.md\|複数単語ページ]] | [[../test-page/index.md#Test Heading\|スペース含有見出し]] |
 
 ## 9. 特殊文字を含むWikiLink
 
@@ -198,11 +199,11 @@ tags:
 1. [[ページ 名前]]
 2. [[複数 の 空白]]
 3. [[  前後に空白  ]]
-4. [[../test page/index.md|実際のスペース含有ページ]]
-5. [[../my test page/index.md|複数単語のテストページ]]
-6. [[../test page/index.md#Heading with Spaces|スペース含有見出しへのリンク]]
-7. [[../my test page/index.md#Another Multi Word Heading|複数単語見出しへのリンク]]
-8. [[../test page/index.md#日本語 見出し|日本語スペース見出し]]
+4. [[../test-page/index.md|実際のスペース含有ページ]]
+5. [[../my-test-page/index.md|複数単語のテストページ]]
+6. [[../test-page/index.md#Heading with Spaces|スペース含有見出しへのリンク]]
+7. [[../my-test-page/index.md#Another Multi Word Heading|複数単語見出しへのリンク]]
+8. [[../test-page/index.md#日本語 見出し|日本語スペース見出し]]
 ```
 
 #### Output
@@ -210,29 +211,29 @@ tags:
 1. [[ページ 名前]]
 2. [[複数 の 空白]]
 3. [[  前後に空白  ]]
-4. [[../test page/index.md|実際のスペース含有ページ]]
-5. [[../my test page/index.md|複数単語のテストページ]]
-6. [[../test page/index.md#Heading with Spaces|スペース含有見出しへのリンク]]
-7. [[../my test page/index.md#Another Multi Word Heading|複数単語見出しへのリンク]]
-8. [[../test page/index.md#日本語 見出し|日本語スペース見出し]]
+4. [[../test-page/index.md|実際のスペース含有ページ]]
+5. [[../my-test-page/index.md|複数単語のテストページ]]
+6. [[../test-page/index.md#Heading with Spaces|スペース含有見出しへのリンク]]
+7. [[../my-test-page/index.md#Another Multi Word Heading|複数単語見出しへのリンク]]
+8. [[../test-page/index.md#日本語 見出し|日本語スペース見出し]]
 
 ## 11. 先頭・末尾空白の自動除去テスト
 
 #### Syntax
 
 ```markdown
-1. [[  ../test page/index.md  |通常エイリアス]]
-2. [[  ../my test page/index.md  |タブ文字テスト]]
-3. [[  ../test page/index.md  |  前後に空白のエイリアス  ]]
-4. [[   ../test page/index.md#Heading with Spaces   |   空白除去+見出し   ]]
+1. [[  ../test-page/index.md  |通常エイリアス]]
+2. [[  ../my-test-page/index.md  |タブ文字テスト]]
+3. [[  ../test-page/index.md  |  前後に空白のエイリアス  ]]
+4. [[   ../test-page/index.md#Heading with Spaces   |   空白除去+見出し   ]]
 ```
 
 #### Output
 
-1. [[  ../test page/index.md  |通常エイリアス]]
-2. [[  ../my test page/index.md  |タブ文字テスト]]
-3. [[  ../test page/index.md  |  前後に空白のエイリアス  ]]
-4. [[   ../test page/index.md#Heading with Spaces   |   空白除去+見出し   ]]
+1. [[  ../test-page/index.md  |通常エイリアス]]
+2. [[  ../my-test-page/index.md  |タブ文字テスト]]
+3. [[  ../test-page/index.md  |  前後に空白のエイリアス  ]]
+4. [[   ../test-page/index.md#Heading with Spaces   |   空白除去+見出し   ]]
 
 **期待される動作**:
 - パス部分の先頭・末尾空白は自動除去される
@@ -244,22 +245,22 @@ tags:
 #### Syntax
 
 ```markdown
-1. [[../test page/index.md#Test Heading]]
-2. [[../test page/index.md#日本語 見出し]]
-3. [[../test page/index.md#Test Heading|カスタム表示名]]
-4. [[../test page/index.md#English and 日本語 Mixed]]
-5. [[../test page/index.md#Multiple   Spaces   Test]]
-6. [[../my test page/index.md#Another Multi Word Heading]]
+1. [[../test-page/index.md#Test Heading]]
+2. [[../test-page/index.md#日本語 見出し]]
+3. [[../test-page/index.md#Test Heading|カスタム表示名]]
+4. [[../test-page/index.md#English and 日本語 Mixed]]
+5. [[../test-page/index.md#Multiple   Spaces   Test]]
+6. [[../my-test-page/index.md#Another Multi Word Heading]]
 ```
 
 #### Output
 
-1. [[../test page/index.md#Test Heading]]
-2. [[../test page/index.md#日本語 見出し]]
-3. [[../test page/index.md#Test Heading|カスタム表示名]]
-4. [[../test page/index.md#English and 日本語 Mixed]]
-5. [[../test page/index.md#Multiple   Spaces   Test]]
-6. [[../my test page/index.md#Another Multi Word Heading]]
+1. [[../test-page/index.md#Test Heading]]
+2. [[../test-page/index.md#日本語 見出し]]
+3. [[../test-page/index.md#Test Heading|カスタム表示名]]
+4. [[../test-page/index.md#English and 日本語 Mixed]]
+5. [[../test-page/index.md#Multiple   Spaces   Test]]
+6. [[../my-test-page/index.md#Another Multi Word Heading]]
 
 **期待される動作**:
 - 見出しのスペースは自動的にハイフンに変換される

@@ -3,7 +3,7 @@ title: '階層タグテストページ'
 description: '階層タグ機能のテスト用記事'
 pubDate: 'Dec 18 2024'
 heroImage: './itzpapa-hierarchy.jpg'
-tags: 
+tags:
   - tech
   - tech/web
   - tech/web/frontend
@@ -15,6 +15,7 @@ tags:
   - programming/javascript
   - programming/typescript
   - programming/python
+draft: true
 ---
 
 # 階層タグのテスト

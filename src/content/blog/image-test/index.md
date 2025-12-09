@@ -3,6 +3,7 @@ title: 'Image Processing Test'
 description: 'Testing how Astro processes markdown images'
 pubDate: '2025-01-13'
 heroImage: './itzpapa1.jpg'
+draft: true
 ---
 
 # Testing Image Processing in Astro

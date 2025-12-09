@@ -9,6 +9,7 @@ categories:
 tags:
   - wikilink
   - multi-word
+draft: true
 ---
 
 # My Test Page Example
@@ -35,5 +36,5 @@ tags:
 
 ## 関連リンク
 
-- [[../test page/index.md|Test Page with Spaces]]
+- [[../test-page/index.md|Test Page with Spaces]]
 - [[../wikilink-test/index.md|Wikilinkテストページ]]

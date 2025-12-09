@@ -10,6 +10,7 @@ tags:
   - latex
   - katex
   - test
+draft: true
 ---
 
 # 数式記法のテスト

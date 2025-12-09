@@ -10,6 +10,7 @@ tags:
   - diagram
   - flowchart
   - test
+draft: true
 ---
 
 # Mermaidダイアグラムのテスト
