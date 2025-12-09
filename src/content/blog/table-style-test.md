@@ -3,6 +3,7 @@ title: "テーブルスタイルのテスト"
 description: "Markdownテーブルの新しいスタイリングをテストするページです。"
 pubDate: "2025-12-08"
 tags: ["test", "markdown"]
+draft: true
 ---
 
 # テーブルスタイルのテスト

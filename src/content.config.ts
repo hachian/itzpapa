@@ -15,6 +15,8 @@ const blog = defineCollection({
 			heroImage: image().optional(),
 			// タグの配列（オプショナル）
 			tags: z.array(z.string()).optional(),
+			// 下書きフラグ（trueで非公開）
+			draft: z.boolean().optional().default(false),
 		}),
 });
 
