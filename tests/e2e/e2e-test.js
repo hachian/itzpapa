@@ -17,11 +17,11 @@ import { unified } from 'unified';
 import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
 import rehypeStringify from 'rehype-stringify';
-import remarkWikilink from '../src/plugins/remark-wikilink/index.js';
-import remarkMarkHighlight from '../src/plugins/remark-mark-highlight/index.js';
-import remarkTags from '../src/plugins/remark-tags/index.js';
-import remarkCallout from '../src/plugins/remark-callout/index.js';
-import rehypeCallout from '../src/plugins/rehype-callout/index.js';
+import remarkWikilink from '../../src/plugins/remark-wikilink/index.js';
+import remarkMarkHighlight from '../../src/plugins/remark-mark-highlight/index.js';
+import remarkTags from '../../src/plugins/remark-tags/index.js';
+import remarkCallout from '../../src/plugins/remark-callout/index.js';
+import rehypeCallout from '../../src/plugins/rehype-callout/index.js';
 import {
   parseHtml,
   validateCallouts,
@@ -29,7 +29,7 @@ import {
   validateHighlights,
   validateTags,
   assertHtmlContains,
-} from './utils/html-validator.js';
+} from '../utils/html-validator.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -52,7 +52,7 @@ async function processMarkdownToHtml(markdown) {
 
 // Load E2E fixture
 async function loadE2EFixture(name) {
-  const fixturePath = join(__dirname, 'fixtures', 'e2e', `${name}.md`);
+  const fixturePath = join(__dirname, '..', 'fixtures', 'e2e', `${name}.md`);
   const content = await readFile(fixturePath, 'utf-8');
   // Extract content after frontmatter
   const frontmatterMatch = content.match(/^---\n[\s\S]*?\n---\n([\s\S]*)$/);
@@ -61,7 +61,7 @@ async function loadE2EFixture(name) {
 
 // Load expected output
 async function loadExpectedOutput() {
-  const path = join(__dirname, 'fixtures', 'e2e', 'expected-output.json');
+  const path = join(__dirname, '..', 'fixtures', 'e2e', 'expected-output.json');
   const content = await readFile(path, 'utf-8');
   return JSON.parse(content);
 }

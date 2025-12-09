@@ -8,8 +8,8 @@
 import { describe, test } from 'node:test';
 import assert from 'node:assert';
 import { remark } from 'remark';
-import remarkWikilink from '../src/plugins/remark-wikilink/index.js';
-import { loadInput, loadAllFixtures } from './fixtures/fixture-loader.js';
+import remarkWikilink from '../../src/plugins/remark-wikilink/index.js';
+import { loadInput, loadAllFixtures } from '../fixtures/fixture-loader.js';
 
 // Helper: Process markdown with remark-wikilink (returns AST)
 async function processToAst(markdown) {

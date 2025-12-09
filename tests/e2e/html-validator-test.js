@@ -15,7 +15,7 @@ import {
   validateHtmlStructure,
   validateAccessibility,
   assertHtmlContains,
-} from './utils/html-validator.js';
+} from '../utils/html-validator.js';
 
 describe('HTML Validator', () => {
   describe('parseHtml', () => {

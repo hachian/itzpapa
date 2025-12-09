@@ -1,7 +1,7 @@
 import { remark } from 'remark';
-import remarkWikilink from '../src/plugins/remark-wikilink/index.js';
-import remarkMarkHighlight from '../src/plugins/remark-mark-highlight/index.js';
-import remarkTags from '../src/plugins/remark-tags/index.js';
+import remarkWikilink from '../../src/plugins/remark-wikilink/index.js';
+import remarkMarkHighlight from '../../src/plugins/remark-mark-highlight/index.js';
+import remarkTags from '../../src/plugins/remark-tags/index.js';
 import assert from 'assert';
 
 // Test helper to process markdown with full plugin integration

@@ -1,5 +1,5 @@
 import { remark } from 'remark';
-import remarkMarkHighlight from '../src/plugins/remark-mark-highlight/index.js';
+import remarkMarkHighlight from '../../src/plugins/remark-mark-highlight/index.js';
 import assert from 'assert';
 
 // Test helper

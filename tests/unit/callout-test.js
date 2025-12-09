@@ -12,9 +12,9 @@ import { unified } from 'unified';
 import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
 import rehypeStringify from 'rehype-stringify';
-import remarkCallout from '../src/plugins/remark-callout/index.js';
-import rehypeCallout from '../src/plugins/rehype-callout/index.js';
-import { loadInput, loadAllFixtures } from './fixtures/fixture-loader.js';
+import remarkCallout from '../../src/plugins/remark-callout/index.js';
+import rehypeCallout from '../../src/plugins/rehype-callout/index.js';
+import { loadInput, loadAllFixtures } from '../fixtures/fixture-loader.js';
 
 // Helper: Process markdown with remark-callout only (returns AST)
 async function processToAst(markdown) {

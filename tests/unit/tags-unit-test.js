@@ -8,8 +8,8 @@
 import { describe, test } from 'node:test';
 import assert from 'node:assert';
 import { remark } from 'remark';
-import remarkTags from '../src/plugins/remark-tags/index.js';
-import { loadInput, loadAllFixtures } from './fixtures/fixture-loader.js';
+import remarkTags from '../../src/plugins/remark-tags/index.js';
+import { loadInput, loadAllFixtures } from '../fixtures/fixture-loader.js';
 
 // Helper: Process markdown with remark-tags (returns AST)
 async function processToAst(markdown, options = {}) {

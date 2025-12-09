@@ -8,8 +8,8 @@
 import { describe, test } from 'node:test';
 import assert from 'node:assert';
 import { remark } from 'remark';
-import remarkMarkHighlight from '../src/plugins/remark-mark-highlight/index.js';
-import { loadInput, loadAllFixtures } from './fixtures/fixture-loader.js';
+import remarkMarkHighlight from '../../src/plugins/remark-mark-highlight/index.js';
+import { loadInput, loadAllFixtures } from '../fixtures/fixture-loader.js';
 
 // Helper: Process markdown with remark-mark-highlight (returns AST)
 async function processToAst(markdown, options = {}) {

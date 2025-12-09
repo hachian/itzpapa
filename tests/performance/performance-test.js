@@ -1,5 +1,5 @@
 import { remark } from 'remark';
-import remarkWikilink from '../src/plugins/remark-wikilink/index.js';
+import remarkWikilink from '../../src/plugins/remark-wikilink/index.js';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 

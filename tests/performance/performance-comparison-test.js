@@ -1,6 +1,6 @@
 import { remark } from 'remark';
-import remarkWikilinkOriginal from '../src/plugins/remark-wikilink/index.js';
-import remarkWikilinkOptimized from '../src/plugins/remark-wikilink/index-optimized.js';
+import remarkWikilinkOriginal from '../../src/plugins/remark-wikilink/index.js';
+import remarkWikilinkOptimized from '../../src/plugins/remark-wikilink/index-optimized.js';
 
 // カラー出力用のヘルパー
 const colors = {

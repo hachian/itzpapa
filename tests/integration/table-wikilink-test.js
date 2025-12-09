@@ -1,6 +1,6 @@
 import { remark } from 'remark';
 import remarkGfm from 'remark-gfm';
-import remarkWikilink from '../src/plugins/remark-wikilink/index.js';
+import remarkWikilink from '../../src/plugins/remark-wikilink/index.js';
 import { inspect } from 'util';
 
 const testCases = [

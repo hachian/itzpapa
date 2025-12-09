@@ -13,7 +13,7 @@ import {
   loadFixturePair,
   loadAllFixtures,
   getFixturesPath
-} from './fixtures/fixture-loader.js';
+} from '../fixtures/fixture-loader.js';
 
 describe('Fixture Loader', () => {
   describe('loadInput', () => {

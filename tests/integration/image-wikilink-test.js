@@ -1,7 +1,7 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert';
 import { remark } from 'remark';
-import remarkWikilink from '../src/plugins/remark-wikilink/index.js';
+import remarkWikilink from '../../src/plugins/remark-wikilink/index.js';
 
 describe('Image Wikilink Plugin', () => {
   const processor = remark().use(remarkWikilink);

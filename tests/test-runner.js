@@ -20,52 +20,52 @@ const testSuites = [
   {
     name: 'Fixture Loader Tests',
     command: 'node',
-    args: ['--test', 'test/fixture-loader-test.js'],
+    args: ['--test', 'tests/utils/fixture-loader-test.js'],
     timeout: 30000
   },
   // Unit Tests
   {
     name: 'Wikilink Unit Tests',
     command: 'node',
-    args: ['--test', 'test/wikilink-unit-test.js'],
+    args: ['--test', 'tests/unit/wikilink-unit-test.js'],
     timeout: 30000
   },
   {
     name: 'Mark Highlight Unit Tests',
     command: 'node',
-    args: ['--test', 'test/mark-highlight-unit-test.js'],
+    args: ['--test', 'tests/unit/mark-highlight-unit-test.js'],
     timeout: 30000
   },
   {
     name: 'Tags Unit Tests',
     command: 'node',
-    args: ['--test', 'test/tags-unit-test.js'],
+    args: ['--test', 'tests/unit/tags-unit-test.js'],
     timeout: 30000
   },
   {
     name: 'Callout Unit Tests',
     command: 'node',
-    args: ['--test', 'test/callout-test.js'],
+    args: ['--test', 'tests/unit/callout-test.js'],
     timeout: 30000
   },
   // Integration Tests
   {
     name: 'Integration Tests',
     command: 'node',
-    args: ['--test', 'test/integration-test.js'],
+    args: ['--test', 'tests/integration/integration-test.js'],
     timeout: 60000
   },
   // E2E Tests
   {
     name: 'HTML Validator Tests',
     command: 'node',
-    args: ['--test', 'test/html-validator-test.js'],
+    args: ['--test', 'tests/e2e/html-validator-test.js'],
     timeout: 30000
   },
   {
     name: 'E2E Tests',
     command: 'node',
-    args: ['--test', 'test/e2e-test.js'],
+    args: ['--test', 'tests/e2e/e2e-test.js'],
     timeout: 60000
   },
   // Legacy Tests
@@ -222,7 +222,7 @@ async function runAllTests() {
     }))
   };
   
-  const reportPath = path.join(process.cwd(), 'test', 'test-report.json');
+  const reportPath = path.join(process.cwd(), 'tests', 'reports', 'test-report.json');
   fs.writeFileSync(reportPath, JSON.stringify(reportData, null, 2));
   
   // 終了メッセージ
