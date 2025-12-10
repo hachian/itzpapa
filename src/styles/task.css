@@ -1,0 +1,341 @@
+/**
+ * Task Status Styles - Obsidian-style task checkboxes
+ *
+ * Supports 22 task status types with Lucide icons
+ * Features: OKLCH colors, dark mode, display-only (non-interactive)
+ */
+
+/* ========================================
+   CSS Variables - Color Definitions
+   ======================================== */
+
+:root {
+  /* カラーカテゴリ */
+  --task-color-neutral: oklch(0.55 0.02 250);
+  --task-color-success: oklch(0.7 0.2 150);
+  --task-color-warning: oklch(0.75 0.18 75);
+  --task-color-danger: oklch(0.65 0.25 25);
+  --task-color-info: oklch(0.7 0.15 210);
+  --task-color-accent: oklch(0.65 0.2 280);
+  --task-color-muted: oklch(0.6 0.02 250);
+
+  /* アイコンSVG (Lucide Icons - data URI) */
+  /* Basic statuses - Square checkbox style for consistency */
+  --task-icon-todo: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='18' height='18' x='3' y='3' rx='2'/%3E%3C/svg%3E");
+  --task-icon-done: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='18' height='18' x='3' y='3' rx='2'/%3E%3Cpath d='m9 12 2 2 4-4'/%3E%3C/svg%3E");
+  --task-icon-incomplete: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='18' height='18' x='3' y='3' rx='2'/%3E%3Cpath d='M12 8v4'/%3E%3Cpath d='M12 16h.01'/%3E%3C/svg%3E");
+  --task-icon-canceled: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='18' height='18' x='3' y='3' rx='2'/%3E%3Cpath d='m15 9-6 6'/%3E%3Cpath d='m9 9 6 6'/%3E%3C/svg%3E");
+
+  /* Scheduling statuses */
+  --task-icon-forwarded: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14'/%3E%3Cpath d='m12 5 7 7-7 7'/%3E%3C/svg%3E");
+  --task-icon-scheduling: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 2v4'/%3E%3Cpath d='M16 2v4'/%3E%3Crect width='18' height='18' x='3' y='4' rx='2'/%3E%3Cpath d='M3 10h18'/%3E%3C/svg%3E");
+
+  /* Importance statuses */
+  --task-icon-question: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3'/%3E%3Cpath d='M12 17h.01'/%3E%3C/svg%3E");
+  --task-icon-important: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3'/%3E%3Cpath d='M12 9v4'/%3E%3Cpath d='M12 17h.01'/%3E%3C/svg%3E");
+  --task-icon-star: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z'/%3E%3C/svg%3E");
+
+  /* Reference statuses */
+  --task-icon-quote: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M16 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z'/%3E%3Cpath d='M5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z'/%3E%3C/svg%3E");
+  --task-icon-location: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0'/%3E%3Ccircle cx='12' cy='10' r='3'/%3E%3C/svg%3E");
+  --task-icon-bookmark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z'/%3E%3C/svg%3E");
+  --task-icon-information: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 16v-4'/%3E%3Cpath d='M12 8h.01'/%3E%3C/svg%3E");
+
+  /* Idea statuses */
+  --task-icon-savings: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 5c-1.5 0-2.8 1.4-3 2-3.5-1.5-11-.3-11 5 0 1.8 0 3 2 4.5V20h4v-2h3v2h4v-4c1-.5 1.7-1 2-2h2v-4h-2c0-1-.5-1.5-1-2V5z'/%3E%3Cpath d='M2 9v1c0 1.1.9 2 2 2h1'/%3E%3Cpath d='M16 11h.01'/%3E%3C/svg%3E");
+  --task-icon-idea: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5'/%3E%3Cpath d='M9 18h6'/%3E%3Cpath d='M10 22h4'/%3E%3C/svg%3E");
+  --task-icon-pros: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 10v12'/%3E%3Cpath d='M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z'/%3E%3C/svg%3E");
+  --task-icon-cons: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17 14V2'/%3E%3Cpath d='M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22a3.13 3.13 0 0 1-3-3.88Z'/%3E%3C/svg%3E");
+
+  /* Action statuses */
+  --task-icon-fire: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z'/%3E%3C/svg%3E");
+  --task-icon-key: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m15.5 7.5 2.3 2.3a1 1 0 0 0 1.4 0l2.1-2.1a1 1 0 0 0 0-1.4L19 4'/%3E%3Cpath d='m21 2-9.6 9.6'/%3E%3Ccircle cx='7.5' cy='15.5' r='5.5'/%3E%3C/svg%3E");
+  --task-icon-win: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9H4.5a2.5 2.5 0 0 1 0-5H6'/%3E%3Cpath d='M18 9h1.5a2.5 2.5 0 0 0 0-5H18'/%3E%3Cpath d='M4 22h16'/%3E%3Cpath d='M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22'/%3E%3Cpath d='M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22'/%3E%3Cpath d='M18 2H6v7a6 6 0 0 0 12 0V2Z'/%3E%3C/svg%3E");
+  --task-icon-up: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 12 7-7 7 7'/%3E%3Cpath d='M12 19V5'/%3E%3C/svg%3E");
+  --task-icon-down: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5v14'/%3E%3Cpath d='m19 12-7 7-7-7'/%3E%3C/svg%3E");
+
+  /* Unknown/fallback - Square checkbox style */
+  --task-icon-unknown: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='18' height='18' x='3' y='3' rx='2'/%3E%3Cpath d='M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3'/%3E%3Cpath d='M12 17h.01'/%3E%3C/svg%3E");
+}
+
+/* Dark Mode Colors */
+html.dark {
+  --task-color-neutral: oklch(0.65 0.02 250);
+  --task-color-success: oklch(0.8 0.18 150);
+  --task-color-warning: oklch(0.85 0.16 75);
+  --task-color-danger: oklch(0.75 0.22 25);
+  --task-color-info: oklch(0.8 0.13 210);
+  --task-color-accent: oklch(0.75 0.18 280);
+  --task-color-muted: oklch(0.5 0.02 250);
+}
+
+/* OS dark mode preference support */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --task-color-neutral: oklch(0.65 0.02 250);
+    --task-color-success: oklch(0.8 0.18 150);
+    --task-color-warning: oklch(0.85 0.16 75);
+    --task-color-danger: oklch(0.75 0.22 25);
+    --task-color-info: oklch(0.8 0.13 210);
+    --task-color-accent: oklch(0.75 0.18 280);
+    --task-color-muted: oklch(0.5 0.02 250);
+  }
+}
+
+/* ========================================
+   Task List Item Base Styles
+   ======================================== */
+
+.task-list-item {
+  list-style: none;
+  position: relative;
+  margin-left: -1.5em;
+  padding-left: 0;
+}
+
+/* ========================================
+   Task Checkbox Base Styles
+   ======================================== */
+
+.task-checkbox {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25em;
+  height: 1.25em;
+  margin-right: 0.5em;
+  vertical-align: middle;
+  /* Non-interactive styles */
+  pointer-events: none;
+  cursor: default;
+  user-select: none;
+}
+
+.task-icon {
+  display: block;
+  width: 1em;
+  height: 1em;
+  background-color: currentColor;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+/* ========================================
+   Status-specific Styles
+   ======================================== */
+
+/* Basic statuses */
+.task-checkbox[data-task-status="todo"] {
+  color: var(--task-color-neutral);
+}
+.task-checkbox[data-task-status="todo"] .task-icon {
+  -webkit-mask-image: var(--task-icon-todo);
+  mask-image: var(--task-icon-todo);
+}
+
+.task-checkbox[data-task-status="done"] {
+  color: var(--task-color-success);
+}
+.task-checkbox[data-task-status="done"] .task-icon {
+  -webkit-mask-image: var(--task-icon-done);
+  mask-image: var(--task-icon-done);
+}
+
+.task-checkbox[data-task-status="incomplete"] {
+  color: var(--task-color-warning);
+}
+.task-checkbox[data-task-status="incomplete"] .task-icon {
+  -webkit-mask-image: var(--task-icon-incomplete);
+  mask-image: var(--task-icon-incomplete);
+}
+
+.task-checkbox[data-task-status="canceled"] {
+  color: var(--task-color-muted);
+}
+.task-checkbox[data-task-status="canceled"] .task-icon {
+  -webkit-mask-image: var(--task-icon-canceled);
+  mask-image: var(--task-icon-canceled);
+}
+
+/* Scheduling statuses */
+.task-checkbox[data-task-status="forwarded"] {
+  color: var(--task-color-info);
+}
+.task-checkbox[data-task-status="forwarded"] .task-icon {
+  -webkit-mask-image: var(--task-icon-forwarded);
+  mask-image: var(--task-icon-forwarded);
+}
+
+.task-checkbox[data-task-status="scheduling"] {
+  color: var(--task-color-info);
+}
+.task-checkbox[data-task-status="scheduling"] .task-icon {
+  -webkit-mask-image: var(--task-icon-scheduling);
+  mask-image: var(--task-icon-scheduling);
+}
+
+/* Importance statuses */
+.task-checkbox[data-task-status="question"] {
+  color: var(--task-color-warning);
+}
+.task-checkbox[data-task-status="question"] .task-icon {
+  -webkit-mask-image: var(--task-icon-question);
+  mask-image: var(--task-icon-question);
+}
+
+.task-checkbox[data-task-status="important"] {
+  color: var(--task-color-danger);
+}
+.task-checkbox[data-task-status="important"] .task-icon {
+  -webkit-mask-image: var(--task-icon-important);
+  mask-image: var(--task-icon-important);
+}
+
+.task-checkbox[data-task-status="star"] {
+  color: var(--task-color-accent);
+}
+.task-checkbox[data-task-status="star"] .task-icon {
+  -webkit-mask-image: var(--task-icon-star);
+  mask-image: var(--task-icon-star);
+}
+
+/* Reference statuses */
+.task-checkbox[data-task-status="quote"] {
+  color: var(--task-color-neutral);
+}
+.task-checkbox[data-task-status="quote"] .task-icon {
+  -webkit-mask-image: var(--task-icon-quote);
+  mask-image: var(--task-icon-quote);
+}
+
+.task-checkbox[data-task-status="location"] {
+  color: var(--task-color-info);
+}
+.task-checkbox[data-task-status="location"] .task-icon {
+  -webkit-mask-image: var(--task-icon-location);
+  mask-image: var(--task-icon-location);
+}
+
+.task-checkbox[data-task-status="bookmark"] {
+  color: var(--task-color-accent);
+}
+.task-checkbox[data-task-status="bookmark"] .task-icon {
+  -webkit-mask-image: var(--task-icon-bookmark);
+  mask-image: var(--task-icon-bookmark);
+}
+
+.task-checkbox[data-task-status="information"] {
+  color: var(--task-color-info);
+}
+.task-checkbox[data-task-status="information"] .task-icon {
+  -webkit-mask-image: var(--task-icon-information);
+  mask-image: var(--task-icon-information);
+}
+
+/* Idea statuses */
+.task-checkbox[data-task-status="savings"] {
+  color: var(--task-color-success);
+}
+.task-checkbox[data-task-status="savings"] .task-icon {
+  -webkit-mask-image: var(--task-icon-savings);
+  mask-image: var(--task-icon-savings);
+}
+
+.task-checkbox[data-task-status="idea"] {
+  color: var(--task-color-warning);
+}
+.task-checkbox[data-task-status="idea"] .task-icon {
+  -webkit-mask-image: var(--task-icon-idea);
+  mask-image: var(--task-icon-idea);
+}
+
+.task-checkbox[data-task-status="pros"] {
+  color: var(--task-color-success);
+}
+.task-checkbox[data-task-status="pros"] .task-icon {
+  -webkit-mask-image: var(--task-icon-pros);
+  mask-image: var(--task-icon-pros);
+}
+
+.task-checkbox[data-task-status="cons"] {
+  color: var(--task-color-danger);
+}
+.task-checkbox[data-task-status="cons"] .task-icon {
+  -webkit-mask-image: var(--task-icon-cons);
+  mask-image: var(--task-icon-cons);
+}
+
+/* Action statuses */
+.task-checkbox[data-task-status="fire"] {
+  color: var(--task-color-danger);
+}
+.task-checkbox[data-task-status="fire"] .task-icon {
+  -webkit-mask-image: var(--task-icon-fire);
+  mask-image: var(--task-icon-fire);
+}
+
+.task-checkbox[data-task-status="key"] {
+  color: var(--task-color-accent);
+}
+.task-checkbox[data-task-status="key"] .task-icon {
+  -webkit-mask-image: var(--task-icon-key);
+  mask-image: var(--task-icon-key);
+}
+
+.task-checkbox[data-task-status="win"] {
+  color: var(--task-color-success);
+}
+.task-checkbox[data-task-status="win"] .task-icon {
+  -webkit-mask-image: var(--task-icon-win);
+  mask-image: var(--task-icon-win);
+}
+
+.task-checkbox[data-task-status="up"] {
+  color: var(--task-color-success);
+}
+.task-checkbox[data-task-status="up"] .task-icon {
+  -webkit-mask-image: var(--task-icon-up);
+  mask-image: var(--task-icon-up);
+}
+
+.task-checkbox[data-task-status="down"] {
+  color: var(--task-color-danger);
+}
+.task-checkbox[data-task-status="down"] .task-icon {
+  -webkit-mask-image: var(--task-icon-down);
+  mask-image: var(--task-icon-down);
+}
+
+/* Unknown/fallback status */
+.task-checkbox[data-task-status="unknown"] {
+  color: var(--task-color-neutral);
+}
+.task-checkbox[data-task-status="unknown"] .task-icon {
+  -webkit-mask-image: var(--task-icon-unknown);
+  mask-image: var(--task-icon-unknown);
+}
+
+/* ========================================
+   Strikethrough for completed/canceled tasks
+   ======================================== */
+
+/* done/canceledタスクのテキストコンテンツに取り消し線を適用 */
+.task-list-item[data-task="done"] > .task-text,
+.task-list-item[data-task="canceled"] > .task-text {
+  text-decoration: line-through;
+}
+
+/* done/canceledタスクは薄く表示（色の透明度で制御、opacityは子要素に影響するため使用しない） */
+.task-list-item[data-task="done"] > .task-text,
+.task-list-item[data-task="canceled"] > .task-text {
+  opacity: 0.6;
+}
+
+.task-list-item[data-task="done"] > .task-checkbox,
+.task-list-item[data-task="canceled"] > .task-checkbox {
+  opacity: 0.6;
+}
