@@ -36,6 +36,9 @@
 /* Import task status styles */
 @import './task.css';
 
+/* Import Japanese typography optimization */
+@import './japanese-typography.css';
+
 :root {
 	--box-shadow:
 		0 2px 6px oklch(0% 0 0 / 0.08),
@@ -76,8 +79,9 @@ body {
 	word-wrap: break-word;
 	overflow-wrap: break-word;
 	color: var(--color-text-primary);
-	font-size: var(--font-size-xl);
-	line-height: var(--line-height-relaxed);
+	font-size: var(--font-size-lg);  /* 18px - デスクトップ用 */
+	line-height: var(--line-height-loose);  /* 1.9 - 日本語本文用 */
+	word-break: normal;  /* 全角文字の不自然な折り返しを防止 */
 	transition: background-color var(--duration-normal) var(--easing-default),
 				color var(--duration-normal) var(--easing-default);
 }
@@ -132,7 +136,7 @@ p {
 	margin-bottom: var(--space-4);
 }
 .prose p {
-	margin-bottom: var(--space-8);
+	margin-bottom: 1.75em;  /* 段落間余白 - 日本語テキストの視覚的リズムに最適化 */
 }
 textarea {
 	width: 100%;
@@ -209,7 +213,7 @@ hr {
 /* モバイル対応 (768px未満) */
 @media (max-width: 767px) {
 	body {
-		font-size: var(--font-size-lg);
+		font-size: var(--font-size-base);  /* 16px - モバイル用 */
 	}
 	main {
 		padding: var(--space-4);

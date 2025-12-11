@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
@@ -33,6 +34,13 @@ const showTableOfContents = features.tableOfContents;
 				max-width: 100%;
 				margin: 0;
 				padding: 0;
+			}
+
+			/* パンくずナビゲーション */
+			.breadcrumb-container {
+				max-width: 960px;
+				margin: 0 auto var(--space-4);
+				padding: 0 var(--space-4);
 			}
 
 			/* ヒーロー画像 */
@@ -218,6 +226,13 @@ const showTableOfContents = features.tableOfContents;
 		<Header />
 		<main style="view-transition-name: main-content;">
 			<article>
+				<div class="breadcrumb-container">
+					<Breadcrumb items={[
+						{ label: 'ホーム', href: '/' },
+						{ label: 'ブログ', href: '/blog' },
+						{ label: title }
+					]} />
+				</div>
 				<div class="hero-image">
 					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" loading="eager" decoding="async" format="webp" />}
 				</div>
@@ -240,7 +255,7 @@ const showTableOfContents = features.tableOfContents;
 								{updatedDate && (
 									<span class="article-meta__item article-meta__updated">
 										<span class="article-meta__icon" aria-hidden="true">🔄</span>
-										<span>更新: <FormattedDate date={updatedDate} /></span>
+										<span>（更新：<FormattedDate date={updatedDate} />）</span>
 									</span>
 								)}
 							</div>

@@ -1,0 +1,68 @@
+/**
+ * Japanese Typography Optimization
+ * 日本語特有のタイポグラフィ設定
+ *
+ * Requirements: 2.1, 2.3, 3.4
+ */
+
+/* =========================================
+   Japanese Text Optimization
+   ========================================= */
+
+/* 文字間隔と約物配置の最適化 */
+.prose {
+  letter-spacing: 0.03em;  /* 和文の標準的な字間 */
+  font-feature-settings: "palt" 1;  /* プロポーショナル約物配置 */
+}
+
+/* =========================================
+   Heading Styles
+   ========================================= */
+
+/* 見出しの折り返しとスタイル設定 */
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4 {
+  text-wrap: balance;  /* 自然な日本語の折り返し */
+  font-weight: var(--font-weight-semibold);
+}
+
+/* 見出しサイズ - 本文サイズに連動 */
+.prose h1 {
+  font-size: var(--heading-scale-h1);
+}
+
+.prose h2 {
+  font-size: var(--heading-scale-h2);
+}
+
+.prose h3 {
+  font-size: var(--heading-scale-h3);
+}
+
+.prose h4 {
+  font-size: var(--heading-scale-h4);
+}
+
+/* =========================================
+   Additional Japanese Typography Utilities
+   ========================================= */
+
+/* 禁則処理の最適化 */
+.prose {
+  overflow-wrap: break-word;
+  line-break: strict;  /* 厳格な禁則処理 */
+}
+
+/* リストアイテムの行間調整 */
+.prose li {
+  margin-bottom: 0.5em;
+}
+
+/* コードブロック内は等幅フォント用に字間をリセット */
+.prose code,
+.prose pre {
+  letter-spacing: normal;
+  font-feature-settings: normal;
+}

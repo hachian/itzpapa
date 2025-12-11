@@ -79,6 +79,12 @@
   color: var(--color-text-primary);
   margin: 0 0 var(--space-2) 0;
   line-height: var(--line-height-tight);
+  /* 日本語テキスト用の最適化 */
+  overflow-wrap: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .card__title a {
@@ -98,6 +104,12 @@
   color: var(--color-text-secondary);
   margin: 0 0 var(--space-4) 0;
   line-height: var(--line-height-relaxed);
+  /* 日本語テキスト用の最適化 */
+  overflow-wrap: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 /* =========================================

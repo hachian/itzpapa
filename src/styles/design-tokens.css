@@ -148,7 +148,13 @@
   --line-height-snug: 1.375;
   --line-height-normal: 1.5;
   --line-height-relaxed: 1.625;
-  --line-height-loose: 1.85;  /* Japanese text optimal */
+  --line-height-loose: 1.9;   /* Japanese text optimal - 日本語本文用 */
+
+  /* Heading Scale - 見出しサイズ（本文サイズに連動） */
+  --heading-scale-h1: 2.5em;
+  --heading-scale-h2: 2em;
+  --heading-scale-h3: 1.5em;
+  --heading-scale-h4: 1.25em;
 
   /* Font Weights */
   --font-weight-normal: 400;

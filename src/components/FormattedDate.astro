@@ -1,17 +1,48 @@
 ---
 interface Props {
 	date: Date;
+	showWeekday?: boolean;
 }
 
-const { date } = Astro.props;
+const { date, showWeekday = false } = Astro.props;
+
+// 日本語の曜日配列
+const weekdays = ['日', '月', '火', '水', '木', '金', '土'];
+
+/**
+ * 日付をYYYY/MM/DD形式でフォーマット
+ * @param date - フォーマットする日付
+ * @returns YYYY/MM/DD形式の文字列
+ */
+function formatDate(date: Date): string {
+	// Invalid Dateの場合は空文字を返す
+	if (isNaN(date.getTime())) {
+		return '';
+	}
+
+	const year = date.getFullYear();
+	const month = String(date.getMonth() + 1).padStart(2, '0');
+	const day = String(date.getDate()).padStart(2, '0');
+
+	return `${year}/${month}/${day}`;
+}
+
+/**
+ * 日本語の曜日を取得
+ * @param date - 曜日を取得する日付
+ * @returns 曜日の文字（日〜土）
+ */
+function getWeekday(date: Date): string {
+	return weekdays[date.getDay()];
+}
+
+const formattedDate = formatDate(date);
+const weekday = showWeekday ? getWeekday(date) : '';
+const displayText = showWeekday && formattedDate
+	? `${formattedDate}（${weekday}）`
+	: formattedDate;
 ---
 
 <time datetime={date.toISOString()}>
-	{
-		date.toLocaleDateString('ja-JP', {
-			year: 'numeric',
-			month: 'long',
-			day: 'numeric',
-		})
-	}
+	{displayText}
 </time>
