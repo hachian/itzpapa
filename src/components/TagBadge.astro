@@ -158,8 +158,8 @@ const accessibility = {
   /* アクセシビリティ: タッチデバイス用の最小タップサイズ確保 */
   @media (hover: none) and (pointer: coarse) {
     .tag {
-      min-height: var(--tag-min-tap-size, 44px);
-      padding: var(--tag-mobile-padding-y, 0.15em) var(--tag-mobile-padding-x, 0.5em);
+      min-height: 32px;
+      padding: var(--tag-mobile-padding-y, 0.1em) var(--tag-mobile-padding-x, 0.45em);
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -169,8 +169,8 @@ const accessibility = {
   /* 小画面でのタッチターゲットサイズ確保（ブラウザエミュレーション対応） */
   @media (max-width: 640px) {
     .tag {
-      min-height: var(--tag-min-tap-size, 44px);
-      padding: var(--tag-mobile-padding-y, 0.15em) var(--tag-mobile-padding-x, 0.5em);
+      min-height: 32px;
+      padding: var(--tag-mobile-padding-y, 0.1em) var(--tag-mobile-padding-x, 0.45em);
       display: inline-flex;
       align-items: center;
       justify-content: center;

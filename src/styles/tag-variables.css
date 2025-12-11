@@ -76,8 +76,8 @@
   
   /* レスポンシブ用変数 */
   --tag-mobile-font-size: 0.8rem;
-  --tag-mobile-padding-y: 0.15em;
-  --tag-mobile-padding-x: 0.5em;
+  --tag-mobile-padding-y: 0.1em;
+  --tag-mobile-padding-x: 0.45em;
   --tag-mobile-count-font-size: 0.7em;
   --tag-mobile-count-padding-y: 0.05em;
   --tag-mobile-count-padding-x: 0.3em;

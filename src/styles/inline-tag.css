@@ -73,8 +73,8 @@ blockquote .tag:where(a) {
   .tag:where(a) {
     font-size: var(--tag-mobile-font-size);
     padding: var(--tag-mobile-padding-y) var(--tag-mobile-padding-x);
-    /* タッチターゲットサイズ確保 */
-    min-height: 44px;
+    /* タッチターゲットサイズ確保（縮小版） */
+    min-height: 32px;
     min-width: auto;
   }
 }
@@ -82,8 +82,8 @@ blockquote .tag:where(a) {
 /* アクセシビリティ: タッチデバイス用の最小タップサイズ確保 */
 @media (hover: none) and (pointer: coarse) {
   .tag:where(a) {
-    min-height: var(--tag-min-tap-size);
-    min-width: var(--tag-min-tap-size);
+    min-height: 32px;
+    min-width: 32px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
