@@ -323,6 +323,17 @@ import Layout from '../layouts/BlogPost.astro';
 			.stack-name {
 				min-width: auto;
 			}
+
+			/* コード要素の折り返し制御 */
+			.step-text code {
+				word-break: break-all;
+				overflow-wrap: break-word;
+			}
+
+			/* ステップテキストの最大幅制御 */
+			.step-text {
+				max-width: calc(100% - 32px - var(--space-4));
+			}
 		}
 	</style>
 </Layout>
