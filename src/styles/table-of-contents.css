@@ -214,6 +214,7 @@
 @media (min-width: 1024px) {
   .blog-layout-with-toc {
     grid-template-columns: 1fr minmax(250px, 300px);
+    gap: var(--space-6);
   }
 }
 
@@ -221,6 +222,7 @@
 @media (min-width: 1440px) {
   .blog-layout-with-toc {
     grid-template-columns: 1fr minmax(280px, 350px);
+    gap: var(--space-6);
     max-width: 1400px;
   }
 }
