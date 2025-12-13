@@ -4,7 +4,7 @@
 .blog-layout-with-toc {
   display: grid;
   grid-template-columns: 1fr minmax(200px, 300px);
-  gap: var(--space-8);
+  gap: var(--space-12);
   max-width: 1200px;
   margin: 0 auto;
   padding: var(--space-8);
