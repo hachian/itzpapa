@@ -16,29 +16,42 @@
    CSS Variables - Light Mode
    ========================================= */
 :root {
-  /* Table-specific variables (using design-tokens) */
+  /* Table-specific variables (using design-tokens)
+   * Header: Primary-100 for subtle emphasis
+   * Stripes: gray-50 vs surface (white) for gentle zebra effect
+   */
   --table-border-color: var(--color-gray-200);
-  --table-header-bg: var(--color-gray-100);
-  --table-row-even-bg: var(--color-gray-50);
-  --table-row-hover-bg: var(--color-primary-500-alpha08);
+  --table-header-bg: var(--color-primary-500-alpha30);
+  --table-header-text: var(--color-gray-800);
+  --table-row-even-bg: var(--color-primary-500-alpha10);
+  --table-row-odd-bg: var(--color-gray-50);
+  --table-row-hover-bg: var(--color-primary-500-alpha20);
 }
 
 /* =========================================
    Dark Mode Variables
    ========================================= */
 html.dark {
-  --table-border-color: var(--color-gray-700);
-  --table-header-bg: var(--color-gray-800);
-  --table-row-even-bg: oklch(22% 0.012 280);
+  /* Dark mode: Use defined gray scale for consistency
+   * Header: gray-700 for clear distinction
+   * Stripes: gray-800 vs background (gray-900) for gentle effect
+   */
+  --table-border-color: var(--color-gray-600);
+  --table-header-bg: var(--color-primary-dark-alpha30);
+  --table-header-text: var(--color-gray-100);
+  --table-row-even-bg: var(--color-primary-dark-alpha08);
+  --table-row-odd-bg: var(--color-gray-800);
   --table-row-hover-bg: var(--color-primary-dark-alpha20);
 }
 
 /* OS Dark Mode Preference */
 @media (prefers-color-scheme: dark) {
   :root:not(.light) {
-    --table-border-color: var(--color-gray-700);
-    --table-header-bg: var(--color-gray-800);
-    --table-row-even-bg: oklch(22% 0.012 280);
+    --table-border-color: var(--color-gray-600);
+    --table-header-bg: var(--color-primary-dark-alpha30);
+    --table-header-text: var(--color-gray-100);
+    --table-row-odd-bg: var(--color-gray-800);
+    --table-row-even-bg: var(--color-primary-dark-alpha08);
     --table-row-hover-bg: var(--color-primary-dark-alpha20);
   }
 }
@@ -63,12 +76,17 @@ table {
    ========================================= */
 th {
   background-color: var(--table-header-bg);
-  font-weight: var(--font-weight-semibold);
+  color: var(--table-header-text);
+  font-weight: var(--font-weight-bold);
   text-align: left;
   padding: var(--space-3) var(--space-4);
   border-bottom: 2px solid var(--table-border-color);
+  font-size: 0.95em;
+  text-transform: none;
+  letter-spacing: 0.01em;
   transition: background-color var(--duration-normal) var(--easing-default),
-              border-color var(--duration-normal) var(--easing-default);
+              border-color var(--duration-normal) var(--easing-default),
+              color var(--duration-normal) var(--easing-default);
 }
 
 /* First header cell - top-left radius */
@@ -107,16 +125,26 @@ tbody tr:last-child td:last-child {
 }
 
 /* =========================================
-   Zebra Stripes
+   Zebra Stripes - Gentle alternating colors
    ========================================= */
+tbody tr:nth-child(odd) {
+  background-color: var(--table-row-odd-bg);
+}
+
 tbody tr:nth-child(even) {
   background-color: var(--table-row-even-bg);
 }
 
 /* =========================================
-   Hover Effect
+   Hover Effect - Subtle highlight
    ========================================= */
 tbody tr:hover {
+  background-color: var(--table-row-hover-bg);
+}
+
+/* Ensure hover overrides stripe colors */
+tbody tr:nth-child(odd):hover,
+tbody tr:nth-child(even):hover {
   background-color: var(--table-row-hover-bg);
 }
 

@@ -125,6 +125,7 @@
   --color-primary-500-alpha30: oklch(55% 0.24 var(--primary-hue) / 0.3);
   --color-primary-500-alpha40: oklch(55% 0.24 var(--primary-hue) / 0.4);
   --color-primary-500-alpha50: oklch(55% 0.24 var(--primary-hue) / 0.5);
+  --color-primary-dark-alpha08: oklch(65% 0.20 var(--primary-hue) / 0.08);
   --color-primary-dark-alpha20: oklch(65% 0.20 var(--primary-hue) / 0.2);
   --color-primary-dark-alpha30: oklch(65% 0.20 var(--primary-hue) / 0.3);
   --color-primary-dark-alpha50: oklch(65% 0.20 var(--primary-hue) / 0.5);
