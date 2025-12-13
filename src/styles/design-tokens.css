@@ -25,16 +25,16 @@
     --color-primary-900: #3b0764;
 
     /* Neutral Gray Palette - Hex Fallbacks */
-    --color-gray-50: #fafafa;
-    --color-gray-100: #f4f4f5;
-    --color-gray-200: #e4e4e7;
-    --color-gray-300: #d4d4d8;
-    --color-gray-400: #a1a1aa;
-    --color-gray-500: #71717a;
-    --color-gray-600: #52525b;
-    --color-gray-700: #3f3f46;
-    --color-gray-800: #27272a;
-    --color-gray-900: #18181b;
+    --color-gray-50: #faf5ff;
+    --color-gray-100: #f3e8ff;
+    --color-gray-200: #e9d5ff;
+    --color-gray-300: #d8b4fe;
+    --color-gray-400: #a78bfa;
+    --color-gray-500: #7c3aed;
+    --color-gray-600: #6d28d9;
+    --color-gray-700: #5b21b6;
+    --color-gray-800: #3d2b5c;
+    --color-gray-900: #2d2240;
 
     /* Semantic Colors - Hex Fallbacks */
     --color-background: #fafafa;
@@ -75,18 +75,19 @@
   --color-primary-900: oklch(25% 0.12 var(--primary-hue));
 
   /* Neutral Gray Palette (OKLCH)
-   * Subtle purple hue (280) for cohesion with primary
+   * Uses primary hue for cohesion with primary color
+   * Dark grays (800-900) use higher lightness for eye comfort
    */
-  --color-gray-50: oklch(98% 0.005 280);
-  --color-gray-100: oklch(96% 0.008 280);
-  --color-gray-200: oklch(92% 0.010 280);
-  --color-gray-300: oklch(85% 0.012 280);
-  --color-gray-400: oklch(70% 0.015 280);
-  --color-gray-500: oklch(55% 0.015 280);
-  --color-gray-600: oklch(45% 0.015 280);
-  --color-gray-700: oklch(35% 0.015 280);
-  --color-gray-800: oklch(25% 0.012 280);
-  --color-gray-900: oklch(15% 0.010 280);
+  --color-gray-50: oklch(98% 0.005 var(--primary-hue));
+  --color-gray-100: oklch(96% 0.008 var(--primary-hue));
+  --color-gray-200: oklch(92% 0.010 var(--primary-hue));
+  --color-gray-300: oklch(85% 0.012 var(--primary-hue));
+  --color-gray-400: oklch(70% 0.015 var(--primary-hue));
+  --color-gray-500: oklch(55% 0.015 var(--primary-hue));
+  --color-gray-600: oklch(45% 0.015 var(--primary-hue));
+  --color-gray-700: oklch(35% 0.015 var(--primary-hue));
+  --color-gray-800: oklch(30% 0.012 var(--primary-hue));
+  --color-gray-900: oklch(22% 0.010 var(--primary-hue));
 
   /* Semantic Colors */
   --color-background: var(--color-gray-50);
@@ -96,6 +97,23 @@
   --color-accent: var(--color-primary-500);
   --color-link: var(--color-primary-600);
   --color-link-hover: var(--color-primary-700);
+
+  /* Semantic State Colors (Light Mode) */
+  --color-success: oklch(65% 0.20 145);
+  --color-success-bg: oklch(65% 0.20 145 / 0.1);
+  --color-warning: oklch(75% 0.18 75);
+  --color-warning-bg: oklch(75% 0.18 75 / 0.1);
+  --color-error: oklch(60% 0.25 25);
+  --color-error-bg: oklch(60% 0.25 25 / 0.1);
+  --color-info: oklch(65% 0.20 260);
+  --color-info-bg: oklch(65% 0.20 260 / 0.1);
+
+  /* Component Colors */
+  --article-bg: var(--color-surface);
+  --article-border: var(--color-gray-200);
+  --article-shadow: var(--shadow-md);
+  --card-bg: var(--color-surface);
+  --card-border: var(--color-gray-200);
 
   /* Component-specific color utilities */
   --color-primary-hover-dark: oklch(30% 0.08 var(--primary-hue));
@@ -256,6 +274,20 @@ html.dark {
   --color-link: oklch(72% 0.18 var(--primary-hue));
   --color-link-hover: oklch(78% 0.16 var(--primary-hue));
 
+  /* Semantic State Colors - Dark Mode */
+  --color-success: oklch(75% 0.18 145);
+  --color-success-bg: oklch(75% 0.18 145 / 0.15);
+  --color-warning: oklch(85% 0.16 75);
+  --color-warning-bg: oklch(85% 0.16 75 / 0.15);
+  --color-error: oklch(70% 0.22 25);
+  --color-error-bg: oklch(70% 0.22 25 / 0.15);
+  --color-info: oklch(75% 0.18 260);
+  --color-info-bg: oklch(75% 0.18 260 / 0.15);
+
+  /* Component Colors - Dark Mode */
+  --article-border: var(--color-gray-700);
+  --card-border: var(--color-gray-700);
+
   /* Shadows - Darker and more diffused for dark mode */
   --shadow-sm: 0 1px 2px oklch(0% 0 0 / 0.2);
   --shadow-md: 0 4px 6px oklch(0% 0 0 / 0.25), 0 2px 4px oklch(0% 0 0 / 0.2);
@@ -282,6 +314,20 @@ html.dark {
     --color-accent: var(--color-primary-500);
     --color-link: oklch(72% 0.18 var(--primary-hue));
     --color-link-hover: oklch(78% 0.16 var(--primary-hue));
+
+    /* Semantic State Colors - Dark Mode */
+    --color-success: oklch(75% 0.18 145);
+    --color-success-bg: oklch(75% 0.18 145 / 0.15);
+    --color-warning: oklch(85% 0.16 75);
+    --color-warning-bg: oklch(85% 0.16 75 / 0.15);
+    --color-error: oklch(70% 0.22 25);
+    --color-error-bg: oklch(70% 0.22 25 / 0.15);
+    --color-info: oklch(75% 0.18 260);
+    --color-info-bg: oklch(75% 0.18 260 / 0.15);
+
+    /* Component Colors - Dark Mode */
+    --article-border: var(--color-gray-700);
+    --card-border: var(--color-gray-700);
 
     --shadow-sm: 0 1px 2px oklch(0% 0 0 / 0.2);
     --shadow-md: 0 4px 6px oklch(0% 0 0 / 0.25), 0 2px 4px oklch(0% 0 0 / 0.2);

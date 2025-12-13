@@ -6,6 +6,7 @@ import type { ImageMetadata } from 'astro';
 import FallbackImage from '../assets/blog-placeholder-1.jpg';
 import { siteConfig, SITE_TITLE } from '../site.config';
 import { ClientRouter } from 'astro:transitions';
+import { resolveThemeColor } from '../theme/color-presets';
 
 interface Props {
 	title: string;
@@ -20,10 +21,8 @@ const { title, description, image = FallbackImage } = Astro.props;
 // テーマ設定を取得
 const { theme, seo } = siteConfig;
 
-// primaryHue の検証（0-360 の範囲外ならデフォルト値 293 にフォールバック）
-const primaryHue = (theme.primaryHue >= 0 && theme.primaryHue <= 360)
-  ? theme.primaryHue
-  : 293;
+// プリセット名または数値から色相値を解決
+const primaryHue = resolveThemeColor(theme.primaryHue);
 
 // Google Analytics ID（空でない場合のみ使用）
 const googleAnalyticsId = seo.googleAnalyticsId || '';

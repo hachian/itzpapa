@@ -55,8 +55,13 @@ export interface SiteInfo {
  * テーマ設定
  */
 export interface ThemeConfig {
-  /** プライマリカラーの色相（0-360）、デフォルト: 293（紫） */
-  primaryHue: number;
+  /**
+   * プライマリカラーの色相
+   * - プリセット名: 'purple' | 'ocean' | 'forest' | 'sunset' | 'mono'
+   * - 数値: 0-360（色相値を直接指定）
+   * デフォルト: 'purple'（293）
+   */
+  primaryHue: import('../theme/color-presets').ThemeColorInput;
 }
 
 /**

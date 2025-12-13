@@ -89,6 +89,14 @@ const showTableOfContents = features.tableOfContents;
 				color: var(--color-text-primary);
 			}
 
+			/* 本文エリアの背景分離 */
+			.prose.blog-content {
+				background-color: var(--article-bg);
+				border-radius: var(--radius-xl);
+				padding: var(--space-8);
+				box-shadow: var(--article-shadow);
+			}
+
 			/* 記事ヘッダー */
 			.article-header {
 				margin-bottom: var(--space-8);
@@ -195,6 +203,13 @@ const showTableOfContents = features.tableOfContents;
 					width: 100%;
 					padding: var(--space-4);
 					box-sizing: border-box;
+				}
+
+				.prose.blog-content {
+					padding: var(--space-4);
+					border-radius: var(--radius-lg);
+					margin: 0 var(--space-2);
+					width: calc(100% - var(--space-4));
 				}
 
 				.article-header {
