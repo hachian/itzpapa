@@ -60,10 +60,10 @@ const listClasses = [
   className
 ].filter(Boolean).join(' ');
 
-// タグのスラッグを生成
+// タグのスラッグを生成（末尾スラッシュ付き）
 function tagToSlug(tag: string): string {
   // タグ名をそのまま小文字にして返す（スラッシュもハイフンも保持）
-  return tag.toLowerCase();
+  return tag.toLowerCase() + '/';
 }
 
 ---

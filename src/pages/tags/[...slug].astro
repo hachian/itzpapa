@@ -390,7 +390,7 @@ const pageDescription = `${tagName}タグが付けられた${sortedPosts.length}
     <main style="view-transition-name: main-content;">
       <div class="tag-page-container">
         <!-- 戻るリンク -->
-        <a href="/tags" class="back-link">
+        <a href="/tags/" class="back-link">
           ← タグ一覧に戻る
         </a>
 
@@ -403,7 +403,7 @@ const pageDescription = `${tagName}タグが付けられた${sortedPosts.length}
                 {crumb.isLast ? (
                   <span>#{crumb.name}</span>
                 ) : (
-                  <a href={`/tags/${crumb.fullName.toLowerCase()}`} class="breadcrumb-link">
+                  <a href={`/tags/${crumb.fullName.toLowerCase()}/`} class="breadcrumb-link">
                     #{crumb.name}
                   </a>
                 )}
@@ -444,7 +444,7 @@ const pageDescription = `${tagName}タグが付けられた${sortedPosts.length}
               {childTags.map(childTag => (
                 <TagBadge
                   tag={childTag.name}
-                  href={`/tags/${childTag.name.toLowerCase()}`}
+                  href={`/tags/${childTag.name.toLowerCase()}/`}
                   count={childTag.count}
                 />
               ))}
@@ -464,7 +464,7 @@ const pageDescription = `${tagName}タグが付けられた${sortedPosts.length}
                     <FormattedDate date={post.data.pubDate} />
                   </div>
                   <div class="post-content">
-                    <a href={`/blog/${post.id}`} class="post-link">
+                    <a href={`/blog/${post.id}/`} class="post-link">
                       <h3 class="post-title">{post.data.title}</h3>
                       <p class="post-description">{post.data.description}</p>
                     </a>
@@ -473,7 +473,7 @@ const pageDescription = `${tagName}タグが付けられた${sortedPosts.length}
                         {post.data.tags.map(postTag => (
                           <TagBadge
                             tag={postTag}
-                            href={`/tags/${postTag.toLowerCase()}`}
+                            href={`/tags/${postTag.toLowerCase()}/`}
                           />
                         ))}
                       </div>

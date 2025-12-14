@@ -118,7 +118,8 @@ export default function remarkWikilink() {
                 .replace(/[^\w\-\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/g, '');
             }
             
-            url = `/blog/${cleanPath}${cleanHash}`;
+            // 末尾スラッシュを追加（hashがある場合は/の後にhash）
+            url = cleanHash ? `/blog/${cleanPath}/${cleanHash}` : `/blog/${cleanPath}/`;
           } else if (linkPath.startsWith('#')) {
             // Handle same-page anchor links
             // Convert hash to proper anchor format (spaces to hyphens, lowercase, etc.)

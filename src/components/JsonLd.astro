@@ -1,0 +1,94 @@
+---
+/**
+ * JSON-LD構造化データコンポーネント
+ *
+ * 3種類のスキーマタイプをサポート:
+ * - article: ブログ記事用（BlogPosting）
+ * - website: トップページ用（WebSite）
+ * - breadcrumb: パンくずナビ用（BreadcrumbList）
+ */
+import { siteConfig } from '../site.config';
+
+export interface Props {
+  type: 'article' | 'website' | 'breadcrumb';
+  // Article用
+  article?: {
+    title: string;
+    description: string;
+    datePublished: Date;
+    dateModified?: Date;
+    image?: string;
+    tags?: string[];
+    url: string;
+  };
+  // BreadcrumbList用
+  breadcrumbs?: Array<{
+    name: string;
+    url: string;
+  }>;
+}
+
+const { type, article, breadcrumbs } = Astro.props;
+const { site } = siteConfig;
+
+// 日付をISO 8601形式に変換
+const toISOString = (date: Date): string => {
+  return date.toISOString();
+};
+
+// JSON-LDスキーマを生成
+const generateSchema = () => {
+  switch (type) {
+    case 'article':
+      if (!article) return null;
+      return {
+        '@context': 'https://schema.org',
+        '@type': 'BlogPosting',
+        headline: article.title,
+        description: article.description,
+        datePublished: toISOString(article.datePublished),
+        dateModified: toISOString(article.dateModified || article.datePublished),
+        author: {
+          '@type': 'Person',
+          name: site.author,
+          ...(site.authorProfile && { url: new URL(site.authorProfile, site.baseUrl).toString() }),
+        },
+        ...(article.image && { image: article.image }),
+        mainEntityOfPage: {
+          '@type': 'WebPage',
+          '@id': article.url,
+        },
+      };
+
+    case 'website':
+      return {
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        name: site.title,
+        url: site.baseUrl,
+      };
+
+    case 'breadcrumb':
+      if (!breadcrumbs || breadcrumbs.length === 0) return null;
+      return {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: breadcrumbs.map((item, index) => ({
+          '@type': 'ListItem',
+          position: index + 1,
+          name: item.name,
+          item: item.url,
+        })),
+      };
+
+    default:
+      return null;
+  }
+};
+
+const schema = generateSchema();
+---
+
+{schema && (
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+)}

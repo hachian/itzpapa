@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
+import JsonLd from '../components/JsonLd.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
@@ -17,18 +18,54 @@ import defaultHeroDark from '../assets/itzpapa-dark_16_9.png';
 type Props = CollectionEntry<'blog'>['data'] & {
   headings?: Array<{ depth: number; text: string; slug: string }>;
   readingTime?: number;
+  slug?: string;
 };
 
-const { title, description, pubDate, updatedDate, heroImage, tags, headings = [], readingTime } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, tags, headings = [], readingTime, slug } = Astro.props;
 
 // 機能フラグを取得
-const { features } = siteConfig;
+const { features, site } = siteConfig;
+
+// 記事の絶対URL
+const articleUrl = new URL(Astro.url.pathname, Astro.site).toString();
+
+// OG画像URL（heroImageがある場合）
+const ogImageUrl = heroImage ? new URL(heroImage.src, Astro.site).toString() : undefined;
+
+// パンくずリスト用データ
+const breadcrumbItems = [
+  { name: 'ホーム', url: site.baseUrl + '/' },
+  { name: 'ブログ', url: site.baseUrl + '/blog/' },
+  { name: title, url: articleUrl },
+];
 const showTableOfContents = features.tableOfContents;
 ---
 
 <html lang="ja">
 	<head>
-		<BaseHead title={title} description={description} image={heroImage} />
+		<BaseHead
+			title={title}
+			description={description}
+			image={heroImage}
+			article={{
+				publishedTime: pubDate,
+				modifiedTime: updatedDate,
+				tags: tags,
+			}}
+		/>
+		<JsonLd
+			type="article"
+			article={{
+				title,
+				description,
+				datePublished: pubDate,
+				dateModified: updatedDate,
+				image: ogImageUrl,
+				tags,
+				url: articleUrl,
+			}}
+		/>
+		<JsonLd type="breadcrumb" breadcrumbs={breadcrumbItems} />
 		<style>
 			/* メインコンテナ */
 			main {
@@ -268,7 +305,7 @@ const showTableOfContents = features.tableOfContents;
 				<div class="breadcrumb-container">
 					<Breadcrumb items={[
 						{ label: 'ホーム', href: '/' },
-						{ label: 'ブログ', href: '/blog' },
+						{ label: 'ブログ', href: '/blog/' },
 						{ label: title }
 					]} />
 				</div>

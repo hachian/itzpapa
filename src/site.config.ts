@@ -57,11 +57,11 @@ export const siteConfig: SiteConfig = {
     /** ホームページ */
     { label: 'Home', href: '/' },
     /** ブログ一覧ページ */
-    { label: 'Blog', href: '/blog' },
+    { label: 'Blog', href: '/blog/' },
     /** タグ一覧ページ */
-    { label: 'Tags', href: '/tags' },
+    { label: 'Tags', href: '/tags/' },
     /** アバウトページ */
-    { label: 'About', href: '/about' },
+    { label: 'About', href: '/about/' },
     // 外部リンクの例（http/https で始まるURLは自動的に新しいタブで開きます）
     // { label: 'GitHub', href: 'https://github.com/username' },
   ],

@@ -15,6 +15,8 @@ import rehypeTaskStatus from './src/plugins/rehype-task-status/index.js';
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://example.com',
+	// URL末尾スラッシュを統一（canonical URLとの整合性確保）
+	trailingSlash: 'always',
 	// 画像最適化設定
 	image: {
 		// WebP形式を優先して配信

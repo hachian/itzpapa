@@ -1,0 +1,14 @@
+# robots.txt for itzpapa blog
+# https://www.robotstxt.org/robotstxt.html
+
+User-agent: *
+Allow: /
+
+# 内部APIエンドポイントを除外
+Disallow: /api/
+
+# テストページを除外
+Disallow: /test-
+
+# サイトマップ参照
+Sitemap: https://example.com/sitemap-index.xml
