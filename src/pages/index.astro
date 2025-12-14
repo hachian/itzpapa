@@ -6,7 +6,8 @@ import Header from '../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../site.config';
 import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
-import itzpapaImage from '../assets/itzpapa.png';
+import itzpapaDark from '../assets/itzpapa-dark.png';
+import itzpapaLight from '../assets/itzpapa-light.png';
 
 // 最新ブログ記事を取得
 const allPosts = await getCollection('blog');
@@ -28,9 +29,19 @@ const latestPosts = allPosts
 				<div class="hero__container">
 					<div class="hero__banner">
 						<Image
-							src={itzpapaImage}
+							src={itzpapaLight}
 							alt="itzpapa - 紫の蝶とロータスフラワーのブランドロゴ"
-							class="hero__image"
+							class="hero__image hero__image--light"
+							loading="eager"
+							decoding="async"
+							width={150}
+							height={150}
+							format="webp"
+						/>
+						<Image
+							src={itzpapaDark}
+							alt="itzpapa - 紫の蝶とロータスフラワーのブランドロゴ"
+							class="hero__image hero__image--dark"
 							loading="eager"
 							decoding="async"
 							width={150}
@@ -169,6 +180,24 @@ const latestPosts = allPosts
 		transition:
 			transform var(--duration-normal) var(--easing-default),
 			box-shadow var(--duration-normal) var(--easing-default);
+	}
+
+	/* ライトモード: ライト画像を表示、ダーク画像を非表示 */
+	.hero__image--light {
+		display: block;
+	}
+
+	.hero__image--dark {
+		display: none;
+	}
+
+	/* ダークモード: ダーク画像を表示、ライト画像を非表示 */
+	html.dark .hero__image--light {
+		display: none;
+	}
+
+	html.dark .hero__image--dark {
+		display: block;
 	}
 
 	.hero__image:hover {
