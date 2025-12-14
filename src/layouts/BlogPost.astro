@@ -11,6 +11,8 @@ import TableOfContents from '../components/TableOfContents.astro';
 import { siteConfig } from '../site.config';
 import '../styles/table-of-contents.css';
 import '../styles/callout.css';
+import defaultHeroLight from '../assets/itzpapa-light_16_9.png';
+import defaultHeroDark from '../assets/itzpapa-dark_16_9.png';
 
 type Props = CollectionEntry<'blog'>['data'] & {
   headings?: Array<{ depth: number; text: string; slug: string }>;
@@ -61,6 +63,23 @@ const showTableOfContents = features.tableOfContents;
 				box-shadow: var(--shadow-lg);
 				object-fit: cover;
 				aspect-ratio: 2 / 1;
+			}
+
+			/* デフォルトhero画像のダークモード切り替え */
+			.hero-image img.hero-image--light {
+				display: block;
+			}
+
+			.hero-image img.hero-image--dark {
+				display: none;
+			}
+
+			html.dark .hero-image img.hero-image--light {
+				display: none;
+			}
+
+			html.dark .hero-image img.hero-image--dark {
+				display: block;
 			}
 
 			/* 画像読み込み中のスケルトン表示 */
@@ -254,7 +273,14 @@ const showTableOfContents = features.tableOfContents;
 					]} />
 				</div>
 				<div class="hero-image">
-					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" loading="eager" decoding="async" format="webp" />}
+					{heroImage ? (
+						<Image width={1020} height={510} src={heroImage} alt="" loading="eager" decoding="async" format="webp" />
+					) : (
+						<>
+							<Image width={1020} height={510} src={defaultHeroLight} alt="" loading="eager" decoding="async" format="webp" class="hero-image--light" />
+							<Image width={1020} height={510} src={defaultHeroDark} alt="" loading="eager" decoding="async" format="webp" class="hero-image--dark" />
+						</>
+					)}
 				</div>
 				<div class={showTableOfContents && headings && headings.length > 0 ? "blog-layout-with-toc" : ""}>
 					<div class="prose blog-content">

@@ -6,6 +6,8 @@ import Footer from '../../components/Footer.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 import Header from '../../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../../site.config';
+import defaultHeroLight from '../../assets/itzpapa-light_16_9.png';
+import defaultHeroDark from '../../assets/itzpapa-dark_16_9.png';
 
 const posts = (await getCollection('blog', ({ data }) => {
 	// 本番環境ではdraft: trueの記事を除外
@@ -90,6 +92,23 @@ const posts = (await getCollection('blog', ({ data }) => {
 
 			html.dark .post-card__image-wrapper {
 				background: var(--color-gray-700);
+			}
+
+			/* デフォルトhero画像のダークモード切り替え */
+			.post-card__image-wrapper img.post-card__image--light {
+				display: block;
+			}
+
+			.post-card__image-wrapper img.post-card__image--dark {
+				display: none;
+			}
+
+			html.dark .post-card__image-wrapper img.post-card__image--light {
+				display: none;
+			}
+
+			html.dark .post-card__image-wrapper img.post-card__image--dark {
+				display: block;
 			}
 
 			.post-card__content {
@@ -185,7 +204,7 @@ const posts = (await getCollection('blog', ({ data }) => {
 						<li>
 							<a href={`/blog/${post.id}/`} class="post-card">
 								<div class="post-card__image-wrapper">
-									{post.data.heroImage && (
+									{post.data.heroImage ? (
 										<Image
 											width={720}
 											height={360}
@@ -196,6 +215,29 @@ const posts = (await getCollection('blog', ({ data }) => {
 											decoding="async"
 											format="webp"
 										/>
+									) : (
+										<>
+											<Image
+												width={720}
+												height={360}
+												src={defaultHeroLight}
+												alt=""
+												class="post-card__image post-card__image--light"
+												loading="lazy"
+												decoding="async"
+												format="webp"
+											/>
+											<Image
+												width={720}
+												height={360}
+												src={defaultHeroDark}
+												alt=""
+												class="post-card__image post-card__image--dark"
+												loading="lazy"
+												decoding="async"
+												format="webp"
+											/>
+										</>
 									)}
 								</div>
 								<div class="post-card__content">

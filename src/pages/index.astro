@@ -8,6 +8,8 @@ import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 import itzpapaDark from '../assets/itzpapa-dark.png';
 import itzpapaLight from '../assets/itzpapa-light.png';
+import defaultHeroLight from '../assets/itzpapa-light_16_9.png';
+import defaultHeroDark from '../assets/itzpapa-dark_16_9.png';
 
 // 最新ブログ記事を取得
 const allPosts = await getCollection('blog');
@@ -84,7 +86,7 @@ const latestPosts = allPosts
 							{latestPosts.map((post, index) => (
 								<article class="card card--link" aria-setsize={latestPosts.length} aria-posinset={index + 1}>
 									<a href={`/blog/${post.id}/`} class="post-card" aria-label={`${post.data.title} - ${post.data.description}`}>
-										{post.data.heroImage && (
+										{post.data.heroImage ? (
 											<Image
 												src={post.data.heroImage}
 												alt=""
@@ -95,6 +97,29 @@ const latestPosts = allPosts
 												decoding="async"
 												format="webp"
 											/>
+										) : (
+											<>
+												<Image
+													src={defaultHeroLight}
+													alt=""
+													class="post-card__thumbnail post-card__thumbnail--light"
+													width={400}
+													height={225}
+													loading="lazy"
+													decoding="async"
+													format="webp"
+												/>
+												<Image
+													src={defaultHeroDark}
+													alt=""
+													class="post-card__thumbnail post-card__thumbnail--dark"
+													width={400}
+													height={225}
+													loading="lazy"
+													decoding="async"
+													format="webp"
+												/>
+											</>
 										)}
 										<div class="post-card__content">
 											<h3 class="post-card__title">{post.data.title}</h3>
@@ -303,6 +328,23 @@ const latestPosts = allPosts
 		aspect-ratio: 16 / 9;
 		object-fit: cover;
 		border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+	}
+
+	/* デフォルトhero画像のダークモード切り替え */
+	.post-card img.post-card__thumbnail--light {
+		display: block;
+	}
+
+	.post-card img.post-card__thumbnail--dark {
+		display: none;
+	}
+
+	html.dark .post-card img.post-card__thumbnail--light {
+		display: none;
+	}
+
+	html.dark .post-card img.post-card__thumbnail--dark {
+		display: block;
 	}
 
 	.post-card__content {
