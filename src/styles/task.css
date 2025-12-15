@@ -93,6 +93,16 @@ html.dark {
   padding-left: 0;
 }
 
+/* Nested task list indentation */
+.task-list-item > ul {
+  padding-left: var(--list-nested-indent, 1.5em);
+}
+
+/* Reset negative margin for nested task items */
+.task-list-item .task-list-item {
+  margin-left: 0;
+}
+
 /* ========================================
    Task Checkbox Base Styles
    ======================================== */

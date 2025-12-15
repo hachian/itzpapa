@@ -55,10 +55,7 @@
   line-break: strict;  /* 厳格な禁則処理 */
 }
 
-/* リストアイテムの行間調整 */
-.prose li {
-  margin-bottom: 0.5em;
-}
+/* リストスタイルは list.css に移動 */
 
 /* コードブロック内は等幅フォント用に字間をリセット */
 .prose code,

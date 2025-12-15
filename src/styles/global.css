@@ -33,6 +33,9 @@
 /* Import table styles */
 @import './table.css';
 
+/* Import list styles */
+@import './list.css';
+
 /* Import task status styles */
 @import './task.css';
 
