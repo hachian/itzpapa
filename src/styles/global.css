@@ -289,13 +289,10 @@ html.dark body {
 	);
 }
 
-html.dark code {
+/* インラインコード専用 - pre内のcodeは最初から除外 */
+html.dark :not(pre) > code {
 	background-color: var(--color-gray-700);
 	color: var(--color-gray-100);
-}
-
-html.dark pre > code {
-	background-color: transparent;
 }
 
 html.dark hr {
@@ -318,13 +315,9 @@ html.dark blockquote:not(.callout) {
 		);
 	}
 
-	:root:not(.light) code {
+	:root:not(.light) :not(pre) > code {
 		background-color: var(--color-gray-700);
 		color: var(--color-gray-100);
-	}
-
-	:root:not(.light) pre > code {
-		background-color: transparent;
 	}
 
 	:root:not(.light) hr {

@@ -187,16 +187,12 @@ blockquote[data-callout] pre {
   overflow-x: auto;
 }
 
-blockquote[data-callout] code {
+/* インラインコード専用 - pre内のcodeは最初から除外 */
+blockquote[data-callout] :not(pre) > code {
   font-size: 0.875em;
   background-color: var(--color-gray-100, oklch(96% 0.008 280));
   padding: 0.125rem 0.25rem;
   border-radius: var(--radius-sm, 0.25rem);
-}
-
-blockquote[data-callout] pre code {
-  background-color: transparent;
-  padding: 0;
 }
 
 /* Images inside callouts */
@@ -400,13 +396,13 @@ blockquote[data-callout][data-nest-level="2"] {
    Dark Mode Adjustments
    ======================================== */
 
-html.dark blockquote[data-callout] code {
+html.dark blockquote[data-callout] :not(pre) > code {
   background-color: var(--color-gray-700, oklch(35% 0.015 280));
 }
 
 /* OS dark mode preference */
 @media (prefers-color-scheme: dark) {
-  :root:not(.light) blockquote[data-callout] code {
+  :root:not(.light) blockquote[data-callout] :not(pre) > code {
     background-color: var(--color-gray-700, oklch(35% 0.015 280));
   }
 }
