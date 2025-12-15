@@ -124,9 +124,19 @@ h5 {
 h6 {
 	font-size: var(--font-size-lg);
 }
+/* 日本語向け強調スタイル - 太字/斜体の代わりにカラーで強調 */
 strong,
 b {
-	font-weight: var(--font-weight-bold);
+	font-weight: inherit;
+	background-color: var(--color-primary-100);
+	padding: 0.1em 0.3em;
+	border-radius: var(--radius-sm);
+}
+
+em,
+i {
+	font-style: normal;
+	color: var(--color-primary-600);
 }
 a {
 	color: var(--color-link, var(--accent));
@@ -299,6 +309,17 @@ html.dark hr {
 	border-top-color: var(--color-gray-700);
 }
 
+/* ダークモード用の強調スタイル */
+html.dark strong,
+html.dark b {
+	background-color: var(--color-primary-800);
+}
+
+html.dark em,
+html.dark i {
+	color: var(--color-primary-400);
+}
+
 html.dark blockquote:not(.callout) {
 	border-left-color: var(--color-primary-500);
 	color: var(--color-text-secondary);
@@ -322,6 +343,17 @@ html.dark blockquote:not(.callout) {
 
 	:root:not(.light) hr {
 		border-top-color: var(--color-gray-700);
+	}
+
+	/* OS Dark Mode用の強調スタイル */
+	:root:not(.light) strong,
+	:root:not(.light) b {
+		background-color: var(--color-primary-800);
+	}
+
+	:root:not(.light) em,
+	:root:not(.light) i {
+		color: var(--color-primary-400);
 	}
 
 	:root:not(.light) blockquote:not(.callout) {
