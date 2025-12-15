@@ -9,7 +9,7 @@
 | `src/components/BaseHead.astro` | 共通headタグ出力 | canonical URL、Open Graph、Twitter Card、メタタグ、GA |
 | `src/layouts/BlogPost.astro` | ブログ記事レイアウト | OG画像の受け渡し、パンくず表示 |
 | `src/components/Breadcrumb.astro` | パンくずナビ | `aria-current="page"`対応済み |
-| `src/site.config.ts` | サイト設定 | タイトル、説明、OG画像、GA ID設定 |
+| `site.config.ts` | サイト設定 | タイトル、説明、OG画像、GA ID設定 |
 | `src/pages/rss.xml.js` | RSSフィード | draft記事除外済み |
 | `astro.config.mjs` | Astro設定 | `@astrojs/sitemap`統合済み |
 | `src/plugins/remark-wikilink/` | WikiLink処理 | 内部リンク自動変換済み |

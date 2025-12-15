@@ -20,7 +20,7 @@
 | コンポーネント | パス | 役割 |
 |--------------|------|------|
 | BaseHead.astro | `src/components/BaseHead.astro` | OGメタタグ出力（og:image, twitter:image） |
-| site.config.ts | `src/site.config.ts` | サイト設定（defaultOgImage定義あり） |
+| site.config.ts | `site.config.ts` | サイト設定（defaultOgImage定義あり） |
 | site-config.ts (型) | `src/types/site-config.ts` | SeoConfig型定義（defaultOgImage?） |
 | content.config.ts | `src/content.config.ts` | コンテンツスキーマ（heroImageのみ） |
 | BlogPost.astro | `src/layouts/BlogPost.astro` | 記事レイアウト |

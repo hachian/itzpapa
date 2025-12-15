@@ -243,7 +243,7 @@ interface BaseHeadProps {
 ##### 既存設定（変更なし）
 
 ```typescript
-// src/site.config.ts
+// site.config.ts
 seo: {
   defaultOgImage: '/og-image.png',
   // ...

@@ -8,7 +8,7 @@ import { resolve } from 'node:path';
 import { execSync } from 'node:child_process';
 
 describe('Task 7.1: 設定変更がビルド結果に反映されることを検証', () => {
-  const configPath = resolve(process.cwd(), 'src/site.config.ts');
+  const configPath = resolve(process.cwd(), 'site.config.ts');
   let originalConfig;
 
   before(() => {
@@ -141,7 +141,7 @@ describe('Task 7.2: TypeScript 型チェック検証', () => {
   });
 
   it('設定ファイルが型定義をインポートしている', () => {
-    const configPath = resolve(process.cwd(), 'src/site.config.ts');
+    const configPath = resolve(process.cwd(), 'site.config.ts');
     const content = readFileSync(configPath, 'utf-8');
     assert.ok(
       content.includes("import type") && content.includes('SiteConfig'),

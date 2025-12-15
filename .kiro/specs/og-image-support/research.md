@@ -46,7 +46,7 @@
 ### siteConfig連携の調査
 - **Context**: デフォルトOG画像設定の利用方法を確認
 - **Sources Consulted**:
-  - `src/site.config.ts`
+  - `site.config.ts`
   - `src/types/site-config.ts`
 - **Findings**:
   - `siteConfig.seo.defaultOgImage`が定義済み（値: `/og-image.png`）

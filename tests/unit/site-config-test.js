@@ -223,25 +223,25 @@ describe('SiteConfig 型定義', () => {
 describe('site.config.ts 設定ファイル', () => {
   describe('ファイルの存在確認', () => {
     it('site.config.ts ファイルが存在する', () => {
-      const configPath = resolve(process.cwd(), 'src/site.config.ts');
-      assert.ok(existsSync(configPath), 'src/site.config.ts が存在する');
+      const configPath = resolve(process.cwd(), 'site.config.ts');
+      assert.ok(existsSync(configPath), 'site.config.ts が存在する');
     });
   });
 
   describe('設定ファイルの内容検証', () => {
     it('SiteConfig 型をインポートしている', () => {
-      const configPath = resolve(process.cwd(), 'src/site.config.ts');
+      const configPath = resolve(process.cwd(), 'site.config.ts');
       const content = readFileSync(configPath, 'utf-8');
       assert.ok(
         content.includes("import type { SiteConfig }") ||
         content.includes("import { SiteConfig }") ||
-        content.includes("from './types/site-config'"),
+        content.includes("from './src/types/site-config'"),
         '型定義をインポートしている'
       );
     });
 
     it('siteConfig をエクスポートしている', () => {
-      const configPath = resolve(process.cwd(), 'src/site.config.ts');
+      const configPath = resolve(process.cwd(), 'site.config.ts');
       const content = readFileSync(configPath, 'utf-8');
       assert.ok(
         content.includes('export const siteConfig'),
@@ -250,7 +250,7 @@ describe('site.config.ts 設定ファイル', () => {
     });
 
     it('サイト基本情報が設定されている', () => {
-      const configPath = resolve(process.cwd(), 'src/site.config.ts');
+      const configPath = resolve(process.cwd(), 'site.config.ts');
       const content = readFileSync(configPath, 'utf-8');
       assert.ok(content.includes('site:'), 'site セクションが存在する');
       assert.ok(content.includes('title:'), 'title が設定されている');
@@ -260,20 +260,20 @@ describe('site.config.ts 設定ファイル', () => {
     });
 
     it('テーマ設定が含まれている', () => {
-      const configPath = resolve(process.cwd(), 'src/site.config.ts');
+      const configPath = resolve(process.cwd(), 'site.config.ts');
       const content = readFileSync(configPath, 'utf-8');
       assert.ok(content.includes('theme:'), 'theme セクションが存在する');
       assert.ok(content.includes('primaryHue:'), 'primaryHue が設定されている');
     });
 
     it('ナビゲーション設定が含まれている', () => {
-      const configPath = resolve(process.cwd(), 'src/site.config.ts');
+      const configPath = resolve(process.cwd(), 'site.config.ts');
       const content = readFileSync(configPath, 'utf-8');
       assert.ok(content.includes('navigation:'), 'navigation セクションが存在する');
     });
 
     it('SNS 設定が含まれている', () => {
-      const configPath = resolve(process.cwd(), 'src/site.config.ts');
+      const configPath = resolve(process.cwd(), 'site.config.ts');
       const content = readFileSync(configPath, 'utf-8');
       assert.ok(content.includes('social:'), 'social セクションが存在する');
       assert.ok(content.includes('github:'), 'github 設定が存在する');
@@ -281,19 +281,19 @@ describe('site.config.ts 設定ファイル', () => {
     });
 
     it('フッター設定が含まれている', () => {
-      const configPath = resolve(process.cwd(), 'src/site.config.ts');
+      const configPath = resolve(process.cwd(), 'site.config.ts');
       const content = readFileSync(configPath, 'utf-8');
       assert.ok(content.includes('footer:'), 'footer セクションが存在する');
     });
 
     it('SEO 設定が含まれている', () => {
-      const configPath = resolve(process.cwd(), 'src/site.config.ts');
+      const configPath = resolve(process.cwd(), 'site.config.ts');
       const content = readFileSync(configPath, 'utf-8');
       assert.ok(content.includes('seo:'), 'seo セクションが存在する');
     });
 
     it('機能フラグが含まれている', () => {
-      const configPath = resolve(process.cwd(), 'src/site.config.ts');
+      const configPath = resolve(process.cwd(), 'site.config.ts');
       const content = readFileSync(configPath, 'utf-8');
       assert.ok(content.includes('features:'), 'features セクションが存在する');
       assert.ok(content.includes('tableOfContents:'), 'tableOfContents が設定されている');
@@ -302,7 +302,7 @@ describe('site.config.ts 設定ファイル', () => {
     });
 
     it('各設定項目の用途を説明するコメントが含まれている', () => {
-      const configPath = resolve(process.cwd(), 'src/site.config.ts');
+      const configPath = resolve(process.cwd(), 'site.config.ts');
       const content = readFileSync(configPath, 'utf-8');
       // コメントが存在することを確認（// または /* のいずれか）
       const hasComments = content.includes('//') || content.includes('/*');
@@ -312,7 +312,7 @@ describe('site.config.ts 設定ファイル', () => {
 
   describe('後方互換性', () => {
     it('SITE_TITLE がエクスポートされている', () => {
-      const configPath = resolve(process.cwd(), 'src/site.config.ts');
+      const configPath = resolve(process.cwd(), 'site.config.ts');
       const content = readFileSync(configPath, 'utf-8');
       assert.ok(
         content.includes('export const SITE_TITLE') ||
@@ -322,7 +322,7 @@ describe('site.config.ts 設定ファイル', () => {
     });
 
     it('SITE_DESCRIPTION がエクスポートされている', () => {
-      const configPath = resolve(process.cwd(), 'src/site.config.ts');
+      const configPath = resolve(process.cwd(), 'site.config.ts');
       const content = readFileSync(configPath, 'utf-8');
       assert.ok(
         content.includes('export const SITE_DESCRIPTION') ||

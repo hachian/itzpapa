@@ -6,10 +6,10 @@
 
 **Users**: itzpapa を利用してブログを構築する開発者。サイトのブランディング、SNS プレゼンス、機能選択をコードを直接編集せずに行いたいユーザー。
 
-**Impact**: 既存の `src/consts.ts` を `src/site.config.ts` に置き換え、Header/Footer コンポーネントを設定駆動に変更する。
+**Impact**: 既存の `src/consts.ts` を `site.config.ts` に置き換え、Header/Footer コンポーネントを設定駆動に変更する。
 
 ### Goals
-- すべてのカスタマイズ項目を単一ファイル `src/site.config.ts` に集約
+- すべてのカスタマイズ項目を単一ファイル `site.config.ts` に集約
 - TypeScript による型安全な設定と IDE 補完の提供
 - SNS リンク（GitHub、Twitter/X、YouTube、Bluesky 等）の個別 ON/OFF 設定
 - `--primary-hue` CSS 変数によるカラーテーマのカスタマイズ
@@ -30,7 +30,7 @@
 - `src/styles/design-tokens.css`: `--primary-hue` CSS 変数でカラー制御
 
 変更が必要なコンポーネント:
-- `src/consts.ts` → `src/site.config.ts` に置き換え
+- `src/consts.ts` → `site.config.ts` に置き換え
 - `src/components/Header.astro`: 設定からナビゲーション・SNS を読み込み
 - `src/components/Footer.astro`: 設定から著作権・SNS を読み込み
 - `src/components/BaseHead.astro`: 設定からカラー・SEO 情報を適用
@@ -199,8 +199,8 @@ export interface SiteConfig {
 
 ##### State Management
 ```typescript
-// src/site.config.ts
-import type { SiteConfig } from './types/site-config';
+// site.config.ts
+import type { SiteConfig } from './src/types/site-config';
 
 export const siteConfig: SiteConfig = {
   site: {

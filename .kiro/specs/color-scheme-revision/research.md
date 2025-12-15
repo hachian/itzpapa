@@ -12,7 +12,7 @@
 
 ### 既存カラーシステムの分析
 - **Context**: 現在の配色スキーム実装状況の把握
-- **Sources Consulted**: `src/styles/design-tokens.css`, `src/site.config.ts`, `src/types/site-config.ts`
+- **Sources Consulted**: `src/styles/design-tokens.css`, `site.config.ts`, `src/types/site-config.ts`
 - **Findings**:
   - OKLCHカラースペースを採用（知覚的に均一な色空間）
   - `--primary-hue`（0-360）により全プライマリカラーパレットを動的生成

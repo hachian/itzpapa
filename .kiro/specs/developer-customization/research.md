@@ -55,9 +55,9 @@
 - **Alternatives Considered**:
   1. `src/site.config.ts` — src 配下に配置
   2. `site.config.ts` — プロジェクトルートに配置
-- **Selected Approach**: `src/site.config.ts`
-- **Rationale**: 他の TypeScript ソースと同じ src 配下に配置することで、import パスが統一される
-- **Trade-offs**: ルート配置より見つけにくいが、Astro の慣習に沿う
+- **Selected Approach**: `site.config.ts`（プロジェクトルート）
+- **Rationale**: 設定ファイルはユーザーが頻繁に編集するため、見つけやすいルートに配置
+- **Trade-offs**: src配下より見つけやすく、astro.config.mjsなど他のルート設定ファイルと一貫性がある
 - **Follow-up**: README にファイル位置を明記
 
 ### Decision: SNS 設定の構造

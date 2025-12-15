@@ -4,7 +4,7 @@
  * このファイルでサイト全体の設定を一元管理します。
  * 各設定項目を編集することで、サイトの見た目や動作をカスタマイズできます。
  */
-import type { SiteConfig } from './types/site-config';
+import type { SiteConfig } from './src/types/site-config';
 
 /**
  * サイト設定オブジェクト

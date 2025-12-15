@@ -23,7 +23,7 @@
 
 ### Existing Architecture Analysis
 - **現在のパターン**: OKLCHベースのCSS変数システム、`--primary-hue`による動的パレット生成
-- **ドメイン境界**: スタイル定義は`src/styles/`に集約、設定は`src/site.config.ts`
+- **ドメイン境界**: スタイル定義は`src/styles/`に集約、設定は`site.config.ts`
 - **維持すべき統合点**: ダークモード切り替え（html.dark / prefers-color-scheme）、Astroコンポーネントとの連携
 - **技術的負債**: Callout色が固定色相で統一感に欠ける
 
