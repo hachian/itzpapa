@@ -30,19 +30,19 @@
 
 /* 見出しサイズ - 本文サイズに連動 */
 .prose h1 {
-  font-size: var(--heading-scale-h1);
+  font-size: 2em;
 }
 
 .prose h2 {
-  font-size: var(--heading-scale-h2);
+  font-size: 1.75em;
 }
 
 .prose h3 {
-  font-size: var(--heading-scale-h3);
+  font-size: 1.5em;
 }
 
 .prose h4 {
-  font-size: var(--heading-scale-h4);
+  font-size: 1.25em;
 }
 
 /* =========================================
