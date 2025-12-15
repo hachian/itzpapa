@@ -1,179 +1,152 @@
-# Astroブログサイト with Obsidian風機能
+# itzpapa - Astro Blog with Obsidian-style Features
 
-このプロジェクトは、Astroをベースにしたブログサイトで、Obsidian風の記法（WikiLink、Callout、マークハイライト）をサポートしています。
+[日本語版はこちら / Japanese](./README.ja.md)
 
-## 特徴
+An Astro-based blog site that supports Obsidian-style syntax (WikiLink, Callout, Mark Highlight).
 
-### 基本機能
-- 📝 Markdown & MDXサポート
-- 🚀 高速な静的サイト生成（Astro v5.12.8）
-- 🎨 シンプルでカスタマイズ可能なデザイン
-- 📊 高パフォーマンス設計
-- 🔍 SEO最適化（canonical URLs、OpenGraphデータ）
-- 🗺️ サイトマップ自動生成
-- 📡 RSSフィード対応
+## Features
 
-### Obsidian風機能
-- **WikiLink記法** - `[[ページ名]]`形式のリンク記法をサポート
-  - スペースを含むファイル名に対応
-  - アンカーリンク（`[[ページ#見出し]]`）対応
-  - 画像の埋め込み（`![[画像名.jpg]]`）対応
-- **Calloutブロック** - Obsidian風の強調ブロック
-  - 各種タイプ（note、tip、warning、danger等）をサポート
-  - ネスト可能
-- **マークハイライト** - `==テキスト==`形式でテキストをハイライト表示
+### Core Features
+- Markdown & MDX support
+- Fast static site generation (Astro v5)
+- Simple, customizable design
+- High performance architecture
+- SEO optimized (canonical URLs, OpenGraph)
+- Auto-generated sitemap
+- RSS feed support
 
-## インストール
+### Obsidian-style Features
+- **WikiLink syntax** - Support for `[[page name]]` link format
+  - Handles file names with spaces
+  - Anchor links (`[[page#heading]]`)
+  - Image embeds (`![[image.jpg]]`)
+- **Callout blocks** - Obsidian-style emphasis blocks
+  - Various types (note, tip, warning, danger, etc.)
+  - Nestable
+- **Mark highlight** - Highlight text with `==text==` syntax
+
+## Installation
 
 ```bash
-# 依存関係のインストール
+# Install dependencies
 npm install
 
-# 開発サーバーの起動
+# Start development server
 npm run dev
 ```
 
-## コマンド一覧
+## Commands
 
-| コマンド | 説明 |
-|---------|------|
-| `npm install` | 依存関係をインストール |
-| `npm run dev` | 開発サーバーを起動（localhost:4321） |
-| `npm run build` | 本番用サイトをビルド（./dist/へ出力） |
-| `npm run preview` | ビルド結果をローカルでプレビュー |
-| `npm run test` | すべてのテストを実行 |
-| `npm run test:wikilink` | WikiLinkプラグインのテスト |
-| `npm run test:image` | 画像WikiLinkのテスト |
-| `npm run test:table` | テーブル内WikiLinkのテスト |
-| `npm run test:performance` | パフォーマンステスト |
+| Command | Description |
+|---------|-------------|
+| `npm install` | Install dependencies |
+| `npm run dev` | Start dev server (localhost:4321) |
+| `npm run build` | Build for production (./dist/) |
+| `npm run preview` | Preview build locally |
+| `npm run test` | Run all tests |
 
-## プロジェクト構造
+## Project Structure
 
 ```
-├── public/              # 静的ファイル
+├── public/              # Static files
 │   ├── favicon.svg
-│   └── fonts/          # Webフォント
+│   └── fonts/          # Web fonts
 ├── src/
-│   ├── assets/         # 画像アセット
-│   ├── components/     # Astroコンポーネント
-│   ├── content/        # ブログ記事（Markdown/MDX）
-│   │   └── blog/      # ブログ投稿
-│   ├── layouts/        # レイアウトテンプレート
-│   ├── pages/          # ページコンポーネント
-│   ├── plugins/        # カスタムプラグイン
-│   │   ├── remark-wikilink/      # WikiLinkサポート
-│   │   └── remark-mark-highlight/ # マークハイライト
-│   └── styles/         # グローバルスタイル
-├── test/               # テストファイル
-├── docs/               # ドキュメント
-│   ├── spec/          # 仕様書
-│   ├── tasks/         # タスク管理
-│   └── implementation/ # 実装詳細
-├── astro.config.mjs    # Astro設定
-├── package.json        # パッケージ設定
-└── tsconfig.json       # TypeScript設定
+│   ├── assets/         # Image assets
+│   ├── components/     # Astro components
+│   ├── content/        # Blog posts (Markdown/MDX)
+│   │   └── blog/      # Blog entries
+│   ├── layouts/        # Layout templates
+│   ├── pages/          # Page components
+│   ├── plugins/        # Custom plugins
+│   │   ├── remark-wikilink/      # WikiLink support
+│   │   └── remark-mark-highlight/ # Mark highlight
+│   └── styles/         # Global styles
+├── tests/              # Test files
+├── astro.config.mjs    # Astro configuration
+├── package.json        # Package configuration
+└── tsconfig.json       # TypeScript configuration
 ```
 
-## 依存ライブラリ
+## Dependencies
 
-### メイン依存関係
-- **astro** (v5.12.8) - 静的サイトジェネレーター
-- **@astrojs/mdx** (v4.3.3) - MDX統合
-- **@astrojs/rss** (v4.0.12) - RSSフィード生成
-- **@astrojs/sitemap** (v3.4.2) - サイトマップ生成
-- **rehype-callouts** (v2.1.2) - Obsidian風コールアウトブロック
-- **sharp** (v0.34.2) - 画像処理
+### Main Dependencies
+- **astro** - Static site generator
+- **@astrojs/mdx** - MDX integration
+- **@astrojs/rss** - RSS feed generation
+- **@astrojs/sitemap** - Sitemap generation
+- **sharp** - Image processing
 
-### 開発用依存関係
-- **remark** (v15.0.1) - Markdownプロセッサ
-- **unified** (v11.0.5) - テキスト処理インターフェース
-- **unist-util-visit** (v5.0.0) - ASTノードトラバース
+### Dev Dependencies
+- **remark** - Markdown processor
+- **unified** - Text processing interface
+- **unist-util-visit** - AST node traversal
 
-## カスタムプラグイン
+## Custom Plugins
 
 ### remark-wikilink
-WikiLink記法（`[[ページ名]]`）をサポートするプラグイン。
-- ファイル名のスペース対応
-- アンカーリンク対応
-- 画像埋め込み対応
+Plugin supporting WikiLink syntax (`[[page name]]`).
+- Space handling in file names
+- Anchor link support
+- Image embed support
 
 ### remark-mark-highlight
-マークハイライト記法（`==テキスト==`）をサポートするプラグイン。
-- インラインハイライト表示
-- CSSカスタマイズ可能
+Plugin supporting mark highlight syntax (`==text==`).
+- Inline highlight display
+- CSS customizable
 
-## 使い方
+## Usage
 
-### ブログ記事の作成
+### Creating Blog Posts
 
-1. `src/content/blog/`ディレクトリに新しいフォルダを作成
-2. `index.md`または`index.mdx`ファイルを作成
-3. フロントマターとコンテンツを記述
+1. Create a new folder in `src/content/blog/`
+2. Create an `index.md` or `index.mdx` file
+3. Add frontmatter and content
 
-#### フロントマター（記事のメタデータ）
-
-フロントマターは、Markdownファイルの先頭に記述するYAML形式のメタデータです。`---`で囲まれた部分に記述します。
+#### Frontmatter (Article Metadata)
 
 ```markdown
 ---
-title: '記事タイトル'          # 必須：ページのタイトル
-description: '記事の説明'      # 必須：SEOやRSSで使用される説明文
-pubDate: '2024-07-08'        # 必須：公開日（形式: YYYY-MM-DD）
-heroImage: './image.jpg'      # オプション：ヒーロー画像のパス
-tags:                         # オプション：タグ（配列形式）
+title: 'Article Title'           # Required: Page title
+description: 'Article summary'   # Required: For SEO and RSS
+pubDate: '2024-07-08'           # Required: Publish date (YYYY-MM-DD)
+heroImage: './image.jpg'         # Optional: Hero image path
+tags:                            # Optional: Tags (array)
   - 'Astro'
-  - 'ブログ'
-draft: false                  # オプション：下書きフラグ（trueで非公開）
-updateDate: '2024-07-09'      # オプション：更新日（形式: YYYY-MM-DD）
+  - 'Blog'
+draft: false                     # Optional: Draft flag (true = unpublished)
+updateDate: '2024-07-09'         # Optional: Update date (YYYY-MM-DD)
 ---
 
-記事の内容をここに記述...
+Article content here...
 ```
 
-#### フロントマターのフィールド詳細
-
-| フィールド | 必須 | 説明 | 例 |
-|-----------|------|------|-----|
-| `title` | ✅ | 記事のタイトル | `'初めてのAstroブログ'` |
-| `description` | ✅ | 記事の概要（SEO用） | `'Astroでブログを始める方法'` |
-| `pubDate` | ✅ | 公開日 | `'2025-08-16'` |
-| `heroImage` | ❌ | ヒーロー画像のパス | `'./hero.jpg'` または `'/images/hero.jpg'` |
-| `tags` | ❌ | タグのリスト | `['tech', 'web']` |
-| `draft` | ❌ | 下書き状態 | `true` または `false` |
-| `updateDate` | ❌ | 更新日 | `'2025-08-17'` |
-
-#### 画像パスの指定方法
-
-- **相対パス**: `./image.jpg` - 同じフォルダ内の画像
-- **絶対パス**: `/blog-placeholder-1.jpg` - publicフォルダからのパス
-- **外部URL**: `https://example.com/image.jpg` - 外部画像
-
-### WikiLink記法の使用
+### WikiLink Syntax
 
 ```markdown
-# 基本的なリンク
-[[他のページ]]
+# Basic link
+[[other-page]]
 
-# アンカーリンク
-[[ページ名#見出し]]
+# Anchor link
+[[page#heading]]
 
-# 画像の埋め込み
-![[画像ファイル.jpg]]
+# Image embed
+![[image.jpg]]
 ```
 
-### Calloutブロックの使用
+### Callout Blocks
 
 ```markdown
 > [!note]
-> これはノートタイプのコールアウトです。
+> This is a note callout.
 
 > [!warning]
-> これは警告タイプのコールアウトです。
+> This is a warning callout.
 
 > [!tip]
-> これはヒントタイプのコールアウトです。
+> This is a tip callout.
 ```
 
-## ライセンス
+## License
 
 MIT

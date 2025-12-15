@@ -80,7 +80,7 @@ describe('remark-wikilink Plugin', () => {
       const link = findLink(ast);
 
       assert(link, 'Should find a link');
-      assert.strictEqual(link.url, '/blog/page', 'Should convert to blog path');
+      assert.strictEqual(link.url, '/blog/page/', 'Should convert to blog path');
     });
 
     test('adds wikilink-internal class', async () => {
@@ -114,7 +114,7 @@ describe('remark-wikilink Plugin', () => {
       const ast = await processToAst(input);
       const link = findLink(ast);
 
-      assert.strictEqual(link.url, '/blog/page', 'Should have correct URL');
+      assert.strictEqual(link.url, '/blog/page/', 'Should have correct URL');
       assert.strictEqual(
         link.children[0].value,
         'カスタム表示名',
@@ -159,7 +159,7 @@ describe('remark-wikilink Plugin', () => {
       const ast = await processToAst(input);
       const link = findLink(ast);
 
-      assert.strictEqual(link.url, '/blog/ページ-名前', 'Should convert full-width space to hyphen');
+      assert.strictEqual(link.url, '/blog/ページ-名前/', 'Should convert full-width space to hyphen');
     });
   });
 
@@ -177,7 +177,7 @@ describe('remark-wikilink Plugin', () => {
       const ast = await processToAst(input);
       const link = findLink(ast);
 
-      assert.strictEqual(link.url, '/blog/page#test-heading', 'Should slugify heading');
+      assert.strictEqual(link.url, '/blog/page/#test-heading', 'Should slugify heading');
     });
 
     test('preserves Japanese heading text', async () => {
@@ -185,7 +185,7 @@ describe('remark-wikilink Plugin', () => {
       const ast = await processToAst(input);
       const link = findLink(ast);
 
-      assert.strictEqual(link.url, '/blog/page#日本語の見出し', 'Should preserve Japanese heading');
+      assert.strictEqual(link.url, '/blog/page/#日本語の見出し', 'Should preserve Japanese heading');
     });
 
     test('handles mixed language heading', async () => {
@@ -193,7 +193,7 @@ describe('remark-wikilink Plugin', () => {
       const ast = await processToAst(input);
       const link = findLink(ast);
 
-      assert(link.url.includes('#english-and-日本語'), 'Should handle mixed language heading');
+      assert(link.url.includes('/#english-and-日本語'), 'Should handle mixed language heading');
     });
   });
 
@@ -203,7 +203,7 @@ describe('remark-wikilink Plugin', () => {
       const ast = await processToAst(input);
       const link = findLink(ast);
 
-      assert.strictEqual(link.url, '/blog/test/page', 'Should remove .md extension');
+      assert.strictEqual(link.url, '/blog/test/page/', 'Should remove .md extension');
     });
 
     test('removes /index from path', async () => {
@@ -211,7 +211,7 @@ describe('remark-wikilink Plugin', () => {
       const ast = await processToAst(input);
       const link = findLink(ast);
 
-      assert.strictEqual(link.url, '/blog/test', 'Should remove /index');
+      assert.strictEqual(link.url, '/blog/test/', 'Should remove /index');
     });
 
     test('converts spaces to hyphens in path', async () => {
@@ -219,7 +219,7 @@ describe('remark-wikilink Plugin', () => {
       const ast = await processToAst(input);
       const link = findLink(ast);
 
-      assert.strictEqual(link.url, '/blog/page-name', 'Should convert spaces to hyphens');
+      assert.strictEqual(link.url, '/blog/page-name/', 'Should convert spaces to hyphens');
     });
 
     test('handles multiple consecutive spaces', async () => {
@@ -227,7 +227,7 @@ describe('remark-wikilink Plugin', () => {
       const ast = await processToAst(input);
       const link = findLink(ast);
 
-      assert.strictEqual(link.url, '/blog/page-with-spaces', 'Should normalize multiple spaces');
+      assert.strictEqual(link.url, '/blog/page-with-spaces/', 'Should normalize multiple spaces');
     });
 
     test('trims whitespace around path', async () => {
@@ -235,7 +235,7 @@ describe('remark-wikilink Plugin', () => {
       const ast = await processToAst(input);
       const link = findLink(ast);
 
-      assert.strictEqual(link.url, '/blog/page', 'Should trim whitespace');
+      assert.strictEqual(link.url, '/blog/page/', 'Should trim whitespace');
     });
   });
 
@@ -246,8 +246,8 @@ describe('remark-wikilink Plugin', () => {
       const links = findAllLinks(ast);
 
       assert.strictEqual(links.length, 2, 'Should find 2 links');
-      assert.strictEqual(links[0].url, '/blog/first', 'First link correct');
-      assert.strictEqual(links[1].url, '/blog/second', 'Second link correct');
+      assert.strictEqual(links[0].url, '/blog/first/', 'First link correct');
+      assert.strictEqual(links[1].url, '/blog/second/', 'Second link correct');
       assert.strictEqual(links[1].children[0].value, '二番目', 'Second link has alias');
     });
 
@@ -272,7 +272,7 @@ describe('remark-wikilink Plugin', () => {
       const link = findLink(ast);
 
       assert(link, 'Should find link in table');
-      assert.strictEqual(link.url, '/blog/page', 'Should have correct URL');
+      assert.strictEqual(link.url, '/blog/page/', 'Should have correct URL');
       assert.strictEqual(link.children[0].value, 'リンク', 'Should have alias');
     });
   });
@@ -343,7 +343,7 @@ describe('remark-wikilink Plugin', () => {
       const ast = await processToAst(input);
       const link = findLink(ast);
 
-      assert.strictEqual(link.url, '/blog/mypage', 'Should lowercase path');
+      assert.strictEqual(link.url, '/blog/mypage/', 'Should lowercase path');
     });
   });
 

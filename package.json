@@ -1,7 +1,22 @@
 {
-  "name": "",
+  "name": "itzpapa",
+  "description": "An Astro blog template with Obsidian-style features (WikiLink, Callout, Mark Highlight)",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hachian/itzpapa.git"
+  },
+  "keywords": [
+    "astro",
+    "blog",
+    "obsidian",
+    "wikilink",
+    "markdown",
+    "static-site-generator"
+  ],
+  "author": "hachian",
+  "license": "MIT",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
