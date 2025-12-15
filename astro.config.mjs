@@ -4,6 +4,7 @@
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import { defineConfig } from 'astro/config';
+import remarkBreaks from 'remark-breaks';
 import remarkWikilink from './src/plugins/remark-wikilink/index.js';
 import remarkTaskStatus from './src/plugins/remark-task-status/index.js';
 import remarkTags from './src/plugins/remark-tags/index.js';
@@ -32,6 +33,8 @@ export default defineConfig({
 	integrations: [
 		mdx({
 			remarkPlugins: [
+				// 単一改行を<br>に変換
+				remarkBreaks,
 				// Wikilinkを最初に処理（GFMの前）
 				[remarkWikilink, { priority: 'high' }],
 				// タスクステータス処理（Obsidian形式）
@@ -60,6 +63,8 @@ export default defineConfig({
 	],
 	markdown: {
 		remarkPlugins: [
+			// 単一改行を<br>に変換
+			remarkBreaks,
 			// Wikilinkを最初に処理（最高優先度）
 			[remarkWikilink, { priority: 'high' }],
 			// タスクステータス処理（Obsidian形式）
