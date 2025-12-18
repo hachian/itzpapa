@@ -1,43 +1,43 @@
 {
-  "timestamp": "2025-12-15T12:57:23.053Z",
+  "timestamp": "2025-12-15T15:27:27.600Z",
   "testResults": [
     {
       "success": true,
-      "duration": 4.469194000000002,
+      "duration": 4.475367000000006,
       "linkCount": 10,
-      "memoryUsed": 1.0700000000000003,
+      "memoryUsed": 1.0700000000000012,
       "wikilinkCount": 10
     },
     {
       "success": true,
-      "duration": 6.649605000000008,
+      "duration": 7.902486999999994,
       "linkCount": 100,
-      "memoryUsed": 1.7400000000000002,
+      "memoryUsed": 0.21000000000000085,
       "wikilinkCount": 100
     },
     {
       "success": true,
-      "duration": 42.28090300000001,
+      "duration": 42.690612,
       "linkCount": 1000,
-      "memoryUsed": 15.5,
+      "memoryUsed": 10.2,
       "wikilinkCount": 1000
     },
     {
       "success": true,
-      "duration": 147.80775099999997,
+      "duration": 147.945736,
       "linkCount": 5000,
-      "memoryUsed": 48.03000000000001,
+      "memoryUsed": 59.07,
       "wikilinkCount": 5000
     }
   ],
   "benchmark": {
-    "basicDuration": 1.6586110000000076,
-    "pluginDuration": 2.789787300000006,
-    "performanceImpact": 68.20021692850182
+    "basicDuration": 1.3147560999999997,
+    "pluginDuration": 1.271726599999988,
+    "performanceImpact": -3.2728123489985412
   },
   "analysis": {
-    "requirementsMet": false,
-    "avgMemoryUsage": 16.585,
-    "avgThroughput": 18688.773048183582
+    "requirementsMet": true,
+    "avgMemoryUsage": 17.6375,
+    "avgThroughput": 18027.30667609719
   }
 }
