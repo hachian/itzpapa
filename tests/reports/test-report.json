@@ -1,22 +1,22 @@
 {
-  "timestamp": "2025-12-15T15:27:27.617Z",
+  "timestamp": "2025-12-20T06:31:16.485Z",
   "summary": {
     "total": 12,
     "passed": 11,
     "failed": 0,
-    "duration": 2364
+    "duration": 2262
   },
   "results": [
     {
       "name": "Fixture Loader Tests",
       "success": true,
-      "duration": 86,
+      "duration": 83,
       "error": null
     },
     {
       "name": "Wikilink Unit Tests",
       "success": true,
-      "duration": 150,
+      "duration": 159,
       "error": null
     },
     {
@@ -28,55 +28,55 @@
     {
       "name": "Tags Unit Tests",
       "success": true,
-      "duration": 136,
+      "duration": 142,
       "error": null
     },
     {
       "name": "Callout Unit Tests",
       "success": true,
-      "duration": 200,
+      "duration": 211,
       "error": null
     },
     {
       "name": "Integration Tests",
       "success": true,
-      "duration": 67,
+      "duration": 63,
       "error": null
     },
     {
       "name": "HTML Validator Tests",
       "success": true,
-      "duration": 224,
+      "duration": 168,
       "error": null
     },
     {
       "name": "E2E Tests",
       "success": true,
-      "duration": 410,
+      "duration": 360,
       "error": null
     },
     {
       "name": "Wikilink Core Tests (Legacy)",
       "success": false,
-      "duration": 167,
+      "duration": 166,
       "error": null
     },
     {
       "name": "Image Wikilink Tests",
       "success": true,
-      "duration": 198,
+      "duration": 182,
       "error": null
     },
     {
       "name": "Table Wikilink Tests",
       "success": true,
-      "duration": 204,
+      "duration": 187,
       "error": null
     },
     {
       "name": "Performance Tests",
       "success": true,
-      "duration": 380,
+      "duration": 400,
       "error": null
     }
   ]
