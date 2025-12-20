@@ -7,6 +7,7 @@
 
 import { getCollection } from 'astro:content';
 import BaseHead from '../../components/BaseHead.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
@@ -75,28 +76,27 @@ const sortedPosts = relatedPosts.sort((a, b) =>
   new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
 );
 
-// パンくずリスト用の親タグパス
-function getTagBreadcrumbs(tagName: string) {
+// パンくずリスト用のアイテム配列を構築
+function buildBreadcrumbItems(tagName: string) {
+  const items = [
+    { label: t('breadcrumb.home'), href: '/' },
+    { label: t('breadcrumb.tags'), href: '/tags/' }
+  ];
+
   const parts = tagName.split('/');
-  const breadcrumbs = [];
-  
   for (let i = 0; i < parts.length; i++) {
     const partialTag = parts.slice(0, i + 1).join('/');
-    const tagObj = tagService.getTag(partialTag);
-    if (tagObj) {
-      breadcrumbs.push({
-        name: parts[i],
-        fullName: partialTag,
-        slug: tagObj.slug,
-        isLast: i === parts.length - 1
-      });
-    }
+    const isLast = i === parts.length - 1;
+    items.push({
+      label: parts[i],
+      href: isLast ? undefined : `/tags/${partialTag.toLowerCase()}/`
+    });
   }
-  
-  return breadcrumbs;
+
+  return items;
 }
 
-const breadcrumbs = getTagBreadcrumbs(tagName);
+const breadcrumbItems = buildBreadcrumbItems(tagName);
 const isHierarchical = tagName.includes('/');
 
 // 関連する子タグを取得
@@ -106,7 +106,6 @@ const childTags = tagService.getAllTags().filter(t =>
 
 // ページメタデータと翻訳
 const lang = getLanguage();
-const backToList = t('tags.backToList');
 const pageTitle = lang === 'ja'
   ? `${tagName} のタグ記事`
   : `Posts tagged: ${tagName}`;
@@ -130,51 +129,6 @@ const pageDescription = lang === 'ja'
         margin-bottom: var(--space-8);
         padding-bottom: var(--space-4);
         border-bottom: 2px solid var(--color-gray-200);
-      }
-
-      .breadcrumbs {
-        display: flex;
-        align-items: center;
-        gap: var(--space-2);
-        margin-bottom: var(--space-4);
-        font-size: var(--font-size-sm);
-        color: var(--color-text-secondary);
-      }
-
-      .breadcrumb-item {
-        display: flex;
-        align-items: center;
-        gap: var(--space-2);
-      }
-
-      .breadcrumb-link {
-        display: inline-flex;
-        align-items: center;
-        background-color: var(--tag-bg);
-        color: var(--tag-color);
-        border: 1px solid var(--tag-border);
-        border-radius: var(--tag-border-radius);
-        padding: var(--tag-padding-y) var(--tag-padding-x);
-        font-size: var(--tag-font-size);
-        font-weight: var(--tag-font-weight);
-        line-height: var(--tag-line-height);
-        text-decoration: none;
-        transition: all var(--tag-transition-duration) var(--tag-transition-easing);
-        white-space: nowrap;
-        cursor: pointer;
-      }
-
-      .breadcrumb-link:hover {
-        background-color: var(--tag-hover-bg);
-        color: var(--tag-hover-color);
-        border-color: var(--tag-hover-border);
-        transform: var(--tag-hover-transform);
-        box-shadow: var(--tag-hover-shadow);
-      }
-
-      .breadcrumb-separator {
-        color: var(--color-text-secondary);
-        font-weight: var(--font-weight-bold);
       }
 
       .page-title {
@@ -310,21 +264,6 @@ const pageDescription = lang === 'ja'
         color: var(--color-text-primary);
       }
 
-      .back-link {
-        display: inline-flex;
-        align-items: center;
-        gap: var(--space-2);
-        color: var(--color-link);
-        text-decoration: none;
-        padding: var(--space-2) 0;
-        margin-bottom: var(--space-4);
-        transition: color var(--duration-fast) var(--easing-default);
-      }
-
-      .back-link:hover {
-        color: var(--color-link-hover);
-      }
-
       /* レスポンシブ対応 */
       @media (max-width: 768px) {
         .tag-page-container {
@@ -354,9 +293,6 @@ const pageDescription = lang === 'ja'
           white-space: normal;
         }
 
-        .breadcrumbs {
-          flex-wrap: wrap;
-        }
       }
 
       /* ダークモード対応 */
@@ -377,18 +313,6 @@ const pageDescription = lang === 'ja'
         border-color: var(--color-primary-500);
         box-shadow: var(--shadow-lg);
       }
-
-      html.dark .breadcrumb-link {
-        background-color: var(--tag-bg);
-        color: var(--tag-color);
-        border-color: var(--tag-border);
-      }
-
-      html.dark .breadcrumb-link:hover {
-        background-color: var(--tag-hover-bg);
-        color: var(--tag-hover-color);
-        border-color: var(--tag-hover-border);
-      }
     </style>
   </head>
 
@@ -396,28 +320,8 @@ const pageDescription = lang === 'ja'
     <Header />
     <main style="view-transition-name: main-content;">
       <div class="tag-page-container">
-        <!-- 戻るリンク -->
-        <a href="/tags/" class="back-link">
-          ← {backToList}
-        </a>
-
         <!-- パンくずナビゲーション -->
-        {isHierarchical && breadcrumbs.length > 1 && (
-          <nav class="breadcrumbs" aria-label="パンくずナビゲーション">
-            {breadcrumbs.map((crumb, index) => (
-              <div class="breadcrumb-item">
-                {index > 0 && <span class="breadcrumb-separator">/</span>}
-                {crumb.isLast ? (
-                  <span>#{crumb.name}</span>
-                ) : (
-                  <a href={`/tags/${crumb.fullName.toLowerCase()}/`} class="breadcrumb-link">
-                    #{crumb.name}
-                  </a>
-                )}
-              </div>
-            ))}
-          </nav>
-        )}
+        <Breadcrumb items={breadcrumbItems} />
 
         <!-- ページヘッダー -->
         <header class="page-header">

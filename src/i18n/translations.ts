@@ -66,6 +66,7 @@ export interface TranslationKeys {
   'breadcrumb.ariaLabel': string;
   'breadcrumb.home': string;
   'breadcrumb.blog': string;
+  'breadcrumb.tags': string;
 
   // メニュー操作
   'menu.open': string;
@@ -164,6 +165,7 @@ export const translations: Translations = {
     'breadcrumb.ariaLabel': 'パンくずナビゲーション',
     'breadcrumb.home': 'ホーム',
     'breadcrumb.blog': 'ブログ',
+    'breadcrumb.tags': 'タグ',
     // メニュー操作
     'menu.open': 'メニューを開く',
     'menu.close': 'メニューを閉じる',
@@ -254,6 +256,7 @@ export const translations: Translations = {
     'breadcrumb.ariaLabel': 'Breadcrumb navigation',
     'breadcrumb.home': 'Home',
     'breadcrumb.blog': 'Blog',
+    'breadcrumb.tags': 'Tags',
     // Menu operations
     'menu.open': 'Open menu',
     'menu.close': 'Close menu',
