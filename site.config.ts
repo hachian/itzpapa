@@ -60,7 +60,7 @@ export const siteConfig: SiteConfig = {
      *
      * デフォルト: 'purple'
      */
-    primaryHue: 'purple',
+    primaryHue: 293
   },
 
   // ========================================
