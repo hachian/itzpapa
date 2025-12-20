@@ -5,8 +5,10 @@
 
 /* Base mark element styling */
 mark {
-  /* Background using CSS variables with fallback */
-  background-color: var(--mark-bg, oklch(90% 0.20 100 / 0.6));
+  /* Background using CSS variables with fallback
+   * Default hue: complementary color of primary (primaryHue + 180)
+   */
+  background-color: var(--mark-bg, oklch(90% 0.20 calc(var(--primary-hue) + 180) / 0.6));
 
   /* Typography */
   color: inherit;
@@ -32,16 +34,16 @@ mark:focus {
 
 /* Dark mode support */
 html.dark mark {
-  background-color: var(--mark-bg-dark, oklch(85% 0.18 85 / 0.4));
+  background-color: var(--mark-bg-dark, oklch(85% 0.18 calc(var(--primary-hue) + 180) / 0.4));
 }
 
 /* Custom class support */
 mark.highlight-yellow {
-  background-color: var(--mark-bg, oklch(90% 0.20 100 / 0.6));
+  background-color: var(--mark-bg, oklch(90% 0.20 calc(var(--primary-hue) + 180) / 0.6));
 }
 
 html.dark mark.highlight-yellow {
-  background-color: var(--mark-bg-dark, oklch(85% 0.18 85 / 0.4));
+  background-color: var(--mark-bg-dark, oklch(85% 0.18 calc(var(--primary-hue) + 180) / 0.4));
 }
 
 mark.highlight-blue {
@@ -71,7 +73,7 @@ html.dark mark.highlight-pink {
 /* Print support */
 @media print {
   mark {
-    background-color: oklch(90% 0.20 100 / 0.3) !important;
+    background-color: oklch(90% 0.20 calc(var(--primary-hue) + 180) / 0.3) !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
