@@ -29,12 +29,9 @@ pnpm-debug.log*
 .serena/
 
 # test reports
-test/test-report.txt
-test/test-report.json
-test/test-report.html
-test/reports/
-test/performance-report.json
-test/performance-test-results.json
+tests/reports/
+tests/performance/performance-report.json
+tests/integration/test-report.json
 
 # playwright temporary files
 .playwright-mcp/
