@@ -11,4 +11,4 @@ Disallow: /api/
 Disallow: /test-
 
 # サイトマップ参照
-Sitemap: https://example.com/sitemap-index.xml
+Sitemap: https://itzpapa.hachian.com/sitemap-index.xml

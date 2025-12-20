@@ -26,11 +26,11 @@ export const siteConfig: SiteConfig = {
       en: 'An Astro blog solution for Obsidian users',
     },
     /** 著者名 */
-    author: 'Your Name',
+    author: 'Hachian',
     /** 著者プロフィールページへのURL（オプション） */
     // authorProfile: '/about',
     /** 本番環境のベースURL（末尾のスラッシュなし） */
-    baseUrl: 'https://example.com',
+    baseUrl: 'https://itzpapa.hachian.com',
     /**
      * 表示言語
      * 'ja': 日本語（デフォルト）
@@ -85,7 +85,7 @@ export const siteConfig: SiteConfig = {
   // ========================================
   social: {
     /** GitHub */
-    github: { enabled: true, url: 'https://github.com/username' },
+    github: { enabled: true, url: 'https://github.com/hachian/itzpapa' },
     /** Twitter (X) */
     twitter: { enabled: false, url: '' },
     /** YouTube */
