@@ -143,16 +143,46 @@ export const siteConfig: SiteConfig = {
     /**
      * コメントシステム設定
      * enabled: true にして provider を設定すると、記事ページにコメント欄が表示されます
+     *
+     * giscusの設定手順:
+     * 1. https://giscus.app/ にアクセス
+     * 2. GitHubリポジトリを入力して設定を生成
+     * 3. 生成された値を以下に設定
+     *
+     * 必須設定:
+     *   - repo: GitHubリポジトリ（例: "owner/repo"）
+     *   - repoId: リポジトリID（giscus.appで生成）
+     *   - category: Discussionカテゴリ名
+     *   - categoryId: カテゴリID（giscus.appで生成）
+     *
+     * オプション設定:
+     *   - mapping: ページとDiscussionの紐付け方法（デフォルト: 'pathname'）
+     *     'pathname' | 'url' | 'title' | 'og:title' | 'specific' | 'number'
+     *   - strict: 厳密マッチング（デフォルト: false）
+     *   - reactionsEnabled: リアクション表示（デフォルト: true）
+     *   - emitMetadata: メタデータ送信（デフォルト: false）
+     *   - inputPosition: 入力欄の位置（デフォルト: 'bottom'）
+     *     'top' | 'bottom'
+     *   - lang: 言語（デフォルト: サイト言語）
      */
     comments: {
-      enabled: false,
-      // provider: 'giscus',
-      // config: {
-      //   repo: 'owner/repo',
-      //   repoId: 'R_xxxxx',
-      //   category: 'Comments',
-      //   categoryId: 'DIC_xxxxx',
-      // },
+      enabled: true,
+      // コメントを有効にするには enabled: true にし、以下のコメントを解除してください
+      provider: 'giscus',
+      config: {
+        // 必須: giscus.appで生成した値を設定
+        repo: 'hachian/itzpapa',
+        repoId: 'R_kgDOPfX1yA',
+        category: 'Announcements',
+        categoryId: 'DIC_kwDOPfX1yM4C0CxI',
+        // オプション: 必要に応じて設定
+        // mapping: 'pathname',
+        // strict: false,
+        // reactionsEnabled: true,
+        // emitMetadata: false,
+        // inputPosition: 'bottom',
+        // lang: 'ja',
+      },
     },
   },
 };

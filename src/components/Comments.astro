@@ -1,0 +1,206 @@
+---
+/**
+ * Comments.astro
+ * giscusを使用したコメントセクションコンポーネント
+ *
+ * @description
+ * GitHub Discussionsベースのコメント機能を提供する。
+ * site.config.tsで設定されたgiscus設定を使用し、
+ * サイトのテーマと連動してダーク/ライトテーマを切り替える。
+ */
+import { siteConfig } from '../../site.config';
+import type { GiscusConfig } from '../types/site-config';
+
+interface Props {
+  /** 記事のURL（giscus mapping用） */
+  articleUrl: string;
+  /** 記事のタイトル（giscus mapping用） */
+  articleTitle: string;
+}
+
+const { articleUrl, articleTitle } = Astro.props;
+
+// コメント設定を取得
+const { comments } = siteConfig.features;
+const isEnabled = comments?.enabled && comments?.provider === 'giscus' && comments?.config;
+const config = comments?.config as GiscusConfig | undefined;
+
+// 設定が不足している場合は早期リターン
+if (!isEnabled || !config?.repo || !config?.repoId || !config?.category || !config?.categoryId) {
+  // コンポーネントを非表示（何も出力しない）
+  return;
+}
+
+// giscus設定（デフォルト値を適用）
+const giscusConfig = {
+  repo: config.repo,
+  repoId: config.repoId,
+  category: config.category,
+  categoryId: config.categoryId,
+  mapping: config.mapping || 'pathname',
+  strict: config.strict ?? false,
+  reactionsEnabled: config.reactionsEnabled ?? true,
+  emitMetadata: config.emitMetadata ?? false,
+  inputPosition: config.inputPosition || 'bottom',
+  lang: config.lang || siteConfig.site.language || 'ja',
+};
+---
+
+<section class="comments-section" aria-label="コメント">
+  <div
+    class="giscus-container"
+    data-giscus-repo={giscusConfig.repo}
+    data-giscus-repo-id={giscusConfig.repoId}
+    data-giscus-category={giscusConfig.category}
+    data-giscus-category-id={giscusConfig.categoryId}
+    data-giscus-mapping={giscusConfig.mapping}
+    data-giscus-strict={giscusConfig.strict ? '1' : '0'}
+    data-giscus-reactions-enabled={giscusConfig.reactionsEnabled ? '1' : '0'}
+    data-giscus-emit-metadata={giscusConfig.emitMetadata ? '1' : '0'}
+    data-giscus-input-position={giscusConfig.inputPosition}
+    data-giscus-lang={giscusConfig.lang}
+  >
+    <!-- giscusはJavaScriptで動的に挿入される -->
+  </div>
+</section>
+
+<script>
+  /**
+   * giscus初期化・テーマ同期スクリプト
+   * View Transitions対応のため、動的にgiscusスクリプトを挿入する
+   */
+  function initGiscus() {
+    const container = document.querySelector('.giscus-container');
+    if (!container) return;
+
+    // 既存のgiscus要素を削除（ページ遷移時の再初期化用）
+    const existingGiscus = container.querySelector('.giscus');
+    if (existingGiscus) {
+      existingGiscus.remove();
+    }
+    const existingScript = container.querySelector('script[src*="giscus.app"]');
+    if (existingScript) {
+      existingScript.remove();
+    }
+
+    // data属性から設定を取得
+    const repo = container.getAttribute('data-giscus-repo');
+    const repoId = container.getAttribute('data-giscus-repo-id');
+    const category = container.getAttribute('data-giscus-category');
+    const categoryId = container.getAttribute('data-giscus-category-id');
+    const mapping = container.getAttribute('data-giscus-mapping');
+    const strict = container.getAttribute('data-giscus-strict');
+    const reactionsEnabled = container.getAttribute('data-giscus-reactions-enabled');
+    const emitMetadata = container.getAttribute('data-giscus-emit-metadata');
+    const inputPosition = container.getAttribute('data-giscus-input-position');
+    const lang = container.getAttribute('data-giscus-lang');
+
+    if (!repo || !repoId || !category || !categoryId) return;
+
+    // 現在のテーマを取得
+    const theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+
+    // giscusスクリプトを動的に作成・挿入
+    const script = document.createElement('script');
+    script.src = 'https://giscus.app/client.js';
+    script.setAttribute('data-repo', repo);
+    script.setAttribute('data-repo-id', repoId);
+    script.setAttribute('data-category', category);
+    script.setAttribute('data-category-id', categoryId);
+    script.setAttribute('data-mapping', mapping || 'pathname');
+    script.setAttribute('data-strict', strict || '0');
+    script.setAttribute('data-reactions-enabled', reactionsEnabled || '1');
+    script.setAttribute('data-emit-metadata', emitMetadata || '0');
+    script.setAttribute('data-input-position', inputPosition || 'bottom');
+    script.setAttribute('data-theme', theme);
+    script.setAttribute('data-lang', lang || 'ja');
+    script.setAttribute('data-loading', 'lazy');
+    script.crossOrigin = 'anonymous';
+    script.async = true;
+
+    container.appendChild(script);
+  }
+
+  /**
+   * giscusテーマ同期
+   */
+  function setupGiscusThemeSync() {
+    function sendGiscusMessage(message: Record<string, unknown>) {
+      const iframe = document.querySelector<HTMLIFrameElement>('iframe.giscus-frame');
+      if (iframe?.contentWindow) {
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+    }
+
+    function getCurrentTheme(): 'light' | 'dark' {
+      return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+    }
+
+    function updateGiscusTheme() {
+      const theme = getCurrentTheme();
+      sendGiscusMessage({ setConfig: { theme } });
+    }
+
+    // MutationObserverでhtml要素のclass変更を監視
+    const observer = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+          updateGiscusTheme();
+          break;
+        }
+      }
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
+
+    // giscusのiframeが読み込まれた後にテーマを設定
+    window.addEventListener('message', (event) => {
+      if (event.origin !== 'https://giscus.app') return;
+      if (event.data?.giscus?.discussion) {
+        updateGiscusTheme();
+      }
+    });
+  }
+
+  // 初期化
+  function init() {
+    initGiscus();
+    setupGiscusThemeSync();
+  }
+
+  // 初回実行
+  init();
+
+  // Astro View Transitions対応: ページ遷移時に再初期化
+  document.addEventListener('astro:page-load', init);
+</script>
+
+<style>
+  .comments-section {
+    max-width: 720px;
+    width: calc(100% - 2em);
+    margin: var(--space-12) auto var(--space-8);
+    padding: 0 var(--space-6);
+  }
+
+  .giscus-container {
+    min-height: 200px;
+  }
+
+  /* ダークモード対応 */
+  html.dark .comments-section {
+    /* giscusのiframeスタイルはgiscus側で管理 */
+  }
+
+  /* レスポンシブ対応 */
+  @media (max-width: 767px) {
+    .comments-section {
+      width: 100%;
+      padding: 0 var(--space-4);
+      margin: var(--space-8) auto var(--space-6);
+    }
+  }
+</style>

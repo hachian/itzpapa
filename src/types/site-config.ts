@@ -100,12 +100,41 @@ export interface SeoConfig {
 }
 
 /**
+ * giscusプロバイダー固有の設定
+ * @see https://giscus.app/ for configuration options
+ */
+export interface GiscusConfig {
+  /** GitHubリポジトリ（例: "owner/repo"） */
+  repo: string;
+  /** リポジトリID */
+  repoId: string;
+  /** ディスカッションカテゴリ名 */
+  category: string;
+  /** カテゴリID */
+  categoryId: string;
+
+  /** マッピング方式（デフォルト: "pathname"） */
+  mapping?: 'pathname' | 'url' | 'title' | 'og:title' | 'specific' | 'number';
+  /** 厳密マッチング（デフォルト: false） */
+  strict?: boolean;
+  /** リアクション表示（デフォルト: true） */
+  reactionsEnabled?: boolean;
+  /** メタデータ送信（デフォルト: false） */
+  emitMetadata?: boolean;
+  /** 入力位置（デフォルト: "bottom"） */
+  inputPosition?: 'top' | 'bottom';
+  /** 言語（デフォルト: サイト言語） */
+  lang?: string;
+}
+
+/**
  * コメントシステム設定
+ * providerに応じてconfigの型が決まる
  */
 export interface CommentsConfig {
   enabled: boolean;
   provider?: 'giscus' | 'utterances';
-  config?: Record<string, unknown>;
+  config?: GiscusConfig;
 }
 
 /**

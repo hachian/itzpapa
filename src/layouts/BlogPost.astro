@@ -9,6 +9,7 @@ import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 import TagList from '../components/TagList.astro';
 import TableOfContents from '../components/TableOfContents.astro';
+import Comments from '../components/Comments.astro';
 import { siteConfig } from '../../site.config';
 import { t, getLanguage } from '../i18n';
 import '../styles/table-of-contents.css';
@@ -20,9 +21,11 @@ type Props = CollectionEntry<'blog'>['data'] & {
   headings?: Array<{ depth: number; text: string; slug: string }>;
   readingTime?: number;
   slug?: string;
+  /** コメントセクションを表示するか（デフォルト: true） */
+  showComments?: boolean;
 };
 
-const { title, description, pubDate, updatedDate, heroImage, tags, headings = [], readingTime, slug } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, tags, headings = [], readingTime, slug, showComments = true } = Astro.props;
 
 // 機能フラグを取得
 const { features, site } = siteConfig;
@@ -365,6 +368,8 @@ const showTableOfContents = features.tableOfContents;
 						</aside>
 					)}
 				</div>
+				<!-- コメントセクション -->
+				{showComments && <Comments articleUrl={articleUrl} articleTitle={title} />}
 			</article>
 		</main>
 		<Footer />
