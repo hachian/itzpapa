@@ -42,6 +42,19 @@
 /* Import Japanese typography optimization */
 @import './japanese-typography.css';
 
+/* ===========================================
+   Text Selection
+   =========================================== */
+::selection {
+	background-color: oklch(70% 0.08 var(--primary-hue) / 0.5);
+	color: oklch(15% 0.02 var(--primary-hue));
+}
+
+::-moz-selection {
+	background-color: oklch(70% 0.08 var(--primary-hue) / 0.5);
+	color: oklch(15% 0.02 var(--primary-hue));
+}
+
 :root {
 	--box-shadow:
 		0 2px 6px oklch(0% 0 0 / 0.08),
@@ -300,6 +313,16 @@ html.dark body {
 		var(--color-gray-800),
 		var(--color-background) 600px
 	);
+}
+
+html.dark ::selection {
+	background-color: oklch(50% 0.15 var(--primary-hue) / 0.85);
+	color: oklch(95% 0.02 var(--primary-hue));
+}
+
+html.dark ::-moz-selection {
+	background-color: oklch(50% 0.15 var(--primary-hue) / 0.85);
+	color: oklch(95% 0.02 var(--primary-hue));
 }
 
 /* インラインコード専用 - pre内のcodeは最初から除外 */
