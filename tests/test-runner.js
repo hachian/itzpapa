@@ -70,13 +70,6 @@ const testSuites = [
   },
   // Legacy Tests
   {
-    name: 'Wikilink Core Tests (Legacy)',
-    command: 'npm',
-    args: ['run', 'test:wikilink'],
-    timeout: 30000,
-    optional: true
-  },
-  {
     name: 'Image Wikilink Tests',
     command: 'npm',
     args: ['run', 'test:image'],

@@ -26,11 +26,10 @@
     "test:unit": "node --test tests/unit/wikilink-unit-test.js tests/unit/mark-highlight-unit-test.js tests/unit/tags-unit-test.js tests/unit/callout-test.js",
     "test:integration": "node --test tests/integration/integration-test.js",
     "test:e2e": "node --test tests/e2e/e2e-test.js tests/e2e/html-validator-test.js",
-    "test:wikilink": "node tests/integration/wikilink-test.js",
     "test:image": "node --test tests/integration/image-wikilink-test.js",
     "test:table": "node tests/integration/table-wikilink-test.js",
     "test:performance": "node tests/performance/performance-test.js",
-    "test:all": "npm run test:wikilink && npm run test:image && npm run test:table",
+    "test:all": "npm run test:image && npm run test:table",
     "test:fixtures": "node --test tests/utils/fixture-loader-test.js"
   },
   "dependencies": {
