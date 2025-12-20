@@ -4,9 +4,14 @@ import HeaderLink from './HeaderLink.astro';
 import ThemeToggle from './ThemeToggle.astro';
 import SocialIcon from './SocialIcon.astro';
 import type { SocialType } from './SocialIcon.astro';
+import { t } from '../i18n';
 
 // 設定からナビゲーション項目を取得
 const { navigation, social } = siteConfig;
+
+// 翻訳テキストを取得
+const menuOpenLabel = t('menu.open');
+const menuCloseLabel = t('menu.close');
 
 // 外部リンクかどうかを判定するヘルパー関数
 const isExternalLink = (href: string) => href.startsWith('http://') || href.startsWith('https://');
@@ -37,7 +42,9 @@ const enabledSocialLinks = Object.entries(social)
 			class="header__menu-toggle"
 			aria-expanded="false"
 			aria-controls="mobile-menu"
-			aria-label="メニューを開く"
+			aria-label={menuOpenLabel}
+			data-label-open={menuOpenLabel}
+			data-label-close={menuCloseLabel}
 		>
 			<span class="header__menu-icon"></span>
 		</button>
@@ -78,15 +85,19 @@ const enabledSocialLinks = Object.entries(social)
 <script>
 	// モバイルメニュートグル
 	function setupMobileMenu() {
-		const toggle = document.querySelector('.header__menu-toggle');
+		const toggle = document.querySelector('.header__menu-toggle') as HTMLButtonElement | null;
 		const menu = document.getElementById('mobile-menu');
 
 		if (!toggle || !menu) return;
 
+		// data属性から翻訳テキストを取得
+		const labelOpen = toggle.dataset.labelOpen || 'Open menu';
+		const labelClose = toggle.dataset.labelClose || 'Close menu';
+
 		toggle.addEventListener('click', () => {
 			const isOpen = toggle.getAttribute('aria-expanded') === 'true';
 			toggle.setAttribute('aria-expanded', String(!isOpen));
-			toggle.setAttribute('aria-label', isOpen ? 'メニューを開く' : 'メニューを閉じる');
+			toggle.setAttribute('aria-label', isOpen ? labelOpen : labelClose);
 			menu.hidden = isOpen;
 		});
 
@@ -94,7 +105,7 @@ const enabledSocialLinks = Object.entries(social)
 		document.addEventListener('click', (e) => {
 			if (!toggle.contains(e.target as Node) && !menu.contains(e.target as Node)) {
 				toggle.setAttribute('aria-expanded', 'false');
-				toggle.setAttribute('aria-label', 'メニューを開く');
+				toggle.setAttribute('aria-label', labelOpen);
 				menu.hidden = true;
 			}
 		});
@@ -103,7 +114,7 @@ const enabledSocialLinks = Object.entries(social)
 		document.addEventListener('keydown', (e) => {
 			if (e.key === 'Escape' && !menu.hidden) {
 				toggle.setAttribute('aria-expanded', 'false');
-				toggle.setAttribute('aria-label', 'メニューを開く');
+				toggle.setAttribute('aria-label', labelOpen);
 				menu.hidden = true;
 				toggle.focus();
 			}

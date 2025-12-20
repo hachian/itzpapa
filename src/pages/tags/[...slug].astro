@@ -13,6 +13,7 @@ import FormattedDate from '../../components/FormattedDate.astro';
 import TagBadge from '../../components/TagBadge.astro';
 import { TagService } from '../../utils/tag/service';
 import { slugToTag, isDescendantTag } from '../../utils/tag/validation';
+import { t, getLanguage } from '../../i18n';
 
 export async function getStaticPaths() {
   // 全ブログ記事を取得
@@ -103,12 +104,18 @@ const childTags = tagService.getAllTags().filter(t =>
   t.parent === tagName && t.name !== tagName
 );
 
-// ページメタデータ
-const pageTitle = `${tagName} のタグ記事`;
-const pageDescription = `${tagName}タグが付けられた${sortedPosts.length}件の記事一覧`;
+// ページメタデータと翻訳
+const lang = getLanguage();
+const backToList = t('tags.backToList');
+const pageTitle = lang === 'ja'
+  ? `${tagName} のタグ記事`
+  : `Posts tagged: ${tagName}`;
+const pageDescription = lang === 'ja'
+  ? `${tagName}タグが付けられた${sortedPosts.length}件の記事一覧`
+  : `${sortedPosts.length} posts tagged with ${tagName}`;
 ---
 
-<html lang="ja">
+<html lang={lang}>
   <head>
     <BaseHead title={pageTitle} description={pageDescription} />
     <style>
@@ -391,7 +398,7 @@ const pageDescription = `${tagName}タグが付けられた${sortedPosts.length}
       <div class="tag-page-container">
         <!-- 戻るリンク -->
         <a href="/tags/" class="back-link">
-          ← タグ一覧に戻る
+          ← {backToList}
         </a>
 
         <!-- パンくずナビゲーション -->
@@ -421,16 +428,16 @@ const pageDescription = `${tagName}タグが付けられた${sortedPosts.length}
           
           <div class="page-meta">
             <div class="meta-item">
-              <strong>{sortedPosts.length}</strong> 件の記事
+              <strong>{sortedPosts.length}</strong>{t('tags.posts')}
             </div>
             {isHierarchical && (
               <div class="meta-item">
-                階層タグ（レベル {tag.level + 1}）
+                {t('tags.hierarchicalLevel').replace('{level}', String(tag.level + 1))}
               </div>
             )}
             {relatedTags.length > 1 && (
               <div class="meta-item">
-                関連タグ {relatedTags.length} 個を含む
+                {t('tags.relatedTags').replace('{count}', String(relatedTags.length))}
               </div>
             )}
           </div>
@@ -439,7 +446,7 @@ const pageDescription = `${tagName}タグが付けられた${sortedPosts.length}
         <!-- 子タグ一覧 -->
         {childTags.length > 0 && (
           <section class="child-tags">
-            <h2>サブタグ</h2>
+            <h2>{t('tags.subTags')}</h2>
             <div class="child-tags-list">
               {childTags.map(childTag => (
                 <TagBadge
@@ -454,7 +461,7 @@ const pageDescription = `${tagName}タグが付けられた${sortedPosts.length}
 
         <!-- 記事一覧 -->
         <section class="posts-section">
-          <h2>記事一覧</h2>
+          <h2>{t('tags.postList')}</h2>
           
           {sortedPosts.length > 0 ? (
             <div class="posts-grid">
@@ -484,8 +491,8 @@ const pageDescription = `${tagName}タグが付けられた${sortedPosts.length}
             </div>
           ) : (
             <div class="empty-state">
-              <h2>記事が見つかりません</h2>
-              <p>このタグが付けられた記事はまだありません。</p>
+              <h2>{t('tags.noPostsFound')}</h2>
+              <p>{t('tags.noPostsFoundDesc')}</p>
             </div>
           )}
         </section>

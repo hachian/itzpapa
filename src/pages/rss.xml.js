@@ -1,6 +1,7 @@
 import { getCollection } from 'astro:content';
 import rss from '@astrojs/rss';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../../site.config';
+import { SITE_TITLE } from '../../site.config';
+import { getSiteDescription } from '../i18n';
 
 export async function GET(context) {
 	const posts = await getCollection('blog', ({ data }) => {
@@ -9,7 +10,7 @@ export async function GET(context) {
 	});
 	return rss({
 		title: SITE_TITLE,
-		description: SITE_DESCRIPTION,
+		description: getSiteDescription(),
 		site: context.site,
 		items: posts.map((post) => ({
 			...post.data,

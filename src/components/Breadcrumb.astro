@@ -5,6 +5,7 @@
  * @description セマンティックなHTML構造でパンくずリストを表示
  * @requirements 5.1
  */
+import { t } from '../i18n';
 
 interface BreadcrumbItem {
 	label: string;
@@ -19,7 +20,7 @@ interface Props {
 const { items, separator = '›' } = Astro.props;
 ---
 
-<nav aria-label="パンくずナビゲーション" class="breadcrumb">
+<nav aria-label={t('breadcrumb.ariaLabel')} class="breadcrumb">
 	<ol class="breadcrumb__list">
 		{items.map((item, index) => (
 			<li class="breadcrumb__item">

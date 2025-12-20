@@ -12,6 +12,7 @@ import TagBadge from '../../components/TagBadge.astro';
 import TagTree from '../../components/TagTree.astro';
 import { TagService } from '../../utils/tag/service';
 import { siteConfig } from '../../../site.config';
+import { t, getLanguage } from '../../i18n';
 
 // 機能フラグを取得
 const { features } = siteConfig;
@@ -75,13 +76,17 @@ hierarchicalRootTags.forEach(tagName => {
 });
 
 // ページメタデータ
-const pageTitle = 'タグ一覧';
-const pageDescription = `${tagStatistics.totalTags}個のタグで記事を分類しています。`;
+const tagsTitle = t('tags.title');
+const tagsAriaLabel = t('tags.ariaLabel');
+const lang = getLanguage();
+const pageDescription = lang === 'ja'
+  ? `${tagStatistics.totalTags}個のタグで記事を分類しています。`
+  : `Organizing articles with ${tagStatistics.totalTags} tags.`;
 ---
 
-<html lang="ja">
+<html lang={lang}>
   <head>
-    <BaseHead title={pageTitle} description={pageDescription} />
+    <BaseHead title={tagsTitle} description={pageDescription} />
     <style>
       .tags-container {
         width: var(--content-max-width);
@@ -274,7 +279,7 @@ const pageDescription = `${tagStatistics.totalTags}個のタグで記事を分�
     <main style="view-transition-name: main-content;">
       <div class="tags-container">
         <header class="page-header">
-          <h1 class="page-title">タグ一覧</h1>
+          <h1 class="page-title">{tagsTitle}</h1>
           <p class="page-description">{pageDescription}</p>
         </header>
 
@@ -285,22 +290,22 @@ const pageDescription = `${tagStatistics.totalTags}個のタグで記事を分�
               <section class="tags-stats">
                 <div class="stat-item">
                   <span class="stat-number">{tagStatistics.totalTags}</span>
-                  <div class="stat-label">総タグ数</div>
+                  <div class="stat-label">{t('tags.totalTags')}</div>
                 </div>
                 <div class="stat-item">
                   <span class="stat-number">{posts.length}</span>
-                  <div class="stat-label">記事数</div>
+                  <div class="stat-label">{t('tags.totalPosts')}</div>
                 </div>
                 <div class="stat-item">
                   <span class="stat-number">{allTags[0]?.count || 0}</span>
-                  <div class="stat-label">最大使用回数</div>
+                  <div class="stat-label">{t('tags.maxUsage')}</div>
                 </div>
               </section>
 
               {/* 階層タグセクション - 階層タグがある場合のみ表示 */}
               {hierarchicalRootTags.length > 0 && (
                 <section class="tree-section">
-                  <h2 class="section-title">階層タグ</h2>
+                  <h2 class="section-title">{t('tags.hierarchical')}</h2>
                   <TagTree
                     hierarchy={hierarchicalOnlyHierarchy}
                     showCount={true}
@@ -314,8 +319,8 @@ const pageDescription = `${tagStatistics.totalTags}個のタグで記事を分�
               {/* フラットタグセクション */}
               {flatTags.length > 0 && (
                 <section class="tree-section">
-                  <h2 class="section-title">タグ</h2>
-                  <div class="flat-tags-tree" role="tree" aria-label="タグ一覧">
+                  <h2 class="section-title">{t('tags.flat')}</h2>
+                  <div class="flat-tags-tree" role="tree" aria-label={tagsAriaLabel}>
                     {flatTags.map(tag => (
                       <div class="tree-node leaf-node" role="treeitem">
                         <div class="tree-node-content">
@@ -343,15 +348,15 @@ const pageDescription = `${tagStatistics.totalTags}個のタグで記事を分�
           ) : (
             <!-- 空の状態 -->
             <section class="empty-state">
-              <h2>タグが見つかりません</h2>
-              <p>まだタグが付けられた記事がありません。</p>
+              <h2>{t('tags.notFound')}</h2>
+              <p>{t('tags.notFoundDesc')}</p>
             </section>
           )
         ) : (
           <!-- タグクラウド無効 -->
           <section class="empty-state">
-            <h2>タグクラウドは無効です</h2>
-            <p>この機能は現在無効になっています。</p>
+            <h2>{t('tags.disabled')}</h2>
+            <p>{t('tags.disabledDesc')}</p>
           </section>
         )}
       </div>

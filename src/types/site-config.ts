@@ -4,6 +4,17 @@
  */
 
 /**
+ * サポートする言語コード
+ */
+export type Language = 'ja' | 'en';
+
+/**
+ * ローカライズされたテキスト
+ * 単一文字列または言語別オブジェクトをサポート
+ */
+export type LocalizedText = string | { ja: string; en: string };
+
+/**
  * SNS リンクの個別設定
  * enabled: true の場合のみリンクを表示
  */
@@ -41,14 +52,16 @@ export interface NavItem {
 export interface SiteInfo {
   /** サイトのタイトル */
   title: string;
-  /** サイトの説明文 */
-  description: string;
+  /** サイトの説明文（単一文字列または言語別オブジェクト） */
+  description: LocalizedText;
   /** 著者名 */
   author: string;
   /** 著者プロフィールページへのURL（オプション） */
   authorProfile?: string;
   /** 本番環境のベースURL */
   baseUrl: string;
+  /** 表示言語（デフォルト: 'ja'） */
+  language?: Language;
 }
 
 /**

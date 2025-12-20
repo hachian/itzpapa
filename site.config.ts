@@ -17,14 +17,27 @@ export const siteConfig: SiteConfig = {
   site: {
     /** サイトのタイトル（ブラウザタブやヘッダーに表示） */
     title: 'itzpapa',
-    /** サイトの説明文（メタタグやRSSフィードに使用） */
-    description: 'ObsidianユーザーのためのAstroブログソリューション',
+    /**
+     * サイトの説明文（メタタグやRSSフィードに使用）
+     * 単一文字列または言語別オブジェクト { ja: '...', en: '...' } で設定可能
+     */
+    description: {
+      ja: 'ObsidianユーザーのためのAstroブログソリューション',
+      en: 'An Astro blog solution for Obsidian users',
+    },
     /** 著者名 */
     author: 'Your Name',
     /** 著者プロフィールページへのURL（オプション） */
     // authorProfile: '/about',
     /** 本番環境のベースURL（末尾のスラッシュなし） */
     baseUrl: 'https://example.com',
+    /**
+     * 表示言語
+     * 'ja': 日本語（デフォルト）
+     * 'en': English
+     * 設定しない場合は日本語が使用されます
+     */
+    language: 'en',
   },
 
   // ========================================

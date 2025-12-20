@@ -10,6 +10,7 @@ import Header from '../components/Header.astro';
 import TagList from '../components/TagList.astro';
 import TableOfContents from '../components/TableOfContents.astro';
 import { siteConfig } from '../../site.config';
+import { t, getLanguage } from '../i18n';
 import '../styles/table-of-contents.css';
 import '../styles/callout.css';
 import defaultHeroLight from '../assets/itzpapa-light_16_9.png';
@@ -25,6 +26,7 @@ const { title, description, pubDate, updatedDate, heroImage, tags, headings = []
 
 // 機能フラグを取得
 const { features, site } = siteConfig;
+const lang = getLanguage();
 
 // 記事の絶対URL
 const articleUrl = new URL(Astro.url.pathname, Astro.site).toString();
@@ -34,14 +36,14 @@ const ogImageUrl = heroImage ? new URL(heroImage.src, Astro.site).toString() : u
 
 // パンくずリスト用データ
 const breadcrumbItems = [
-  { name: 'ホーム', url: site.baseUrl + '/' },
-  { name: 'ブログ', url: site.baseUrl + '/blog/' },
+  { name: t('breadcrumb.home'), url: site.baseUrl + '/' },
+  { name: t('breadcrumb.blog'), url: site.baseUrl + '/blog/' },
   { name: title, url: articleUrl },
 ];
 const showTableOfContents = features.tableOfContents;
 ---
 
-<html lang="ja">
+<html lang={lang}>
 	<head>
 		<BaseHead
 			title={title}
@@ -304,8 +306,8 @@ const showTableOfContents = features.tableOfContents;
 			<article>
 				<div class="breadcrumb-container">
 					<Breadcrumb items={[
-						{ label: 'ホーム', href: '/' },
-						{ label: 'ブログ', href: '/blog/' },
+						{ label: t('breadcrumb.home'), href: '/' },
+						{ label: t('breadcrumb.blog'), href: '/blog/' },
 						{ label: title }
 					]} />
 				</div>
@@ -332,13 +334,13 @@ const showTableOfContents = features.tableOfContents;
 								{readingTime && (
 									<span class="article-meta__item">
 										<span class="article-meta__icon" aria-hidden="true">⏱️</span>
-										<span class="article-meta__reading-time">{readingTime}分で読めます</span>
+										<span class="article-meta__reading-time">{t('article.readingTime').replace('{min}', String(readingTime))}</span>
 									</span>
 								)}
 								{updatedDate && (
 									<span class="article-meta__item article-meta__updated">
 										<span class="article-meta__icon" aria-hidden="true">🔄</span>
-										<span>（更新：<FormattedDate date={updatedDate} />）</span>
+										<span>{lang === 'ja' ? '（更新：' : '(Updated: '}<FormattedDate date={updatedDate} />{lang === 'ja' ? '）' : ')'}</span>
 									</span>
 								)}
 							</div>
@@ -352,7 +354,7 @@ const showTableOfContents = features.tableOfContents;
 						<slot />
 						{tags && tags.length > 0 && (
 							<footer class="article-footer-tags">
-								<h3>関連タグ</h3>
+								<h3>{t('article.relatedTags')}</h3>
 								<TagList tags={tags} layout="horizontal" showCount={false} />
 							</footer>
 						)}

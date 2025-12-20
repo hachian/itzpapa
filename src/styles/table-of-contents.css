@@ -78,7 +78,7 @@
 
   /* 折りたたみボタン */
   .toc-sidebar::before {
-    content: '📋 目次';
+    content: '📋 Contents';
     position: absolute;
     top: 0;
     left: 0;
@@ -102,9 +102,18 @@
 
   /* 展開時のボタン */
   .toc-sidebar.expanded::before {
-    content: '📖 目次';
+    content: '📖 Contents';
     border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
     box-shadow: 0 2px 8px var(--color-primary-500-alpha20);
+  }
+
+  /* 日本語の場合 */
+  html[lang="ja"] .toc-sidebar::before {
+    content: '📋 目次';
+  }
+
+  html[lang="ja"] .toc-sidebar.expanded::before {
+    content: '📖 目次';
   }
 
   /* ホバー効果 */

@@ -1,4 +1,6 @@
 ---
+import { t } from '../i18n';
+
 export interface Heading {
   depth: number;
   text: string;
@@ -10,6 +12,11 @@ export interface Props {
 }
 
 const { headings } = Astro.props;
+
+// 翻訳テキストを取得
+const tocTitle = t('toc.title');
+const tocAriaLabel = t('toc.ariaLabel');
+const tocToggle = t('toc.toggle');
 
 // H2とH3のみをフィルタリング（depth 2と3）
 const tocHeadings = headings.filter(heading => heading.depth === 2 || heading.depth === 3);
@@ -34,8 +41,8 @@ const tocItems: TocItem[] = tocHeadings.map(heading => ({
 ---
 
 {shouldShowToc && (
-  <nav class="table-of-contents" aria-label="目次">
-    <h2 class="toc-title">目次</h2>
+  <nav class="table-of-contents" aria-label={tocAriaLabel} data-toggle-label={tocToggle}>
+    <h2 class="toc-title">{tocTitle}</h2>
     <div class="toc-scroll-container">
       <ul class="toc-list">
         {tocItems.map((item) => (
@@ -350,7 +357,9 @@ const tocItems: TocItem[] = tocHeadings.map(heading => ({
     // アクセシビリティ属性の設定
     if (mediaQuery.matches) {
       tocSidebar.setAttribute('role', 'button');
-      tocSidebar.setAttribute('aria-label', '目次の表示/非表示を切り替え');
+      // data属性から翻訳テキストを取得、なければフォールバック
+      const toggleLabel = tocSidebar.getAttribute('data-toggle-label') || 'Toggle table of contents';
+      tocSidebar.setAttribute('aria-label', toggleLabel);
       tocSidebar.setAttribute('tabindex', '0');
     }
 
