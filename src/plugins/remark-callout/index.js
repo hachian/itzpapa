@@ -233,9 +233,7 @@ function processNestedCallouts(nodes, depth, maxDepth) {
 
 /**
  * remark-callout plugin
- * @param {Object} options - Plugin options
- * @param {number} options.maxNestingDepth - Maximum nesting depth (default: 3)
- * @returns {Function}
+ * @param {{maxNestingDepth?: number}} [options] - Plugin options
  */
 export default function remarkCallout(options = {}) {
   const maxNestingDepth = options.maxNestingDepth ?? 3;

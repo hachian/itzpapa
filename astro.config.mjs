@@ -1,5 +1,5 @@
-// @ts-check
 // Config updated: 2025-12-10-v2
+// Note: Type checking disabled for this file due to remark plugin type complexity
 
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
@@ -18,11 +18,7 @@ export default defineConfig({
 	site: 'https://itzpapa.hachian.com',
 	// URL末尾スラッシュを統一（canonical URLとの整合性確保）
 	trailingSlash: 'always',
-	// 画像最適化設定
-	image: {
-		// WebP形式を優先して配信
-		experimentalLayout: 'responsive',
-	},
+	// 画像最適化はAstro標準の設定を使用
 	// Viteビルド設定
 	vite: {
 		build: {

@@ -130,8 +130,8 @@ describe('E2E Markdown Processing Tests', () => {
       const callouts = validateCallouts($);
       const types = new Set(callouts.callouts.map(c => c.type));
 
-      // Check for basic types
-      const expectedTypes = ['note', 'tip', 'warning', 'danger', 'info', 'caution', 'important'];
+      // Check for basic types (note: caution→warning, important→tip are alias conversions)
+      const expectedTypes = ['note', 'tip', 'warning', 'danger', 'info'];
       for (const type of expectedTypes) {
         assert(types.has(type), `Should have ${type} callout`);
       }
