@@ -1,7 +1,8 @@
 /**
  * Callout Styles - CSS-only approach for blockquotes with data attributes
  *
- * Supports 7 callout types: note, info, tip, warning, caution, important, danger
+ * Supports Obsidian's 13 callout types:
+ * note, abstract, info, todo, tip, success, question, warning, failure, danger, bug, example, quote
  * Features: OKLCH colors, dark mode, responsive design, foldable callouts (via JS)
  */
 
@@ -10,97 +11,204 @@
    ======================================== */
 
 :root {
-  /* note: Blue */
+  /* note: 青系 (hue: 260) */
   --callout-note-color: oklch(0.65 0.2 260);
   --callout-note-bg: oklch(0.65 0.2 260 / 0.1);
 
-  /* info: Cyan */
-  --callout-info-color: oklch(0.7 0.15 210);
-  --callout-info-bg: oklch(0.7 0.15 210 / 0.1);
+  /* abstract: 水色系 (hue: 180) - Tipと同じ */
+  --callout-abstract-color: oklch(0.7 0.18 180);
+  --callout-abstract-bg: oklch(0.7 0.18 180 / 0.1);
 
-  /* tip: Green */
-  --callout-tip-color: oklch(0.7 0.2 150);
-  --callout-tip-bg: oklch(0.7 0.2 150 / 0.1);
+  /* info: 青系 (hue: 260) - Noteと同じ */
+  --callout-info-color: oklch(0.65 0.2 260);
+  --callout-info-bg: oklch(0.65 0.2 260 / 0.1);
 
-  /* warning: Yellow/Orange */
+  /* todo: 青系 (hue: 260) */
+  --callout-todo-color: oklch(0.65 0.2 260);
+  --callout-todo-bg: oklch(0.65 0.2 260 / 0.1);
+
+  /* tip: 水色系 (hue: 180) */
+  --callout-tip-color: oklch(0.7 0.18 180);
+  --callout-tip-bg: oklch(0.7 0.18 180 / 0.1);
+
+  /* success: 緑系 (hue: 150) */
+  --callout-success-color: oklch(0.7 0.2 150);
+  --callout-success-bg: oklch(0.7 0.2 150 / 0.1);
+
+  /* question: 黄系 (hue: 90) */
+  --callout-question-color: oklch(0.75 0.18 90);
+  --callout-question-bg: oklch(0.75 0.18 90 / 0.1);
+
+  /* warning: オレンジ系 (hue: 75) */
   --callout-warning-color: oklch(0.75 0.18 75);
   --callout-warning-bg: oklch(0.75 0.18 75 / 0.1);
 
-  /* caution: Orange */
-  --callout-caution-color: oklch(0.7 0.2 55);
-  --callout-caution-bg: oklch(0.7 0.2 55 / 0.1);
+  /* failure: 赤系 (hue: 25) */
+  --callout-failure-color: oklch(0.65 0.25 25);
+  --callout-failure-bg: oklch(0.65 0.25 25 / 0.1);
 
-  /* important: Purple */
-  --callout-important-color: oklch(0.6 0.25 300);
-  --callout-important-bg: oklch(0.6 0.25 300 / 0.1);
-
-  /* danger: Red */
+  /* danger: 赤系 (hue: 25) */
   --callout-danger-color: oklch(0.65 0.25 25);
   --callout-danger-bg: oklch(0.65 0.25 25 / 0.1);
+
+  /* bug: 赤系 (hue: 25) */
+  --callout-bug-color: oklch(0.65 0.25 25);
+  --callout-bug-bg: oklch(0.65 0.25 25 / 0.1);
+
+  /* example: 紫系 (hue: 300) */
+  --callout-example-color: oklch(0.6 0.25 300);
+  --callout-example-bg: oklch(0.6 0.25 300 / 0.1);
+
+  /* quote: グレー系 (chroma: 0.02) */
+  --callout-quote-color: oklch(0.55 0.02 280);
+  --callout-quote-bg: oklch(0.55 0.02 280 / 0.1);
 }
 
-/* Dark Mode Colors (increased L value for visibility) */
+/* Dark Mode Colors (increased L value +0.1 for visibility, opacity 0.15) */
 html.dark {
+  /* note: 青系 */
   --callout-note-color: oklch(0.75 0.18 260);
   --callout-note-bg: oklch(0.75 0.18 260 / 0.15);
 
-  --callout-info-color: oklch(0.8 0.13 210);
-  --callout-info-bg: oklch(0.8 0.13 210 / 0.15);
+  /* abstract: 水色系 - Tipと同じ */
+  --callout-abstract-color: oklch(0.8 0.16 180);
+  --callout-abstract-bg: oklch(0.8 0.16 180 / 0.15);
 
-  --callout-tip-color: oklch(0.8 0.18 150);
-  --callout-tip-bg: oklch(0.8 0.18 150 / 0.15);
+  /* info: 青系 - Noteと同じ */
+  --callout-info-color: oklch(0.75 0.18 260);
+  --callout-info-bg: oklch(0.75 0.18 260 / 0.15);
 
+  /* todo: 青系 */
+  --callout-todo-color: oklch(0.75 0.18 260);
+  --callout-todo-bg: oklch(0.75 0.18 260 / 0.15);
+
+  /* tip: 水色系 */
+  --callout-tip-color: oklch(0.8 0.16 180);
+  --callout-tip-bg: oklch(0.8 0.16 180 / 0.15);
+
+  /* success: 緑系 */
+  --callout-success-color: oklch(0.8 0.18 150);
+  --callout-success-bg: oklch(0.8 0.18 150 / 0.15);
+
+  /* question: 黄系 */
+  --callout-question-color: oklch(0.85 0.16 90);
+  --callout-question-bg: oklch(0.85 0.16 90 / 0.15);
+
+  /* warning: オレンジ系 */
   --callout-warning-color: oklch(0.85 0.16 75);
   --callout-warning-bg: oklch(0.85 0.16 75 / 0.15);
 
-  --callout-caution-color: oklch(0.8 0.18 55);
-  --callout-caution-bg: oklch(0.8 0.18 55 / 0.15);
+  /* failure: 赤系 */
+  --callout-failure-color: oklch(0.75 0.22 25);
+  --callout-failure-bg: oklch(0.75 0.22 25 / 0.15);
 
-  --callout-important-color: oklch(0.7 0.22 300);
-  --callout-important-bg: oklch(0.7 0.22 300 / 0.15);
-
+  /* danger: 赤系 */
   --callout-danger-color: oklch(0.75 0.22 25);
   --callout-danger-bg: oklch(0.75 0.22 25 / 0.15);
+
+  /* bug: 赤系 */
+  --callout-bug-color: oklch(0.75 0.22 25);
+  --callout-bug-bg: oklch(0.75 0.22 25 / 0.15);
+
+  /* example: 紫系 */
+  --callout-example-color: oklch(0.7 0.22 300);
+  --callout-example-bg: oklch(0.7 0.22 300 / 0.15);
+
+  /* quote: グレー系 */
+  --callout-quote-color: oklch(0.65 0.02 280);
+  --callout-quote-bg: oklch(0.65 0.02 280 / 0.15);
 }
 
 /* OS dark mode preference support */
 @media (prefers-color-scheme: dark) {
   :root:not(.light) {
+    /* note: 青系 */
     --callout-note-color: oklch(0.75 0.18 260);
     --callout-note-bg: oklch(0.75 0.18 260 / 0.15);
 
-    --callout-info-color: oklch(0.8 0.13 210);
-    --callout-info-bg: oklch(0.8 0.13 210 / 0.15);
+    /* abstract: 水色系 - Tipと同じ */
+    --callout-abstract-color: oklch(0.8 0.16 180);
+    --callout-abstract-bg: oklch(0.8 0.16 180 / 0.15);
 
-    --callout-tip-color: oklch(0.8 0.18 150);
-    --callout-tip-bg: oklch(0.8 0.18 150 / 0.15);
+    /* info: 青系 - Noteと同じ */
+    --callout-info-color: oklch(0.75 0.18 260);
+    --callout-info-bg: oklch(0.75 0.18 260 / 0.15);
 
+    /* todo: 青系 */
+    --callout-todo-color: oklch(0.75 0.18 260);
+    --callout-todo-bg: oklch(0.75 0.18 260 / 0.15);
+
+    /* tip: 水色系 */
+    --callout-tip-color: oklch(0.8 0.16 180);
+    --callout-tip-bg: oklch(0.8 0.16 180 / 0.15);
+
+    /* success: 緑系 */
+    --callout-success-color: oklch(0.8 0.18 150);
+    --callout-success-bg: oklch(0.8 0.18 150 / 0.15);
+
+    /* question: 黄系 */
+    --callout-question-color: oklch(0.85 0.16 90);
+    --callout-question-bg: oklch(0.85 0.16 90 / 0.15);
+
+    /* warning: オレンジ系 */
     --callout-warning-color: oklch(0.85 0.16 75);
     --callout-warning-bg: oklch(0.85 0.16 75 / 0.15);
 
-    --callout-caution-color: oklch(0.8 0.18 55);
-    --callout-caution-bg: oklch(0.8 0.18 55 / 0.15);
+    /* failure: 赤系 */
+    --callout-failure-color: oklch(0.75 0.22 25);
+    --callout-failure-bg: oklch(0.75 0.22 25 / 0.15);
 
-    --callout-important-color: oklch(0.7 0.22 300);
-    --callout-important-bg: oklch(0.7 0.22 300 / 0.15);
-
+    /* danger: 赤系 */
     --callout-danger-color: oklch(0.75 0.22 25);
     --callout-danger-bg: oklch(0.75 0.22 25 / 0.15);
+
+    /* bug: 赤系 */
+    --callout-bug-color: oklch(0.75 0.22 25);
+    --callout-bug-bg: oklch(0.75 0.22 25 / 0.15);
+
+    /* example: 紫系 */
+    --callout-example-color: oklch(0.7 0.22 300);
+    --callout-example-bg: oklch(0.7 0.22 300 / 0.15);
+
+    /* quote: グレー系 */
+    --callout-quote-color: oklch(0.65 0.02 280);
+    --callout-quote-bg: oklch(0.65 0.02 280 / 0.15);
   }
 }
 
 /* ========================================
    SVG Icons as CSS Variables (data URIs)
+   Obsidian公式13タイプ対応 (Lucide icons)
    ======================================== */
 
 :root {
-  --callout-icon-note: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 8v4'/%3E%3Cpath d='M12 16h.01'/%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3C/svg%3E");
+  /* note: pencil */
+  --callout-icon-note: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z'/%3E%3Cpath d='m15 5 4 4'/%3E%3C/svg%3E");
+  /* abstract: clipboard-list */
+  --callout-icon-abstract: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='8' height='4' x='8' y='2' rx='1' ry='1'/%3E%3Cpath d='M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2'/%3E%3Cpath d='M12 11h4'/%3E%3Cpath d='M12 16h4'/%3E%3Cpath d='M8 11h.01'/%3E%3Cpath d='M8 16h.01'/%3E%3C/svg%3E");
+  /* info: info */
   --callout-icon-info: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 16v-4'/%3E%3Cpath d='M12 8h.01'/%3E%3C/svg%3E");
+  /* todo: circle-check-big */
+  --callout-icon-todo: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 11.08V12a10 10 0 1 1-5.93-9.14'/%3E%3Cpolyline points='22 4 12 14.01 9 11.01'/%3E%3C/svg%3E");
+  /* tip: lightbulb */
   --callout-icon-tip: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18h6'/%3E%3Cpath d='M10 22h4'/%3E%3Cpath d='M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14'/%3E%3C/svg%3E");
+  /* success: circle-check */
+  --callout-icon-success: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='m9 12 2 2 4-4'/%3E%3C/svg%3E");
+  /* question: circle-help */
+  --callout-icon-question: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3'/%3E%3Cpath d='M12 17h.01'/%3E%3C/svg%3E");
+  /* warning: triangle-alert */
   --callout-icon-warning: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3'/%3E%3Cpath d='M12 9v4'/%3E%3Cpath d='M12 17h.01'/%3E%3C/svg%3E");
-  --callout-icon-caution: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 8v4'/%3E%3Cpath d='M12 16h.01'/%3E%3C/svg%3E");
-  --callout-icon-important: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z'/%3E%3C/svg%3E");
-  --callout-icon-danger: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17.28 10.4a7 7 0 1 0-9.56 9.56'/%3E%3Cpath d='M7.5 10.4 11 7l3.28 3.28'/%3E%3Cpath d='m2 2 20 20'/%3E%3C/svg%3E");
+  /* failure: x-circle */
+  --callout-icon-failure: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='m15 9-6 6'/%3E%3Cpath d='m9 9 6 6'/%3E%3C/svg%3E");
+  /* danger: zap */
+  --callout-icon-danger: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z'/%3E%3C/svg%3E");
+  /* bug: bug */
+  --callout-icon-bug: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m8 2 1.88 1.88'/%3E%3Cpath d='M14.12 3.88 16 2'/%3E%3Cpath d='M9 7.13v-1a3.003 3.003 0 1 1 6 0v1'/%3E%3Cpath d='M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6'/%3E%3Cpath d='M12 20v-9'/%3E%3Cpath d='M6.53 9C4.6 8.8 3 7.1 3 5'/%3E%3Cpath d='M6 13H2'/%3E%3Cpath d='M3 21c0-2.1 1.7-3.9 3.8-4'/%3E%3Cpath d='M20.97 5c0 2.1-1.6 3.8-3.5 4'/%3E%3Cpath d='M22 13h-4'/%3E%3Cpath d='M17.2 17c2.1.1 3.8 1.9 3.8 4'/%3E%3C/svg%3E");
+  /* example: folder-open */
+  --callout-icon-example: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2'/%3E%3C/svg%3E");
+  /* quote: quote */
+  --callout-icon-quote: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M16 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z'/%3E%3Cpath d='M5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z'/%3E%3C/svg%3E");
+  /* fold: chevron-down */
   --callout-icon-fold: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
 }
 
@@ -204,6 +312,7 @@ blockquote[data-callout] img {
 
 /* ========================================
    Type-Specific Styles
+   Obsidian公式13タイプ対応
    ======================================== */
 
 /* Note (default) */
@@ -220,6 +329,20 @@ blockquote[data-callout="note"]::after {
   mask-image: var(--callout-icon-note);
 }
 
+/* Abstract */
+blockquote[data-callout="abstract"] {
+  border-left-color: var(--callout-abstract-color);
+  background-color: var(--callout-abstract-bg);
+}
+blockquote[data-callout="abstract"]::before {
+  color: var(--callout-abstract-color);
+}
+blockquote[data-callout="abstract"]::after {
+  background-color: var(--callout-abstract-color);
+  -webkit-mask-image: var(--callout-icon-abstract);
+  mask-image: var(--callout-icon-abstract);
+}
+
 /* Info */
 blockquote[data-callout="info"] {
   border-left-color: var(--callout-info-color);
@@ -232,6 +355,20 @@ blockquote[data-callout="info"]::after {
   background-color: var(--callout-info-color);
   -webkit-mask-image: var(--callout-icon-info);
   mask-image: var(--callout-icon-info);
+}
+
+/* Todo */
+blockquote[data-callout="todo"] {
+  border-left-color: var(--callout-todo-color);
+  background-color: var(--callout-todo-bg);
+}
+blockquote[data-callout="todo"]::before {
+  color: var(--callout-todo-color);
+}
+blockquote[data-callout="todo"]::after {
+  background-color: var(--callout-todo-color);
+  -webkit-mask-image: var(--callout-icon-todo);
+  mask-image: var(--callout-icon-todo);
 }
 
 /* Tip */
@@ -248,6 +385,34 @@ blockquote[data-callout="tip"]::after {
   mask-image: var(--callout-icon-tip);
 }
 
+/* Success */
+blockquote[data-callout="success"] {
+  border-left-color: var(--callout-success-color);
+  background-color: var(--callout-success-bg);
+}
+blockquote[data-callout="success"]::before {
+  color: var(--callout-success-color);
+}
+blockquote[data-callout="success"]::after {
+  background-color: var(--callout-success-color);
+  -webkit-mask-image: var(--callout-icon-success);
+  mask-image: var(--callout-icon-success);
+}
+
+/* Question */
+blockquote[data-callout="question"] {
+  border-left-color: var(--callout-question-color);
+  background-color: var(--callout-question-bg);
+}
+blockquote[data-callout="question"]::before {
+  color: var(--callout-question-color);
+}
+blockquote[data-callout="question"]::after {
+  background-color: var(--callout-question-color);
+  -webkit-mask-image: var(--callout-icon-question);
+  mask-image: var(--callout-icon-question);
+}
+
 /* Warning */
 blockquote[data-callout="warning"] {
   border-left-color: var(--callout-warning-color);
@@ -262,32 +427,18 @@ blockquote[data-callout="warning"]::after {
   mask-image: var(--callout-icon-warning);
 }
 
-/* Caution */
-blockquote[data-callout="caution"] {
-  border-left-color: var(--callout-caution-color);
-  background-color: var(--callout-caution-bg);
+/* Failure */
+blockquote[data-callout="failure"] {
+  border-left-color: var(--callout-failure-color);
+  background-color: var(--callout-failure-bg);
 }
-blockquote[data-callout="caution"]::before {
-  color: var(--callout-caution-color);
+blockquote[data-callout="failure"]::before {
+  color: var(--callout-failure-color);
 }
-blockquote[data-callout="caution"]::after {
-  background-color: var(--callout-caution-color);
-  -webkit-mask-image: var(--callout-icon-caution);
-  mask-image: var(--callout-icon-caution);
-}
-
-/* Important */
-blockquote[data-callout="important"] {
-  border-left-color: var(--callout-important-color);
-  background-color: var(--callout-important-bg);
-}
-blockquote[data-callout="important"]::before {
-  color: var(--callout-important-color);
-}
-blockquote[data-callout="important"]::after {
-  background-color: var(--callout-important-color);
-  -webkit-mask-image: var(--callout-icon-important);
-  mask-image: var(--callout-icon-important);
+blockquote[data-callout="failure"]::after {
+  background-color: var(--callout-failure-color);
+  -webkit-mask-image: var(--callout-icon-failure);
+  mask-image: var(--callout-icon-failure);
 }
 
 /* Danger */
@@ -302,6 +453,48 @@ blockquote[data-callout="danger"]::after {
   background-color: var(--callout-danger-color);
   -webkit-mask-image: var(--callout-icon-danger);
   mask-image: var(--callout-icon-danger);
+}
+
+/* Bug */
+blockquote[data-callout="bug"] {
+  border-left-color: var(--callout-bug-color);
+  background-color: var(--callout-bug-bg);
+}
+blockquote[data-callout="bug"]::before {
+  color: var(--callout-bug-color);
+}
+blockquote[data-callout="bug"]::after {
+  background-color: var(--callout-bug-color);
+  -webkit-mask-image: var(--callout-icon-bug);
+  mask-image: var(--callout-icon-bug);
+}
+
+/* Example */
+blockquote[data-callout="example"] {
+  border-left-color: var(--callout-example-color);
+  background-color: var(--callout-example-bg);
+}
+blockquote[data-callout="example"]::before {
+  color: var(--callout-example-color);
+}
+blockquote[data-callout="example"]::after {
+  background-color: var(--callout-example-color);
+  -webkit-mask-image: var(--callout-icon-example);
+  mask-image: var(--callout-icon-example);
+}
+
+/* Quote */
+blockquote[data-callout="quote"] {
+  border-left-color: var(--callout-quote-color);
+  background-color: var(--callout-quote-bg);
+}
+blockquote[data-callout="quote"]::before {
+  color: var(--callout-quote-color);
+}
+blockquote[data-callout="quote"]::after {
+  background-color: var(--callout-quote-color);
+  -webkit-mask-image: var(--callout-icon-quote);
+  mask-image: var(--callout-icon-quote);
 }
 
 /* ========================================
@@ -352,14 +545,20 @@ blockquote[data-callout-foldable="true"] .callout-fold-icon {
   flex-shrink: 0;
 }
 
-/* Type-specific fold icon colors */
+/* Type-specific fold icon colors (Obsidian公式13タイプ) */
 blockquote[data-callout="note"] .callout-fold-icon { background-color: var(--callout-note-color); }
+blockquote[data-callout="abstract"] .callout-fold-icon { background-color: var(--callout-abstract-color); }
 blockquote[data-callout="info"] .callout-fold-icon { background-color: var(--callout-info-color); }
+blockquote[data-callout="todo"] .callout-fold-icon { background-color: var(--callout-todo-color); }
 blockquote[data-callout="tip"] .callout-fold-icon { background-color: var(--callout-tip-color); }
+blockquote[data-callout="success"] .callout-fold-icon { background-color: var(--callout-success-color); }
+blockquote[data-callout="question"] .callout-fold-icon { background-color: var(--callout-question-color); }
 blockquote[data-callout="warning"] .callout-fold-icon { background-color: var(--callout-warning-color); }
-blockquote[data-callout="caution"] .callout-fold-icon { background-color: var(--callout-caution-color); }
-blockquote[data-callout="important"] .callout-fold-icon { background-color: var(--callout-important-color); }
+blockquote[data-callout="failure"] .callout-fold-icon { background-color: var(--callout-failure-color); }
 blockquote[data-callout="danger"] .callout-fold-icon { background-color: var(--callout-danger-color); }
+blockquote[data-callout="bug"] .callout-fold-icon { background-color: var(--callout-bug-color); }
+blockquote[data-callout="example"] .callout-fold-icon { background-color: var(--callout-example-color); }
+blockquote[data-callout="quote"] .callout-fold-icon { background-color: var(--callout-quote-color); }
 
 /* Collapsed state - content hidden */
 blockquote[data-callout-foldable="true"][data-callout-collapsed="true"] > *:not(.callout-title-overlay) {

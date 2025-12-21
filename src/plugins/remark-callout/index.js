@@ -6,21 +6,83 @@ import { visit } from 'unist-util-visit';
  * This remark plugin parses callout syntax and adds data to blockquote nodes.
  * A companion rehype plugin transforms them to the final HTML structure.
  *
- * Supports: note, info, tip, warning, caution, important, danger
+ * Supports Obsidian's 13 official callout types and their aliases.
  */
 
-// Valid callout types
-const VALID_TYPES = ['note', 'info', 'tip', 'warning', 'caution', 'important', 'danger'];
+// Valid callout types (Obsidian公式13タイプ)
+const VALID_TYPES = [
+  'note', 'abstract', 'info', 'todo', 'tip', 'success',
+  'question', 'warning', 'failure', 'danger', 'bug', 'example', 'quote'
+];
 
-// Default titles for each callout type
+// エイリアス→正規タイプ変換マップ
+const TYPE_ALIASES = {
+  // abstract aliases
+  summary: 'abstract',
+  tldr: 'abstract',
+  // tip aliases
+  hint: 'tip',
+  important: 'tip',
+  // success aliases
+  check: 'success',
+  done: 'success',
+  // question aliases
+  help: 'question',
+  faq: 'question',
+  // warning aliases
+  caution: 'warning',
+  attention: 'warning',
+  // failure aliases
+  fail: 'failure',
+  missing: 'failure',
+  // danger aliases
+  error: 'danger',
+  // quote aliases
+  cite: 'quote'
+};
+
+/**
+ * 入力タイプを正規タイプに解決
+ * @param {string} rawType - 入力されたタイプ（小文字化済み）
+ * @returns {string} - 正規タイプ（未知の場合は'note'）
+ */
+function resolveType(rawType) {
+  if (VALID_TYPES.includes(rawType)) return rawType;
+  if (TYPE_ALIASES[rawType]) return TYPE_ALIASES[rawType];
+  return 'note';
+}
+
+// Default titles for each callout type and aliases (with alias support)
 const DEFAULT_TITLES = {
+  // 正規タイプ
   note: 'Note',
+  abstract: 'Abstract',
   info: 'Info',
+  todo: 'Todo',
   tip: 'Tip',
+  success: 'Success',
+  question: 'Question',
   warning: 'Warning',
-  caution: 'Caution',
+  failure: 'Failure',
+  danger: 'Danger',
+  bug: 'Bug',
+  example: 'Example',
+  quote: 'Quote',
+  // エイリアス（エイリアス名をそのままタイトルに）
+  summary: 'Summary',
+  tldr: 'TL;DR',
+  hint: 'Hint',
   important: 'Important',
-  danger: 'Danger'
+  check: 'Check',
+  done: 'Done',
+  help: 'Help',
+  faq: 'FAQ',
+  caution: 'Caution',
+  attention: 'Attention',
+  fail: 'Fail',
+  missing: 'Missing',
+  error: 'Error',
+  cite: 'Cite'
 };
 
 /**
@@ -45,15 +107,15 @@ function parseCalloutHeader(text) {
     return null;
   }
 
-  // Determine callout type (fallback to 'note' for unknown types)
-  const type = VALID_TYPES.includes(rawType) ? rawType : 'note';
+  // Determine callout type (resolve aliases and fallback to 'note' for unknown types)
+  const type = resolveType(rawType);
 
   // Determine fold state
   const foldable = foldIndicator === '-' || foldIndicator === '+';
   const defaultFolded = foldIndicator === '+';
 
-  // Determine title
-  const title = customTitle || DEFAULT_TITLES[type] || DEFAULT_TITLES.note;
+  // Determine title (エイリアス名を優先、なければ正規タイプ名)
+  const title = customTitle || DEFAULT_TITLES[rawType] || DEFAULT_TITLES[type] || DEFAULT_TITLES.note;
 
   return {
     type,

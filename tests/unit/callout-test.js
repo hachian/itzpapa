@@ -117,7 +117,11 @@ describe('remark-callout Plugin', () => {
   });
 
   describe('Callout Types', () => {
-    const types = ['note', 'info', 'tip', 'warning', 'caution', 'important', 'danger'];
+    // Obsidian公式13タイプ
+    const types = [
+      'note', 'abstract', 'info', 'todo', 'tip', 'success',
+      'question', 'warning', 'failure', 'danger', 'bug', 'example', 'quote'
+    ];
 
     for (const type of types) {
       test(`parses ${type} callout type`, async () => {
@@ -158,6 +162,76 @@ describe('remark-callout Plugin', () => {
         blockquote.data?.hProperties?.['data-callout'],
         'warning',
         'Should parse uppercase type as warning'
+      );
+    });
+  });
+
+  describe('Callout Type Aliases', () => {
+    // エイリアス→正規タイプのマッピング
+    const aliasTests = [
+      // abstract aliases
+      { alias: 'summary', canonical: 'abstract' },
+      { alias: 'tldr', canonical: 'abstract' },
+      // tip aliases
+      { alias: 'hint', canonical: 'tip' },
+      { alias: 'important', canonical: 'tip' },
+      // success aliases
+      { alias: 'check', canonical: 'success' },
+      { alias: 'done', canonical: 'success' },
+      // question aliases
+      { alias: 'help', canonical: 'question' },
+      { alias: 'faq', canonical: 'question' },
+      // warning aliases
+      { alias: 'caution', canonical: 'warning' },
+      { alias: 'attention', canonical: 'warning' },
+      // failure aliases
+      { alias: 'fail', canonical: 'failure' },
+      { alias: 'missing', canonical: 'failure' },
+      // danger aliases
+      { alias: 'error', canonical: 'danger' },
+      // quote aliases
+      { alias: 'cite', canonical: 'quote' }
+    ];
+
+    for (const { alias, canonical } of aliasTests) {
+      test(`alias ${alias} resolves to ${canonical}`, async () => {
+        const input = `> [!${alias}]\n> Content`;
+        const ast = await processToAst(input);
+        const blockquote = findBlockquote(ast);
+
+        assert.strictEqual(
+          blockquote.data?.hProperties?.['data-callout'],
+          canonical,
+          `Alias ${alias} should resolve to ${canonical}`
+        );
+        assert(
+          blockquote.data?.hProperties?.className?.includes(`callout-${canonical}`),
+          `Should have callout-${canonical} class`
+        );
+      });
+    }
+
+    test('alias is case insensitive', async () => {
+      const input = '> [!TLDR]\n> Content';
+      const ast = await processToAst(input);
+      const blockquote = findBlockquote(ast);
+
+      assert.strictEqual(
+        blockquote.data?.hProperties?.['data-callout'],
+        'abstract',
+        'Uppercase alias TLDR should resolve to abstract'
+      );
+    });
+
+    test('mixed case alias works', async () => {
+      const input = '> [!Summary]\n> Content';
+      const ast = await processToAst(input);
+      const blockquote = findBlockquote(ast);
+
+      assert.strictEqual(
+        blockquote.data?.hProperties?.['data-callout'],
+        'abstract',
+        'Mixed case alias Summary should resolve to abstract'
       );
     });
   });
@@ -352,8 +426,11 @@ describe('rehype-callout Plugin (HTML Output)', () => {
       assert(html.includes('callout-icon'), 'Should have icon wrapper');
     });
 
-    test('different types have icons', async () => {
-      const types = ['note', 'tip', 'warning', 'danger'];
+    test('all 13 types have icons', async () => {
+      const types = [
+        'note', 'abstract', 'info', 'todo', 'tip', 'success',
+        'question', 'warning', 'failure', 'danger', 'bug', 'example', 'quote'
+      ];
       for (const type of types) {
         const input = `> [!${type}]\n> Content`;
         const html = await processToHtml(input);
