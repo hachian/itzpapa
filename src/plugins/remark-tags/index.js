@@ -116,7 +116,7 @@ export default function remarkTags(options = {}) {
             
             parts.push({
               type: 'link',
-              url: `${config.tagBasePath}${slug}`,
+              url: `${config.tagBasePath}${slug}/`,
               title: `タグ: ${normalizedTag}`,
               children: [{
                 type: 'text',

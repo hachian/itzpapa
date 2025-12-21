@@ -38,7 +38,7 @@ function processInlineTagsMock(markdown, baseUrl = '/tags/') {
 function generateTagUrlMock(tagName) {
   const slug = tagName.replace(/\//g, '-');
   const encoded = encodeURIComponent(slug);
-  return `/tags/${encoded}`;
+  return `/tags/${encoded}/`;
 }
 
 function isValidTagNameMock(tagName) {
@@ -153,17 +153,17 @@ describe('ヘルパー関数テスト', () => {
   describe('generateTagUrl', () => {
     test('単一タグのURL生成', () => {
       const url = generateTagUrl('JavaScript');
-      assert.strictEqual(url, '/tags/JavaScript');
+      assert.strictEqual(url, '/tags/JavaScript/');
     });
 
     test('階層タグのURL生成', () => {
       const url = generateTagUrl('tech/web/frontend');
-      assert.strictEqual(url, '/tags/tech-web-frontend');
+      assert.strictEqual(url, '/tags/tech-web-frontend/');
     });
 
     test('特殊文字を含むタグのURL生成', () => {
       const url = generateTagUrl('test&special');
-      assert.strictEqual(url, '/tags/test%26special');
+      assert.strictEqual(url, '/tags/test%26special/');
     });
   });
 });
