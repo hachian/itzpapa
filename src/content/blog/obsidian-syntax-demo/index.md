@@ -377,7 +377,30 @@ Indicate actions and outcomes.
 
 ## Tags
 
-Tags help you categorize and organize your articles. itzpapa supports hierarchical tags.
+Tags help you categorize and organize your articles. itzpapa supports both frontmatter tags and inline tags.
+
+### Inline Tags
+
+Write `#tagname` anywhere in the article body to create an inline tag. This is a quick way to tag content directly while writing.
+
+#### Syntax
+
+```markdown
+This article is about #obsidian and #markdown syntax.
+You can also use #web/frontend for hierarchical tags.
+```
+
+#### Output
+
+This article is about #obsidian and #markdown syntax.
+You can also use #web/frontend for hierarchical tags.
+
+#### Features
+
+- Inline tags are automatically linked to the tag archive page
+- Supports hierarchical tags with `/` (e.g., `#tech/web`)
+- Can be placed anywhere in the article body
+- Useful for quick categorization while writing
 
 ### Setting Tags in Frontmatter
 
@@ -439,7 +462,7 @@ This page covered the Obsidian-compatible syntax available in itzpapa blog:
 - **Mark Highlight**: Emphasizing important text
 - **Callouts**: Displaying notes and warnings
 - **Task Status**: 22 extended checkbox types for tracking
-- **Tags**: Categorizing and organizing articles
+- **Tags**: Inline tags and frontmatter tags for categorization
 
 Using these features, you can publish your Obsidian notes directly as blog posts.
 

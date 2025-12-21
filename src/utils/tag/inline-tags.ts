@@ -26,7 +26,7 @@ export function generateTagUrl(tagName: string): string {
   // URLエンコード
   const encoded = encodeURIComponent(slug);
   
-  return `/tags/${encoded}`;
+  return `/tags/${encoded}/`;
 }
 
 /**
