@@ -19,8 +19,10 @@ import { t, getLanguage } from '../../i18n';
 const { features } = siteConfig;
 const showTagCloud = features.tagCloud;
 
-// 全ブログ記事を取得
-const posts = await getCollection('blog');
+// 全ブログ記事を取得（本番環境ではdraft記事を除外）
+const posts = await getCollection('blog', ({ data }) => {
+  return import.meta.env.PROD ? data.draft !== true : true;
+});
 
 // タグサービスを使ってタグ情報を収集
 const tagService = new TagService();

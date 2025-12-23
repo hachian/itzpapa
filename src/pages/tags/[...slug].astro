@@ -17,8 +17,10 @@ import { slugToTag, isDescendantTag } from '../../utils/tag/validation';
 import { t, getLanguage } from '../../i18n';
 
 export async function getStaticPaths() {
-  // 全ブログ記事を取得
-  const posts = await getCollection('blog');
+  // 全ブログ記事を取得（本番環境ではdraft記事を除外）
+  const posts = await getCollection('blog', ({ data }) => {
+    return import.meta.env.PROD ? data.draft !== true : true;
+  });
 
   // タグサービスを使ってタグ情報を収集
   const tagService = new TagService();
@@ -28,8 +30,8 @@ export async function getStaticPaths() {
     tagService.addPostTags(post.id, frontmatterTags, []);
   });
 
-  // 全タグのスラッグを生成
-  const allTags = tagService.getAllTags();
+  // 全タグのスラッグを生成（公開記事が0件のタグは除外）
+  const allTags = tagService.getAllTags().filter(tag => tag.count > 0);
 
   return allTags.map(tag => {
     // タグ名を階層に応じて配列に分割（スラッシュをそのまま使用）

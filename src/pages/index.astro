@@ -14,8 +14,10 @@ import defaultHeroLight from '../assets/itzpapa-light_16_9.png';
 import defaultHeroDark from '../assets/itzpapa-dark_16_9.png';
 import { t, getLanguage } from '../i18n';
 
-// 最新ブログ記事を取得
-const allPosts = await getCollection('blog');
+// 最新ブログ記事を取得（本番環境ではdraft記事を除外）
+const allPosts = await getCollection('blog', ({ data }) => {
+	return import.meta.env.PROD ? data.draft !== true : true;
+});
 const latestPosts = allPosts
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
 	.slice(0, 6);
