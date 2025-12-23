@@ -22,7 +22,19 @@ jobs:
       - run: npm run build
 
       - uses: treosh/lighthouse-ci-action@v12
+        id: lighthouse
         with:
           configPath: ./lighthouserc.json
           uploadArtifacts: true
+          temporaryPublicStorage: true
           runs: 3
+
+      - name: Show Lighthouse scores
+        run: |
+          echo "## Lighthouse Scores" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| URL | Performance | Accessibility | Best Practices | SEO |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----|-------------|---------------|----------------|-----|" >> $GITHUB_STEP_SUMMARY
+          echo '${{ steps.lighthouse.outputs.manifest }}' | jq -r '.[] | "| \(.url) | \(.summary.performance * 100 | floor) | \(.summary.accessibility * 100 | floor) | \(.summary."best-practices" * 100 | floor) | \(.summary.seo * 100 | floor) |"' >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "📊 [View full reports](${{ steps.lighthouse.outputs.links }})" >> $GITHUB_STEP_SUMMARY
