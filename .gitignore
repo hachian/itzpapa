@@ -37,3 +37,6 @@ tests/integration/test-report.json
 .playwright-mcp/
 
 .private/
+
+# Wrangler (Cloudflare)
+.wrangler/
