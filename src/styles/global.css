@@ -137,14 +137,11 @@ h5 {
 h6 {
 	font-size: var(--font-size-lg);
 }
-/* 日本語向け強調スタイル - 太字/斜体の代わりにカラーで強調
- * bold: primaryHue + 90 の背景色
- * italic: primaryHue + 270 の文字色
- */
+/* 日本語向け強調スタイル - 太字/斜体の代わりにカラーで強調 */
 strong,
 b {
 	font-weight: inherit;
-	background-color: oklch(90% 0.15 calc(var(--primary-hue) + 90) / 0.6);
+	background-color: oklch(90% 0.15 var(--primary-hue) / 0.6);
 	padding: 0.1em 0.3em;
 	border-radius: var(--radius-sm);
 }
@@ -152,7 +149,7 @@ b {
 em,
 i {
 	font-style: normal;
-	color: oklch(50% 0.20 calc(var(--primary-hue) + 270));
+	color: oklch(50% 0.20 var(--primary-hue));
 }
 a {
 	color: var(--color-link, var(--accent));
@@ -338,12 +335,12 @@ html.dark hr {
 /* ダークモード用の強調スタイル */
 html.dark strong,
 html.dark b {
-	background-color: oklch(35% 0.12 calc(var(--primary-hue) + 90) / 0.5);
+	background-color: oklch(35% 0.12 var(--primary-hue) / 0.5);
 }
 
 html.dark em,
 html.dark i {
-	color: oklch(70% 0.18 calc(var(--primary-hue) + 270));
+	color: oklch(70% 0.18 var(--primary-hue));
 }
 
 html.dark blockquote:not(.callout) {
@@ -374,12 +371,12 @@ html.dark blockquote:not(.callout) {
 	/* OS Dark Mode用の強調スタイル */
 	:root:not(.light) strong,
 	:root:not(.light) b {
-		background-color: oklch(35% 0.12 calc(var(--primary-hue) + 90) / 0.5);
+		background-color: oklch(35% 0.12 var(--primary-hue) / 0.5);
 	}
 
 	:root:not(.light) em,
 	:root:not(.light) i {
-		color: oklch(70% 0.18 calc(var(--primary-hue) + 270));
+		color: oklch(70% 0.18 var(--primary-hue));
 	}
 
 	:root:not(.light) blockquote:not(.callout) {
