@@ -1,5 +1,6 @@
 ---
-import bannerImage from '../assets/banner.png';
+import heroLight from '../assets/itzpapa-light_16_9.png';
+import heroDark from '../assets/itzpapa-dark_16_9.png';
 import Layout from '../layouts/BlogPost.astro';
 import { t } from '../i18n';
 ---
@@ -8,7 +9,8 @@ import { t } from '../i18n';
 	title={t('about.title')}
 	description={t('about.description')}
 	pubDate={new Date('2025-01-15')}
-	heroImage={bannerImage}
+	heroImageLight={heroLight}
+	heroImageDark={heroDark}
 	showComments={false}
 >
 	<section class="about-intro">

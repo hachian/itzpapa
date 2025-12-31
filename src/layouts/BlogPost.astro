@@ -21,9 +21,13 @@ type Props = CollectionEntry<'blog'>['data'] & {
   slug?: string;
   /** コメントセクションを表示するか（デフォルト: true） */
   showComments?: boolean;
+  /** ライトモード用ヒーロー画像（ダークモード対応時に使用） */
+  heroImageLight?: ImageMetadata;
+  /** ダークモード用ヒーロー画像（ダークモード対応時に使用） */
+  heroImageDark?: ImageMetadata;
 };
 
-const { title, description, pubDate, updatedDate, heroImage, tags, headings = [], readingTime, slug, showComments = true } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, heroImageLight, heroImageDark, tags, headings = [], readingTime, slug, showComments = true } = Astro.props;
 
 // 機能フラグを取得
 const { features, site } = siteConfig;
@@ -314,7 +318,12 @@ const showTableOfContents = features.tableOfContents;
 					]} />
 				</div>
 				<div class="hero-image">
-					{heroImage ? (
+					{heroImageLight && heroImageDark ? (
+						<>
+							<Image width={1020} height={510} src={heroImageLight} alt="" loading="eager" decoding="async" format="webp" class="hero-image--light" />
+							<Image width={1020} height={510} src={heroImageDark} alt="" loading="eager" decoding="async" format="webp" class="hero-image--dark" />
+						</>
+					) : heroImage ? (
 						<Image width={1020} height={510} src={heroImage} alt="" loading="eager" decoding="async" format="webp" />
 					) : (
 						<>
