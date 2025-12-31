@@ -335,7 +335,7 @@ html.dark hr {
 /* ダークモード用の強調スタイル */
 html.dark strong,
 html.dark b {
-	background-color: oklch(35% 0.12 var(--primary-hue) / 0.5);
+	background-color: oklch(50% 0.18 var(--primary-hue) / 0.7);
 }
 
 html.dark em,
@@ -371,7 +371,7 @@ html.dark blockquote:not(.callout) {
 	/* OS Dark Mode用の強調スタイル */
 	:root:not(.light) strong,
 	:root:not(.light) b {
-		background-color: oklch(35% 0.12 var(--primary-hue) / 0.5);
+		background-color: oklch(50% 0.18 var(--primary-hue) / 0.7);
 	}
 
 	:root:not(.light) em,
