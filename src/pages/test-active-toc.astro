@@ -1,6 +1,7 @@
 ---
 import TableOfContentsWithActive from '../components/TableOfContentsWithActive.astro';
 import '../styles/table-of-contents.css';
+import '../styles/design-tokens.css';
 
 // テスト用の見出しデータ（長いページ用）
 const testHeadings = [
@@ -30,13 +31,13 @@ const testHeadings = [
     }
 
     .test-header {
-      background: #f0f0f0;
+      background: var(--color-gray-100);
       padding: 1rem;
       text-align: center;
       position: sticky;
       top: 0;
       z-index: 100;
-      border-bottom: 2px solid #ddd;
+      border-bottom: 2px solid var(--color-gray-200);
     }
 
     .blog-layout-with-toc {
@@ -56,19 +57,19 @@ const testHeadings = [
       min-height: 600px;
       padding: 2rem;
       margin-bottom: 2rem;
-      border: 1px solid #e0e0e0;
+      border: 1px solid var(--color-gray-200);
       border-radius: 8px;
-      background: linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%);
+      background: linear-gradient(135deg, var(--color-gray-100) 0%, var(--color-surface) 100%);
     }
 
     .content h2 {
-      color: #333;
-      border-bottom: 2px solid #7611a6;
+      color: var(--color-text-primary);
+      border-bottom: 2px solid var(--color-primary-600);
       padding-bottom: 0.5rem;
     }
 
     .content h3 {
-      color: #666;
+      color: var(--color-text-secondary);
       margin-left: 1rem;
     }
 

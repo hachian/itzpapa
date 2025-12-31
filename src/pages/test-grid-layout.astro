@@ -1,6 +1,7 @@
 ---
 import TableOfContents from '../components/TableOfContents.astro';
 import '../styles/table-of-contents.css';
+import '../styles/design-tokens.css';
 
 // テスト用の見出しデータ
 const testHeadings = [
@@ -23,14 +24,6 @@ const testHeadings = [
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CSS Grid レイアウトテスト</title>
   <style>
-    :root {
-      --gray-light: #f6f6f7;
-      --gray: #8e8e93;
-      --gray-dark: #1a1a1a;
-      --accent: #7611a6;
-      --accent-light: #9933cc;
-    }
-
     body {
       font-family: system-ui, -apple-system, sans-serif;
       margin: 0;
@@ -52,7 +45,7 @@ const testHeadings = [
       margin-top: 3rem;
       margin-bottom: 1rem;
       padding-bottom: 0.5rem;
-      border-bottom: 2px solid var(--gray-light);
+      border-bottom: 2px solid var(--color-gray-100);
     }
 
     .prose h3 {
@@ -62,7 +55,7 @@ const testHeadings = [
 
     .prose p {
       margin-bottom: 1rem;
-      color: #333;
+      color: var(--color-text-primary);
     }
 
     /* レスポンシブテスト用のデバッグ表示 */
