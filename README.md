@@ -2,18 +2,23 @@
 
 [日本語版はこちら / Japanese](./README.ja.md)
 
-An Astro-based blog site that supports Obsidian-style syntax (WikiLink, Callout, Mark Highlight).
+An Astro-based blog site that supports Obsidian-style syntax (WikiLink, Callout, Inline Tags, Mark Highlight) with powerful customization options.
 
 ## Features
 
 ### Core Features
 - Markdown & MDX support
 - Fast static site generation (Astro v5)
-- Simple, customizable design
+- Simple, customizable design with centralized configuration (`site.config.ts`)
 - High performance architecture
 - SEO optimized (canonical URLs, OpenGraph)
+- **Dynamic OG image generation** - Auto-generates OG images with article titles
+- **Auto-generated logo/favicon** - Colors adapt to your primaryHue setting
 - Auto-generated sitemap
 - RSS feed support
+- **Multilingual support (i18n)** - Japanese and English
+- **giscus comment system** - GitHub Discussions-based comments
+- **Breadcrumb navigation** - For blog and tag pages
 
 ### Obsidian-style Features
 - **WikiLink syntax** - Support for `[[page name]]` link format
@@ -21,9 +26,30 @@ An Astro-based blog site that supports Obsidian-style syntax (WikiLink, Callout,
   - Anchor links (`[[page#heading]]`)
   - Image embeds (`![[image.jpg]]`)
 - **Callout blocks** - Obsidian-style emphasis blocks
-  - Various types (note, tip, warning, danger, etc.)
-  - Nestable
+  - 13 official types + 14 aliases (note, tip, warning, danger, abstract, summary, info, todo, success, question, failure, bug, example, quote, etc.)
+  - Foldable and nestable
 - **Mark highlight** - Highlight text with `==text==` syntax
+- **Inline tags** - `#tag` format auto-linked to tag pages
+  - Hierarchical tags: `#parent/child`
+  - Japanese tag support
+- **Single line breaks** - Single newline creates a line break (remark-breaks)
+
+### Theme Customization
+Customize your site's color scheme using `primaryHue` in `site.config.ts`:
+
+```typescript
+theme: {
+  // Use preset names or numeric values (0-360)
+  primaryHue: 'purple'  // or 293
+}
+```
+
+**Presets:**
+- `purple` (293) - Creativity and elegance
+- `ocean` (200) - Trust and calm
+- `forest` (145) - Nature and growth
+- `sunset` (25) - Warmth and energy
+- `mono` (240) - Simple and refined
 
 ## Installation
 
@@ -45,6 +71,33 @@ npm run dev
 | `npm run preview` | Preview build locally |
 | `npm run test` | Run all tests |
 
+## Configuration
+
+All site settings are centralized in `site.config.ts` at the project root:
+
+```typescript
+export const siteConfig = {
+  site: {
+    title: 'Your Site Title',
+    description: { ja: '日本語説明', en: 'English description' },
+    author: 'Your Name',
+    baseUrl: 'https://your-site.com',
+    language: 'en',  // 'ja' or 'en'
+  },
+  theme: {
+    primaryHue: 'purple',  // Preset or 0-360
+  },
+  navigation: [...],
+  social: { github: {...}, twitter: {...}, ... },
+  features: {
+    tableOfContents: true,
+    tagCloud: true,
+    relatedPosts: true,
+    comments: { enabled: true, provider: 'giscus', config: {...} },
+  },
+};
+```
+
 ## Project Structure
 
 ```
@@ -60,9 +113,12 @@ npm run dev
 │   ├── pages/          # Page components
 │   ├── plugins/        # Custom plugins
 │   │   ├── remark-wikilink/      # WikiLink support
-│   │   └── remark-mark-highlight/ # Mark highlight
+│   │   ├── remark-mark-highlight/ # Mark highlight
+│   │   ├── remark-tags/          # Inline tag support
+│   │   └── rehype-callout/       # Callout blocks
 │   └── styles/         # Global styles
 ├── tests/              # Test files
+├── site.config.ts      # Centralized site configuration
 ├── astro.config.mjs    # Astro configuration
 ├── package.json        # Package configuration
 └── tsconfig.json       # TypeScript configuration
@@ -94,6 +150,12 @@ Plugin supporting WikiLink syntax (`[[page name]]`).
 Plugin supporting mark highlight syntax (`==text==`).
 - Inline highlight display
 - CSS customizable
+
+### remark-tags
+Plugin supporting inline tag syntax (`#tag`).
+- Hierarchical tags (`#parent/child`)
+- Japanese tag support
+- Auto-linking to tag pages
 
 ## Usage
 
@@ -134,6 +196,14 @@ Article content here...
 ![[image.jpg]]
 ```
 
+### Inline Tags
+
+```markdown
+This is a #tutorial about #astro/blog development.
+
+Use #日本語タグ for Japanese tags.
+```
+
 ### Callout Blocks
 
 ```markdown
@@ -145,7 +215,20 @@ Article content here...
 
 > [!tip]
 > This is a tip callout.
+
+> [!abstract]
+> This is an abstract/summary callout.
 ```
+
+**Available callout types:** note, abstract, summary, tldr, info, todo, tip, hint, important, success, check, done, question, help, faq, warning, caution, attention, failure, fail, missing, danger, error, bug, example, quote, cite
+
+## Deployment
+
+### Cloudflare Pages
+
+This project includes configuration for Cloudflare Pages deployment:
+- `wrangler.toml` - Cloudflare configuration
+- Security headers configured in `_headers`
 
 ## License
 
