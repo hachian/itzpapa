@@ -3,7 +3,142 @@ import { visit } from 'unist-util-visit';
 export default function remarkWikilink() {
   // プラグインの実行順序を早めるために優先度を設定
   const plugin = function transformer(tree, file) {
-    
+
+    // リンクURL内のWikiLinkを解決する
+    visit(tree, 'link', (node) => {
+      if (node.url && node.url.includes('[[') && node.url.includes(']]')) {
+        // WikiLink形式のURLを解決
+        const wikilinkMatch = node.url.match(/^\[\[([^\]]+?)(?:(?:\\\||<<<PIPE>>>|\|)([^\]]+?))?\]\]$/);
+        if (wikilinkMatch) {
+          const linkPath = wikilinkMatch[1].trim();
+
+          if (linkPath && linkPath.startsWith('../')) {
+            // 内部リンクの処理
+            const hashIndex = linkPath.indexOf('#');
+            let filePath = linkPath;
+            let hash = '';
+
+            if (hashIndex !== -1) {
+              filePath = linkPath.slice(0, hashIndex);
+              hash = linkPath.slice(hashIndex);
+            }
+
+            const cleanPath = filePath
+              .replace(/^\.\.\//, '')
+              .replace(/\.md$/, '')
+              .replace(/\/index$/, '')
+              .replace(/\s+/g, '-')
+              .toLowerCase();
+
+            let cleanHash = hash;
+            if (hash) {
+              const hashText = hash.slice(1);
+              cleanHash = '#' + hashText.toLowerCase()
+                .replace(/\./g, '')
+                .replace(/\s+/g, '-')
+                .replace(/[^\w\-\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/g, '');
+            }
+
+            node.url = cleanHash ? `/blog/${cleanPath}/${cleanHash}` : `/blog/${cleanPath}/`;
+          }
+        }
+      }
+    });
+
+    // 分断されたWikiLinkを処理（画像がエイリアスとして含まれる場合）
+    // 例: [[../path|![alt](url)]] → text("[[../path|") + image + text("]]")
+    // パラグラフとリストアイテムの両方を処理
+    const processFragmentedWikilinks = (node) => {
+      const children = node.children;
+      if (!children || children.length < 3) return;
+
+      for (let i = 0; i < children.length - 2; i++) {
+        const first = children[i];
+        const second = children[i + 1];
+        const third = children[i + 2];
+
+        // パターン: text("[[path|") + image + text("]]")
+        if (
+          first.type === 'text' &&
+          second.type === 'image' &&
+          third.type === 'text' &&
+          first.value.match(/\[\[([^\]|]+)\|$/) &&
+          third.value.startsWith(']]')
+        ) {
+          const pathMatch = first.value.match(/^(.*?)\[\[([^\]|]+)\|$/);
+          if (pathMatch) {
+            const beforeText = pathMatch[1];
+            const linkPath = pathMatch[2].trim();
+            const afterText = third.value.slice(2); // "]]"を除去
+
+            // リンクURLを構築
+            let url = linkPath;
+            if (linkPath.startsWith('../')) {
+              const hashIndex = linkPath.indexOf('#');
+              let filePath = linkPath;
+              let hash = '';
+
+              if (hashIndex !== -1) {
+                filePath = linkPath.slice(0, hashIndex);
+                hash = linkPath.slice(hashIndex);
+              }
+
+              const cleanPath = filePath
+                .replace(/^\.\.\//, '')
+                .replace(/\.md$/, '')
+                .replace(/\/index$/, '')
+                .replace(/\s+/g, '-')
+                .toLowerCase();
+
+              let cleanHash = hash;
+              if (hash) {
+                const hashText = hash.slice(1);
+                cleanHash = '#' + hashText.toLowerCase()
+                  .replace(/\./g, '')
+                  .replace(/\s+/g, '-')
+                  .replace(/[^\w\-\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/g, '');
+              }
+
+              url = cleanHash ? `/blog/${cleanPath}/${cleanHash}` : `/blog/${cleanPath}/`;
+            }
+
+            // 新しいノードを構築
+            const newNodes = [];
+
+            if (beforeText) {
+              newNodes.push({ type: 'text', value: beforeText });
+            }
+
+            newNodes.push({
+              type: 'link',
+              url: url,
+              title: null,
+              children: [second], // 画像ノードをchildrenとして使用
+              data: {
+                hProperties: {
+                  className: ['wikilink-internal']
+                }
+              }
+            });
+
+            if (afterText) {
+              newNodes.push({ type: 'text', value: afterText });
+            }
+
+            // 元の3ノードを新しいノードで置換
+            children.splice(i, 3, ...newNodes);
+
+            // インデックスを調整して再処理
+            i += newNodes.length - 1;
+          }
+        }
+      }
+    };
+
+    // パラグラフとリストアイテムの両方で分断されたWikiLinkを処理
+    visit(tree, 'paragraph', processFragmentedWikilinks);
+    visit(tree, 'listItem', processFragmentedWikilinks);
+
     // 最適化: 単一パスでテーブル処理とWikilink変換を同時実行
     visit(tree, 'text', (node, index, parent) => {
       if (!parent || parent.type === 'link') return;
@@ -11,14 +146,16 @@ export default function remarkWikilink() {
       let text = node.value;
       
       // テーブル内のWikilinkパイプ文字を一時的に置換（必要な場合のみ）
+      // エイリアス内に]が含まれる場合（例：![alt](url)）も処理できるよう正規表現を改善
       if (text.includes('|') && text.includes('[[')) {
-        text = text.replace(/\[\[([^\]]+)\|([^\]]+)\]\]/g, (match, path, alias) => {
+        text = text.replace(/\[\[([^\]|]+)\|((?:[^\]]|\](?!\]))+)\]\]/g, (match, path, alias) => {
           return `[[${path}<<<PIPE>>>${alias}]]`;
         });
       }
       
       // 画像とリンクの両方のパターンを処理（画像は!で始まる）
-      const wikilinkRegex = /(!?)\[\[([^\]]+?)(?:(?:\\\||<<<PIPE>>>|\|)([^\]]+?))?\]\]/g;
+      // パスは]と|を含まない、エイリアスは]]以外の]を許容（Markdown画像等に対応）
+      const wikilinkRegex = /(!?)\[\[([^\]|]+?)(?:(?:\\\||<<<PIPE>>>|\|)((?:[^\]]|\](?!\]))+?))?\]\]/g;
       
       // 最適化: Wikilinkが含まれていない場合は早期リターン
       if (!wikilinkRegex.test(text)) {
@@ -136,11 +273,38 @@ export default function remarkWikilink() {
             url = linkPath;
           }
 
+          // エイリアスがMarkdown画像構文かどうかをチェック
+          const imageInAliasMatch = linkText.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
+
+          let children;
+          if (imageInAliasMatch) {
+            // エイリアスがMarkdown画像の場合、画像ノードを作成
+            const imgAlt = imageInAliasMatch[1];
+            let imgSrc = imageInAliasMatch[2];
+
+            // 画像パスの正規化
+            if (!imgSrc.startsWith('http://') && !imgSrc.startsWith('https://') && !imgSrc.startsWith('/')) {
+              if (!imgSrc.startsWith('./') && !imgSrc.startsWith('../')) {
+                imgSrc = './' + imgSrc;
+              }
+            }
+
+            children = [{
+              type: 'image',
+              url: imgSrc,
+              alt: imgAlt,
+              title: null
+            }];
+          } else {
+            // 通常のテキストエイリアス
+            children = [{ type: 'text', value: linkText }];
+          }
+
           parts.push({
             type: 'link',
             url: url,
             title: null,
-            children: [{ type: 'text', value: linkText }],
+            children: children,
             data: {
               hProperties: {
                 className: ['wikilink-internal']
