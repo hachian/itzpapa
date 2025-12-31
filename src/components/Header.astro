@@ -90,35 +90,74 @@ const enabledSocialLinks = Object.entries(social)
 
 		if (!toggle || !menu) return;
 
+		// 既に初期化済みの場合はスキップ（transition:persistによる重複防止）
+		if (toggle.dataset.initialized === 'true') return;
+		toggle.dataset.initialized = 'true';
+
 		// data属性から翻訳テキストを取得
 		const labelOpen = toggle.dataset.labelOpen || 'Open menu';
 		const labelClose = toggle.dataset.labelClose || 'Close menu';
 
+		// メニューを閉じる
+		const closeMenu = () => {
+			toggle.setAttribute('aria-expanded', 'false');
+			toggle.setAttribute('aria-label', labelOpen);
+			menu.hidden = true;
+		};
+
+		// メニューを開く
+		const openMenu = () => {
+			toggle.setAttribute('aria-expanded', 'true');
+			toggle.setAttribute('aria-label', labelClose);
+			menu.hidden = false;
+		};
+
+		// メニューの開閉状態を取得
+		const isMenuOpen = () => toggle.getAttribute('aria-expanded') === 'true';
+
+		// トグルボタンのクリック
 		toggle.addEventListener('click', () => {
-			const isOpen = toggle.getAttribute('aria-expanded') === 'true';
-			toggle.setAttribute('aria-expanded', String(!isOpen));
-			toggle.setAttribute('aria-label', isOpen ? labelOpen : labelClose);
-			menu.hidden = isOpen;
+			isMenuOpen() ? closeMenu() : openMenu();
 		});
 
-		// メニュー外クリックで閉じる
-		document.addEventListener('click', (e) => {
-			if (!toggle.contains(e.target as Node) && !menu.contains(e.target as Node)) {
-				toggle.setAttribute('aria-expanded', 'false');
-				toggle.setAttribute('aria-label', labelOpen);
-				menu.hidden = true;
+		// メニュー内のリンクをクリックしたらメニューを閉じる（イベント委譲）
+		menu.addEventListener('click', (e) => {
+			if ((e.target as HTMLElement).closest('a')) {
+				closeMenu();
 			}
 		});
 
-		// Escキーで閉じる
-		document.addEventListener('keydown', (e) => {
-			if (e.key === 'Escape' && !menu.hidden) {
-				toggle.setAttribute('aria-expanded', 'false');
-				toggle.setAttribute('aria-label', labelOpen);
-				menu.hidden = true;
-				toggle.focus();
-			}
-		});
+		// グローバルイベントは一度だけ登録（documentにフラグを設定）
+		if (!(document as any).__mobileMenuGlobalListeners) {
+			(document as any).__mobileMenuGlobalListeners = true;
+
+			// メニュー外クリックで閉じる
+			document.addEventListener('click', (e) => {
+				const currentToggle = document.querySelector('.header__menu-toggle');
+				const currentMenu = document.getElementById('mobile-menu');
+				if (!currentToggle || !currentMenu) return;
+
+				if (!currentToggle.contains(e.target as Node) && !currentMenu.contains(e.target as Node)) {
+					currentToggle.setAttribute('aria-expanded', 'false');
+					currentToggle.setAttribute('aria-label', currentToggle.dataset.labelOpen || 'Open menu');
+					currentMenu.hidden = true;
+				}
+			});
+
+			// Escキーで閉じる
+			document.addEventListener('keydown', (e) => {
+				if (e.key !== 'Escape') return;
+
+				const currentToggle = document.querySelector('.header__menu-toggle') as HTMLButtonElement | null;
+				const currentMenu = document.getElementById('mobile-menu');
+				if (!currentToggle || !currentMenu || currentMenu.hidden) return;
+
+				currentToggle.setAttribute('aria-expanded', 'false');
+				currentToggle.setAttribute('aria-label', currentToggle.dataset.labelOpen || 'Open menu');
+				currentMenu.hidden = true;
+				currentToggle.focus();
+			});
+		}
 	}
 
 	setupMobileMenu();
