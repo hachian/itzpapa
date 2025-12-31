@@ -201,9 +201,15 @@ const showTableOfContents = features.tableOfContents;
 
 			.article-meta__icon {
 				font-size: var(--font-size-base);
+				width: 1.5em;
+				min-width: 1.5em;
+				display: inline-flex;
+				justify-content: center;
+				align-items: center;
+				flex-shrink: 0;
 			}
 
-			.article-meta__date {
+			.article-meta__published {
 				color: var(--color-primary-500);
 				font-weight: var(--font-weight-medium);
 			}
@@ -213,7 +219,15 @@ const showTableOfContents = features.tableOfContents;
 			}
 
 			.article-meta__updated {
-				color: var(--color-primary);
+				/* markスタイルを適用 */
+				background-color: var(--mark-bg, oklch(90% 0.20 calc(var(--primary-hue) + 180) / 0.6));
+				color: var(--color-text-primary);
+				padding: 0.1em 0.25em;
+				border-radius: 0.2em;
+			}
+
+			html.dark .article-meta__updated {
+				background-color: var(--mark-bg-dark, oklch(85% 0.18 calc(var(--primary-hue) + 180) / 0.4));
 			}
 
 			/* タグ */
@@ -293,8 +307,10 @@ const showTableOfContents = features.tableOfContents;
 				}
 
 				.article-meta {
+					display: inline-flex;
 					flex-direction: column;
 					gap: var(--space-2);
+					align-items: flex-start;
 				}
 			}
 
@@ -348,14 +364,16 @@ const showTableOfContents = features.tableOfContents;
 							<div class="article-meta">
 								<span class="article-meta__item">
 									<span class="article-meta__icon" aria-hidden="true">📅</span>
-									<span class="article-meta__date">
+									<span class="article-meta__published">
 										<FormattedDate date={published} />
 									</span>
 								</span>
 								{updated && (
-									<span class="article-meta__item article-meta__updated">
+									<span class="article-meta__item">
 										<span class="article-meta__icon" aria-hidden="true">🔄</span>
-										<strong><FormattedDate date={updated} /></strong>
+										<span class="article-meta__updated">
+											<FormattedDate date={updated} />
+										</span>
 									</span>
 								)}
 								{readingTime && (
