@@ -1,0 +1,280 @@
+/**
+ * Lightbox Styles - 画像拡大表示オーバーレイ
+ *
+ * 画像クリック時にフルスクリーンオーバーレイで拡大表示するライトボックスのスタイル定義
+ * OKLCHカラーシステムに準拠し、ダークモード・レスポンシブ対応
+ *
+ * Requirements: 1.4, 2.1, 3.1, 3.2, 5.1
+ */
+
+/* =========================================
+   Lightbox Overlay
+   ========================================= */
+.lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: oklch(0% 0 0 / 0.85);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--duration-normal) var(--easing-out),
+              visibility var(--duration-normal) var(--easing-out);
+  cursor: pointer;
+}
+
+.lightbox-overlay[data-open="true"] {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* =========================================
+   Lightbox Content Container
+   ========================================= */
+.lightbox-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 90vw;
+  max-height: 90vh;
+  cursor: default;
+}
+
+/* =========================================
+   Lightbox Image
+   ========================================= */
+.lightbox-image {
+  max-width: 90vw;
+  max-height: 80vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-2xl);
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity var(--duration-normal) var(--easing-out),
+              transform var(--duration-normal) var(--easing-out);
+}
+
+.lightbox-overlay[data-open="true"] .lightbox-image {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* =========================================
+   Lightbox Caption
+   ========================================= */
+.lightbox-caption {
+  margin-top: var(--space-4);
+  padding: var(--space-2) var(--space-4);
+  max-width: 80vw;
+  text-align: center;
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-200);
+  background-color: oklch(0% 0 0 / 0.6);
+  border-radius: var(--radius-md);
+  line-height: var(--line-height-normal);
+  opacity: 0;
+  transition: opacity var(--duration-normal) var(--easing-out);
+}
+
+.lightbox-overlay[data-open="true"] .lightbox-caption {
+  opacity: 1;
+}
+
+/* Hide caption if empty */
+.lightbox-caption:empty {
+  display: none;
+}
+
+/* =========================================
+   Close Button
+   ========================================= */
+.lightbox-close {
+  position: fixed;
+  top: var(--space-4);
+  right: var(--space-4);
+  width: 44px;
+  height: 44px;
+  min-width: var(--touch-target-min);
+  min-height: var(--touch-target-min);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: oklch(0% 0 0 / 0.6);
+  border: 2px solid oklch(100% 0 0 / 0.3);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--easing-default),
+              border-color var(--duration-fast) var(--easing-default),
+              transform var(--duration-fast) var(--easing-default);
+  z-index: calc(var(--z-modal) + 1);
+}
+
+.lightbox-close:hover {
+  background-color: oklch(0% 0 0 / 0.8);
+  border-color: oklch(100% 0 0 / 0.5);
+  transform: scale(1.05);
+}
+
+.lightbox-close:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Close icon (×) */
+.lightbox-close::before,
+.lightbox-close::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 2px;
+  background-color: oklch(100% 0 0);
+  border-radius: 1px;
+}
+
+.lightbox-close::before {
+  transform: rotate(45deg);
+}
+
+.lightbox-close::after {
+  transform: rotate(-45deg);
+}
+
+/* =========================================
+   Clickable Images in Article
+   ========================================= */
+.prose img:not(.hero-image img):not([data-lightbox-disabled]):not(a img) {
+  cursor: zoom-in;
+  transition: opacity var(--duration-fast) var(--easing-default);
+}
+
+.prose img:not(.hero-image img):not([data-lightbox-disabled]):not(a img):hover {
+  opacity: 0.9;
+}
+
+/* リンク内の画像はライトボックス無効 */
+.prose a img {
+  cursor: pointer;
+}
+
+/* =========================================
+   Dark Mode
+   ========================================= */
+html.dark .lightbox-overlay {
+  background-color: oklch(0% 0 0 / 0.92);
+}
+
+html.dark .lightbox-close {
+  background-color: oklch(20% 0.02 var(--primary-hue) / 0.8);
+  border-color: oklch(100% 0 0 / 0.2);
+}
+
+html.dark .lightbox-close:hover {
+  background-color: oklch(25% 0.02 var(--primary-hue));
+  border-color: oklch(100% 0 0 / 0.4);
+}
+
+html.dark .lightbox-caption {
+  background-color: oklch(20% 0.02 var(--primary-hue) / 0.8);
+  color: var(--color-gray-100);
+}
+
+/* =========================================
+   OS Dark Mode Preference
+   ========================================= */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) .lightbox-overlay {
+    background-color: oklch(0% 0 0 / 0.92);
+  }
+
+  :root:not(.light) .lightbox-close {
+    background-color: oklch(20% 0.02 var(--primary-hue) / 0.8);
+    border-color: oklch(100% 0 0 / 0.2);
+  }
+
+  :root:not(.light) .lightbox-close:hover {
+    background-color: oklch(25% 0.02 var(--primary-hue));
+    border-color: oklch(100% 0 0 / 0.4);
+  }
+
+  :root:not(.light) .lightbox-caption {
+    background-color: oklch(20% 0.02 var(--primary-hue) / 0.8);
+    color: var(--color-gray-100);
+  }
+}
+
+/* =========================================
+   Responsive - Mobile (< 768px)
+   ========================================= */
+@media (max-width: 767px) {
+  .lightbox-content {
+    max-width: 95vw;
+    max-height: 95vh;
+  }
+
+  .lightbox-image {
+    max-width: 95vw;
+    max-height: 85vh;
+    border-radius: var(--radius-sm);
+  }
+
+  .lightbox-caption {
+    max-width: 90vw;
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--font-size-xs);
+  }
+
+  .lightbox-close {
+    top: var(--space-3);
+    right: var(--space-3);
+    width: 48px;
+    height: 48px;
+  }
+}
+
+/* =========================================
+   Landscape Orientation Optimization
+   ========================================= */
+@media (orientation: landscape) and (max-height: 500px) {
+  .lightbox-image {
+    max-height: 75vh;
+  }
+
+  .lightbox-caption {
+    margin-top: var(--space-2);
+    padding: var(--space-1) var(--space-3);
+  }
+}
+
+/* =========================================
+   Reduced Motion
+   ========================================= */
+@media (prefers-reduced-motion: reduce) {
+  .lightbox-overlay,
+  .lightbox-image,
+  .lightbox-caption,
+  .lightbox-close {
+    transition: none;
+  }
+
+  .lightbox-image {
+    transform: none;
+  }
+
+  .lightbox-overlay[data-open="true"] .lightbox-image {
+    transform: none;
+  }
+}
+
+/* =========================================
+   Body scroll lock when lightbox is open
+   ========================================= */
+body.lightbox-open {
+  overflow: hidden;
+}

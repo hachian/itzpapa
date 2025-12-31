@@ -11,6 +11,7 @@ import TagList from '../components/TagList.astro';
 import CategoryBadge from '../components/CategoryBadge.astro';
 import TableOfContents from '../components/TableOfContents.astro';
 import Comments from '../components/Comments.astro';
+import ImageLightbox from '../components/ImageLightbox.astro';
 import { siteConfig } from '../../site.config';
 import { t, getLanguage } from '../i18n';
 import '../styles/table-of-contents.css';
@@ -447,6 +448,9 @@ const showTableOfContents = features.tableOfContents;
 			</article>
 		</main>
 		<Footer />
+
+		<!-- Image Lightbox -->
+		<ImageLightbox />
 
 		<!-- Callout folding functionality -->
 		<script>

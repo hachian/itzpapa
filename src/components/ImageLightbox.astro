@@ -1,0 +1,179 @@
+---
+/**
+ * ImageLightbox - 画像ライトボックスコンポーネント
+ *
+ * ブログ記事内の画像をクリックした際にフルスクリーンオーバーレイで拡大表示する。
+ * キーボード操作（Escape）、タッチ操作、アクセシビリティに対応。
+ *
+ * Requirements: 1.1-1.5, 2.1-2.2, 4.1-4.3, 5.2
+ */
+---
+
+<!-- Lightbox Overlay -->
+<div
+  class="lightbox-overlay"
+  id="image-lightbox"
+  role="dialog"
+  aria-modal="true"
+  aria-label="画像拡大表示"
+  data-open="false"
+  tabindex="-1"
+>
+  <button
+    class="lightbox-close"
+    type="button"
+    aria-label="閉じる"
+    data-lightbox-close
+  ></button>
+  <div class="lightbox-content">
+    <img
+      class="lightbox-image"
+      src=""
+      alt=""
+      data-lightbox-image
+    />
+    <p class="lightbox-caption" data-lightbox-caption></p>
+  </div>
+</div>
+
+<script>
+  function initImageLightbox() {
+    const lightbox = document.getElementById('image-lightbox');
+    if (!lightbox) return;
+
+    const lightboxImage = lightbox.querySelector('[data-lightbox-image]') as HTMLImageElement | null;
+    const lightboxCaption = lightbox.querySelector('[data-lightbox-caption]') as HTMLElement | null;
+    const closeButton = lightbox.querySelector('[data-lightbox-close]') as HTMLButtonElement | null;
+
+    if (!lightboxImage || !lightboxCaption || !closeButton) return;
+
+    // State
+    let previouslyFocused: HTMLElement | null = null;
+
+    /**
+     * ライトボックスを開く
+     */
+    function openLightbox(imageSrc: string, imageAlt: string, triggerElement: HTMLElement) {
+      if (!imageSrc) return;
+
+      // 状態を保存
+      previouslyFocused = triggerElement;
+
+      // 画像とキャプションを設定
+      lightboxImage.src = imageSrc;
+      lightboxImage.alt = imageAlt || '';
+      lightboxCaption.textContent = imageAlt || '';
+
+      // 表示
+      lightbox.setAttribute('data-open', 'true');
+      document.body.classList.add('lightbox-open');
+
+      // フォーカスをライトボックス内に移動
+      requestAnimationFrame(() => {
+        closeButton.focus();
+      });
+    }
+
+    /**
+     * ライトボックスを閉じる
+     */
+    function closeLightbox() {
+      lightbox.setAttribute('data-open', 'false');
+      document.body.classList.remove('lightbox-open');
+
+      // フォーカスを元の画像に戻す
+      if (previouslyFocused && previouslyFocused instanceof HTMLElement) {
+        previouslyFocused.focus();
+      }
+      previouslyFocused = null;
+
+      // 画像をクリア（次回表示時のちらつき防止）
+      setTimeout(() => {
+        if (lightbox.getAttribute('data-open') === 'false') {
+          lightboxImage.src = '';
+          lightboxImage.alt = '';
+          lightboxCaption.textContent = '';
+        }
+      }, 300);
+    }
+
+    /**
+     * 記事内の画像にクリックイベントを登録
+     */
+    function setupImageClickHandlers() {
+      // 記事本文内の画像を取得（ヒーロー画像は除外）
+      const articleImages = document.querySelectorAll('.prose img:not([data-lightbox-disabled])');
+
+      articleImages.forEach((img) => {
+        const imgElement = img as HTMLImageElement;
+
+        // 既にリスナーが設定されている場合はスキップ
+        if (imgElement.hasAttribute('data-lightbox-enabled')) return;
+
+        // リンク内の画像はライトボックスを無効にする
+        if (imgElement.closest('a')) {
+          imgElement.setAttribute('data-lightbox-disabled', 'true');
+          return;
+        }
+
+        imgElement.setAttribute('data-lightbox-enabled', 'true');
+
+        // クリックイベント（タッチも対応）
+        imgElement.addEventListener('click', (e) => {
+          e.preventDefault();
+          const src = imgElement.src || imgElement.getAttribute('data-src') || '';
+          const alt = imgElement.alt || '';
+          openLightbox(src, alt, imgElement);
+        });
+
+        // キーボードアクセシビリティ
+        imgElement.setAttribute('tabindex', '0');
+        imgElement.setAttribute('role', 'button');
+        imgElement.setAttribute('aria-label', imgElement.alt ? `${imgElement.alt}を拡大表示` : '画像を拡大表示');
+
+        imgElement.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            const src = imgElement.src || imgElement.getAttribute('data-src') || '';
+            const alt = imgElement.alt || '';
+            openLightbox(src, alt, imgElement);
+          }
+        });
+      });
+    }
+
+    // 閉じるボタンクリック
+    closeButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeLightbox();
+    });
+
+    // オーバーレイ背景クリック
+    lightbox.addEventListener('click', (e) => {
+      // コンテンツ部分のクリックは無視
+      const target = e.target as HTMLElement;
+      if (target === lightbox) {
+        closeLightbox();
+      }
+    });
+
+    // Escapeキーで閉じる
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && lightbox.getAttribute('data-open') === 'true') {
+        closeLightbox();
+      }
+    });
+
+    // 画像クリックハンドラーを設定
+    setupImageClickHandlers();
+
+    // View Transitions後に再設定
+    document.addEventListener('astro:page-load', setupImageClickHandlers);
+  }
+
+  // 初回ロード時に実行
+  initImageLightbox();
+
+  // View Transitions後に実行
+  document.addEventListener('astro:after-swap', initImageLightbox);
+</script>

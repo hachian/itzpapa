@@ -42,6 +42,9 @@
 /* Import Japanese typography optimization */
 @import './japanese-typography.css';
 
+/* Import lightbox styles */
+@import './lightbox.css';
+
 /* ===========================================
    Text Selection
    =========================================== */
