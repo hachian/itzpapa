@@ -18,8 +18,9 @@
   "author": "hachian",
   "license": "MIT",
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
+    "generate:logo": "node scripts/generate-logo.js",
+    "dev": "npm run generate:logo && astro dev",
+    "build": "npm run generate:logo && astro build",
     "preview": "astro preview",
     "astro": "astro",
     "test": "node tests/test-runner.js",
