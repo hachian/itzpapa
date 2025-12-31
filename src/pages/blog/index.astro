@@ -10,6 +10,10 @@ import { SITE_TITLE } from '../../../site.config';
 import { getSiteDescription } from '../../i18n';
 import { t, getLanguage } from '../../i18n';
 
+// フォールバック用のデフォルトhero画像
+import defaultHeroLight from '../../assets/itzpapa-light_16_9.png';
+import defaultHeroDark from '../../assets/itzpapa-dark_16_9.png';
+
 const posts = (await getCollection('blog', ({ data }) => {
 	// 本番環境ではdraft: trueの記事を除外
 	return import.meta.env.PROD ? data.draft !== true : true;
@@ -224,7 +228,32 @@ const siteDescription = getSiteDescription();
 											decoding="async"
 											format="webp"
 										/>
+									) : import.meta.env.DEV ? (
+										/* dev環境: フォールバック画像を使用 */
+										<>
+											<Image
+												width={720}
+												height={360}
+												src={defaultHeroLight}
+												alt=""
+												class="post-card__image post-card__image--light"
+												loading="lazy"
+												decoding="async"
+												format="webp"
+											/>
+											<Image
+												width={720}
+												height={360}
+												src={defaultHeroDark}
+												alt=""
+												class="post-card__image post-card__image--dark"
+												loading="lazy"
+												decoding="async"
+												format="webp"
+											/>
+										</>
 									) : (
+										/* 本番環境: ビルド時に生成されたタイトル入り画像を使用 */
 										<>
 											<img
 												width="720"
