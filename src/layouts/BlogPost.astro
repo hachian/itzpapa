@@ -14,8 +14,6 @@ import { siteConfig } from '../../site.config';
 import { t, getLanguage } from '../i18n';
 import '../styles/table-of-contents.css';
 import '../styles/callout.css';
-import defaultHeroLight from '../assets/itzpapa-light_16_9.png';
-import defaultHeroDark from '../assets/itzpapa-dark_16_9.png';
 
 type Props = CollectionEntry<'blog'>['data'] & {
   headings?: Array<{ depth: number; text: string; slug: string }>;
@@ -52,6 +50,7 @@ const showTableOfContents = features.tableOfContents;
 			title={title}
 			description={description}
 			image={heroImage}
+			slug={slug}
 			article={{
 				publishedTime: pubDate,
 				modifiedTime: updatedDate,
@@ -319,8 +318,8 @@ const showTableOfContents = features.tableOfContents;
 						<Image width={1020} height={510} src={heroImage} alt="" loading="eager" decoding="async" format="webp" />
 					) : (
 						<>
-							<Image width={1020} height={510} src={defaultHeroLight} alt="" loading="eager" decoding="async" format="webp" class="hero-image--light" />
-							<Image width={1020} height={510} src={defaultHeroDark} alt="" loading="eager" decoding="async" format="webp" class="hero-image--dark" />
+							<img width="1020" height="510" src={`/hero/${slug}-light.png`} alt="" loading="eager" decoding="async" class="hero-image--light" />
+							<img width="1020" height="510" src={`/hero/${slug}-dark.png`} alt="" loading="eager" decoding="async" class="hero-image--dark" />
 						</>
 					)}
 				</div>

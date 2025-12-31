@@ -29,6 +29,6 @@ const calculateReadingTime = (content: string): number => {
 const readingTime = post.body ? calculateReadingTime(post.body) : undefined;
 ---
 
-<BlogPost {...post.data} headings={headings} readingTime={readingTime}>
+<BlogPost {...post.data} headings={headings} readingTime={readingTime} slug={post.id}>
 	<Content />
 </BlogPost>

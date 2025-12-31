@@ -8,8 +8,6 @@ import FormattedDate from '../../components/FormattedDate.astro';
 import Header from '../../components/Header.astro';
 import { SITE_TITLE } from '../../../site.config';
 import { getSiteDescription } from '../../i18n';
-import defaultHeroLight from '../../assets/itzpapa-light_16_9.png';
-import defaultHeroDark from '../../assets/itzpapa-dark_16_9.png';
 import { t, getLanguage } from '../../i18n';
 
 const posts = (await getCollection('blog', ({ data }) => {
@@ -228,25 +226,23 @@ const siteDescription = getSiteDescription();
 										/>
 									) : (
 										<>
-											<Image
-												width={720}
-												height={360}
-												src={defaultHeroLight}
+											<img
+												width="720"
+												height="360"
+												src={`/hero/${post.id}-light.png`}
 												alt=""
 												class="post-card__image post-card__image--light"
 												loading="lazy"
 												decoding="async"
-												format="webp"
 											/>
-											<Image
-												width={720}
-												height={360}
-												src={defaultHeroDark}
+											<img
+												width="720"
+												height="360"
+												src={`/hero/${post.id}-dark.png`}
 												alt=""
 												class="post-card__image post-card__image--dark"
 												loading="lazy"
 												decoding="async"
-												format="webp"
 											/>
 										</>
 									)}

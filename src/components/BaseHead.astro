@@ -3,7 +3,6 @@
 // all pages through the use of the <BaseHead /> component.
 import '../styles/global.css';
 import type { ImageMetadata } from 'astro';
-import FallbackImage from '../assets/blog-placeholder-1.jpg';
 import { siteConfig, SITE_TITLE } from '../../site.config';
 import { ClientRouter } from 'astro:transitions';
 import { resolveThemeColor } from '../theme/color-presets';
@@ -14,6 +13,8 @@ interface Props {
 	description: string;
 	image?: ImageMetadata;
 	isHomePage?: boolean;
+	/** 記事のスラッグ（記事ページでOG画像を動的生成する場合に使用） */
+	slug?: string;
 	article?: {
 		publishedTime: Date;
 		modifiedTime?: Date;
@@ -23,7 +24,7 @@ interface Props {
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
-const { title, description, image: propsImage, isHomePage, article } = Astro.props;
+const { title, description, image: propsImage, isHomePage, slug, article } = Astro.props;
 
 // タイトル形式: トップページ以外は「記事タイトル | サイト名」形式
 const formattedTitle = isHomePage ? title : `${title} | ${SITE_TITLE}`;
@@ -31,12 +32,14 @@ const formattedTitle = isHomePage ? title : `${title} | ${SITE_TITLE}`;
 // 説明文を160文字で切り詰め
 const truncatedDescription = truncateText(description, 160);
 
-// OG画像フォールバック優先順位: Props.image → siteConfig.seo.defaultOgImage → FallbackImage
-// Props.imageが渡された場合はそれを使用、そうでなければsiteConfig設定、最終的にFallbackImage
+// OG画像フォールバック優先順位:
+// 1. Props.image（カスタムOG画像）
+// 2. slugがある場合は動的生成OG画像 /og/{slug}.png
+// 3. デフォルトOG画像 /og/default.png
 const resolveOgImage = (): ImageMetadata | string => {
 	if (propsImage) return propsImage;
-	if (siteConfig.seo.defaultOgImage) return siteConfig.seo.defaultOgImage;
-	return FallbackImage;
+	if (slug) return `/og/${slug}.png`;
+	return '/og/default.png';
 };
 
 const ogImage = resolveOgImage();
@@ -48,10 +51,11 @@ const getImageSrc = (img: ImageMetadata | string): string => {
 
 const imageSrc = getImageSrc(ogImage);
 
-// ImageMetadata型の場合はwidth/heightを取得（string型の場合はundefined）
+// ImageMetadata型の場合はwidth/heightを取得
+// 動的生成OG画像の場合は固定サイズ（1200x630）
 const isImageMetadata = typeof ogImage !== 'string';
-const imageWidth = isImageMetadata ? (ogImage as ImageMetadata).width : undefined;
-const imageHeight = isImageMetadata ? (ogImage as ImageMetadata).height : undefined;
+const imageWidth = isImageMetadata ? (ogImage as ImageMetadata).width : 1200;
+const imageHeight = isImageMetadata ? (ogImage as ImageMetadata).height : 630;
 
 // テーマ設定を取得
 const { theme, seo } = siteConfig;
