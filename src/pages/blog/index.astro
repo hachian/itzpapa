@@ -6,6 +6,7 @@ import Breadcrumb from '../../components/Breadcrumb.astro';
 import Footer from '../../components/Footer.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 import Header from '../../components/Header.astro';
+import CategoryBadge from '../../components/CategoryBadge.astro';
 import { SITE_TITLE } from '../../../site.config';
 import { getSiteDescription } from '../../i18n';
 import { t, getLanguage } from '../../i18n';
@@ -72,7 +73,6 @@ const siteDescription = getSiteDescription();
 				border-radius: var(--radius-xl);
 				overflow: hidden;
 				box-shadow: var(--shadow-sm);
-				text-decoration: none;
 				transition: transform var(--duration-normal) var(--easing-default),
 							box-shadow var(--duration-normal) var(--easing-default);
 			}
@@ -82,7 +82,22 @@ const siteDescription = getSiteDescription();
 				box-shadow: var(--shadow-lg);
 			}
 
-			.post-card:focus-visible {
+			.post-card__image-link {
+				display: block;
+				text-decoration: none;
+			}
+
+			.post-card__title-link {
+				text-decoration: none;
+				color: inherit;
+			}
+
+			.post-card__title-link:hover .post-card__title,
+			.post-card__title-link:focus .post-card__title {
+				color: var(--color-primary-500);
+			}
+
+			.post-card__title-link:focus-visible {
 				outline: var(--focus-ring-width) solid var(--focus-ring-color);
 				outline-offset: var(--focus-ring-offset);
 			}
@@ -140,10 +155,6 @@ const siteDescription = getSiteDescription();
 				overflow: hidden;
 			}
 
-			.post-card:hover .post-card__title {
-				color: var(--color-primary-500);
-			}
-
 			.post-card__description {
 				font-size: var(--font-size-base);
 				color: var(--color-text-secondary);
@@ -154,6 +165,10 @@ const siteDescription = getSiteDescription();
 				-webkit-line-clamp: 2;
 				-webkit-box-orient: vertical;
 				overflow: hidden;
+			}
+
+			.post-card__category {
+				margin-bottom: var(--space-2);
 			}
 
 			.post-card__date {
@@ -215,69 +230,81 @@ const siteDescription = getSiteDescription();
 				{
 					posts.map((post) => (
 						<li>
-							<a href={`/blog/${post.id}/`} class="post-card">
-								<div class="post-card__image-wrapper">
-									{post.data.image ? (
-										<Image
-											width={720}
-											height={360}
-											src={post.data.image}
-											alt=""
-											class="post-card__image"
-											loading="lazy"
-											decoding="async"
-											format="webp"
-										/>
-									) : import.meta.env.DEV ? (
-										/* dev環境: フォールバック画像を使用 */
-										<>
+							<article class="post-card">
+								<a href={`/blog/${post.id}/`} class="post-card__image-link">
+									<div class="post-card__image-wrapper">
+										{post.data.image ? (
 											<Image
 												width={720}
 												height={360}
-												src={defaultHeroLight}
+												src={post.data.image}
 												alt=""
-												class="post-card__image post-card__image--light"
+												class="post-card__image"
 												loading="lazy"
 												decoding="async"
 												format="webp"
 											/>
-											<Image
-												width={720}
-												height={360}
-												src={defaultHeroDark}
-												alt=""
-												class="post-card__image post-card__image--dark"
-												loading="lazy"
-												decoding="async"
-												format="webp"
-											/>
-										</>
-									) : (
-										/* 本番環境: ビルド時に生成されたタイトル入り画像を使用 */
-										<>
-											<img
-												width="720"
-												height="360"
-												src={`/hero/${post.id}-light.png`}
-												alt=""
-												class="post-card__image post-card__image--light"
-												loading="lazy"
-												decoding="async"
-											/>
-											<img
-												width="720"
-												height="360"
-												src={`/hero/${post.id}-dark.png`}
-												alt=""
-												class="post-card__image post-card__image--dark"
-												loading="lazy"
-												decoding="async"
-											/>
-										</>
-									)}
-								</div>
+										) : import.meta.env.DEV ? (
+											/* dev環境: フォールバック画像を使用 */
+											<>
+												<Image
+													width={720}
+													height={360}
+													src={defaultHeroLight}
+													alt=""
+													class="post-card__image post-card__image--light"
+													loading="lazy"
+													decoding="async"
+													format="webp"
+												/>
+												<Image
+													width={720}
+													height={360}
+													src={defaultHeroDark}
+													alt=""
+													class="post-card__image post-card__image--dark"
+													loading="lazy"
+													decoding="async"
+													format="webp"
+												/>
+											</>
+										) : (
+											/* 本番環境: ビルド時に生成されたタイトル入り画像を使用 */
+											<>
+												<img
+													width="720"
+													height="360"
+													src={`/hero/${post.id}-light.png`}
+													alt=""
+													class="post-card__image post-card__image--light"
+													loading="lazy"
+													decoding="async"
+												/>
+												<img
+													width="720"
+													height="360"
+													src={`/hero/${post.id}-dark.png`}
+													alt=""
+													class="post-card__image post-card__image--dark"
+													loading="lazy"
+													decoding="async"
+												/>
+											</>
+										)}
+									</div>
+								</a>
 								<div class="post-card__content">
-									<h2 class="post-card__title">{post.data.title}</h2>
+									{post.data.category && post.data.category.trim() !== '' && (
+										<div class="post-card__category">
+											<CategoryBadge
+												category={post.data.category}
+												href={`/category/${post.data.category.toLowerCase()}/`}
+											/>
+										</div>
+									)}
+									<a href={`/blog/${post.id}/`} class="post-card__title-link">
+										<h2 class="post-card__title">{post.data.title}</h2>
+									</a>
 									{post.data.description && (
 										<p class="post-card__description">{post.data.description}</p>
 									)}
@@ -285,7 +312,7 @@ const siteDescription = getSiteDescription();
 										<FormattedDate date={post.data.published} />
 									</time>
 								</div>
-							</a>
+							</article>
 						</li>
 					))
 				}

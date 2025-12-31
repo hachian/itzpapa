@@ -8,6 +8,7 @@ import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 import TagList from '../components/TagList.astro';
+import CategoryBadge from '../components/CategoryBadge.astro';
 import TableOfContents from '../components/TableOfContents.astro';
 import Comments from '../components/Comments.astro';
 import { siteConfig } from '../../site.config';
@@ -31,7 +32,10 @@ type Props = CollectionEntry<'blog'>['data'] & {
   imageDark?: ImageMetadata;
 };
 
-const { title, description, published, updated, image, imageLight, imageDark, tags, headings = [], readingTime, slug, showComments = true } = Astro.props;
+const { title, description, published, updated, image, imageLight, imageDark, tags, category, headings = [], readingTime, slug, showComments = true } = Astro.props;
+
+// カテゴリが有効かどうかをチェック
+const hasCategory = category && category.trim() !== '';
 
 // 機能フラグを取得
 const { features, site } = siteConfig;
@@ -230,10 +234,31 @@ const showTableOfContents = features.tableOfContents;
 				background-color: var(--mark-bg-dark, oklch(85% 0.18 calc(var(--primary-hue) + 180) / 0.4));
 			}
 
+			/* カテゴリ・タグ行 */
+			.article-category-tags {
+				display: flex;
+				flex-wrap: wrap;
+				align-items: center;
+				justify-content: flex-start;
+				gap: var(--space-3);
+				margin: var(--space-4) 0;
+			}
+
+			.article-category-tags__separator {
+				color: var(--color-gray-400);
+				font-size: var(--font-size-lg);
+			}
+
+			html.dark .article-category-tags__separator {
+				color: var(--color-gray-500);
+			}
+
 			/* タグ */
 			.article-tags {
-				margin: var(--space-4) 0;
-				text-align: center;
+				display: flex;
+				flex-wrap: wrap;
+				align-items: center;
+				gap: var(--space-2);
 			}
 
 			/* 記事フッター */
@@ -384,9 +409,22 @@ const showTableOfContents = features.tableOfContents;
 								)}
 							</div>
 							<h1>{title}</h1>
-							{tags && tags.length > 0 && (
-								<div class="article-tags">
-									<TagList tags={tags} layout="horizontal" />
+							{(hasCategory || (tags && tags.length > 0)) && (
+								<div class="article-category-tags">
+									{hasCategory && (
+										<CategoryBadge
+											category={category}
+											href={`/category/${category.toLowerCase()}/`}
+										/>
+									)}
+									{hasCategory && tags && tags.length > 0 && (
+										<span class="article-category-tags__separator" aria-hidden="true">|</span>
+									)}
+									{tags && tags.length > 0 && (
+										<div class="article-tags">
+											<TagList tags={tags} layout="horizontal" />
+										</div>
+									)}
 								</div>
 							)}
 						</header>

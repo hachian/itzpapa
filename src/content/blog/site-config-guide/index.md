@@ -3,6 +3,7 @@ title: Site Configuration Guide
 description: >-
   How to configure site.config.ts: site info, theme, navigation, social links,
   SEO, and more
+category: Guide
 tags:
   - config
   - setup

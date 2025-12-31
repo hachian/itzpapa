@@ -1,6 +1,7 @@
 ---
 title: Markdown Syntax Guide
 description: A comprehensive guide to standard Markdown syntax supported in itzpapa blog
+category: Tutorial
 tags:
   - markdown
   - tutorial

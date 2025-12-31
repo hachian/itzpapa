@@ -18,16 +18,19 @@
   --gray-light: 229, 233, 240;
   --gray-dark: 34, 41, 57;
   --gray-gradient: oklch(92% 0.010 280 / 0.5), oklch(100% 0 0);
-  
-  /* 基本カラー - デザイントークンのOKLCHパレットから参照 */
-  --tag-bg: var(--color-primary-50);
-  --tag-color: var(--color-primary-600);
-  --tag-border: var(--color-primary-200);
+
+  /* タグ用色相（primaryHueと同じ = シフトなし） */
+  --tag-hue: var(--primary-hue);
+
+  /* 基本カラー - OKLCHパレット（--tag-hueベース） */
+  --tag-bg: oklch(97% 0.02 var(--tag-hue));
+  --tag-color: oklch(48% 0.22 var(--tag-hue));
+  --tag-border: oklch(88% 0.10 var(--tag-hue));
 
   /* ホバー状態 */
-  --tag-hover-bg: var(--color-primary-500);
+  --tag-hover-bg: oklch(55% 0.24 var(--tag-hue));
   --tag-hover-color: oklch(100% 0 0);
-  --tag-hover-border: var(--color-primary-500);
+  --tag-hover-border: oklch(55% 0.24 var(--tag-hue));
 
   /* フォーカス状態 */
   --tag-focus-color: var(--focus-ring-color);
@@ -97,15 +100,15 @@
   --tree-toggle-hover-color: var(--color-gray-700);
 }
 
-/* ダークモード対応 - デザイントークンのOKLCHパレットから参照 */
+/* ダークモード対応 - OKLCHパレット（--tag-hueベース） */
 html.dark {
-  --tag-bg: var(--color-primary-900);
-  --tag-color: var(--color-primary-200);
-  --tag-border: var(--color-primary-800);
+  --tag-bg: oklch(25% 0.12 var(--tag-hue));
+  --tag-color: oklch(88% 0.10 var(--tag-hue));
+  --tag-border: oklch(32% 0.15 var(--tag-hue));
 
-  --tag-hover-bg: var(--color-primary-500);
+  --tag-hover-bg: oklch(55% 0.24 var(--tag-hue));
   --tag-hover-color: oklch(100% 0 0);
-  --tag-hover-border: var(--color-primary-500);
+  --tag-hover-border: oklch(55% 0.24 var(--tag-hue));
 
   --tag-focus-color: var(--focus-ring-color);
 

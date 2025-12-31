@@ -1,0 +1,232 @@
+---
+/**
+ * カテゴリ一覧ページ
+ * 全ブログ記事のカテゴリを収集して表示
+ */
+
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import CategoryBadge from '../../components/CategoryBadge.astro';
+import { t, getLanguage } from '../../i18n';
+
+// 全ブログ記事を取得（本番環境ではdraft記事を除外）
+const posts = await getCollection('blog', ({ data }) => {
+  return import.meta.env.PROD ? data.draft !== true : true;
+});
+
+// カテゴリを収集・集計
+interface CategoryInfo {
+  name: string;
+  count: number;
+  slug: string;
+}
+
+const categoryMap = new Map<string, number>();
+posts.forEach(post => {
+  const category = post.data.category;
+  if (category && category.trim() !== '') {
+    categoryMap.set(category, (categoryMap.get(category) || 0) + 1);
+  }
+});
+
+// カテゴリ情報の配列を作成し、アルファベット順でソート
+const categories: CategoryInfo[] = Array.from(categoryMap.entries())
+  .map(([name, count]) => ({
+    name,
+    count,
+    slug: name.toLowerCase()
+  }))
+  .sort((a, b) => a.name.localeCompare(b.name));
+
+// ページメタデータ
+const lang = getLanguage();
+const pageTitle = t('category.title');
+const pageDescription = lang === 'ja'
+  ? `${categories.length}個のカテゴリで記事を分類しています。`
+  : `Organizing articles with ${categories.length} categories.`;
+---
+
+<html lang={lang}>
+  <head>
+    <BaseHead title={pageTitle} description={pageDescription} />
+    <style>
+      .category-container {
+        width: var(--content-max-width);
+        max-width: calc(100% - 2em);
+        margin: var(--space-2) auto var(--space-8);
+        padding: 0 var(--space-4) var(--space-4);
+      }
+
+      .page-header {
+        text-align: center;
+        margin-bottom: var(--space-8);
+        padding-bottom: var(--space-4);
+        border-bottom: 2px solid var(--color-gray-200);
+      }
+
+      .page-title {
+        font-size: var(--font-size-4xl);
+        font-weight: var(--font-weight-bold);
+        color: var(--color-text-primary);
+        margin: 0 0 var(--space-2) 0;
+      }
+
+      .page-description {
+        font-size: var(--font-size-lg);
+        color: var(--color-text-secondary);
+        margin: 0;
+      }
+
+      .category-stats {
+        --category-hue: calc(var(--primary-hue) + 20);
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: var(--space-4);
+        margin-bottom: var(--space-8);
+        padding: var(--space-4);
+        background-color: oklch(97% 0.02 var(--category-hue) / 0.5);
+        border-radius: var(--radius-lg);
+        border: 1px solid oklch(88% 0.10 var(--category-hue));
+      }
+
+      .stat-item {
+        text-align: center;
+      }
+
+      .stat-number {
+        font-size: var(--font-size-3xl);
+        font-weight: var(--font-weight-bold);
+        color: oklch(55% 0.24 var(--category-hue));
+        display: block;
+      }
+
+      .stat-label {
+        font-size: var(--font-size-sm);
+        color: var(--color-text-secondary);
+        margin-top: var(--space-1);
+      }
+
+      .category-section {
+        margin: var(--space-8) 0;
+        padding: var(--space-6);
+        background: var(--color-surface);
+        border-radius: var(--radius-xl);
+        border: 1px solid var(--color-gray-200);
+      }
+
+      .category-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-3);
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: var(--space-12) var(--space-4);
+        color: var(--color-text-secondary);
+      }
+
+      .empty-state h2 {
+        font-size: var(--font-size-2xl);
+        margin-bottom: var(--space-2);
+        color: var(--color-text-primary);
+      }
+
+      /* レスポンシブ対応 */
+      @media (max-width: 768px) {
+        .category-container {
+          margin: 0 auto var(--space-4);
+          padding: 0 var(--space-2) var(--space-2);
+        }
+
+        .page-title {
+          font-size: var(--font-size-2xl);
+        }
+
+        .category-stats {
+          grid-template-columns: repeat(2, 1fr);
+          gap: var(--space-2);
+          padding: var(--space-3);
+        }
+
+        .stat-number {
+          font-size: var(--font-size-2xl);
+        }
+
+        .category-grid {
+          gap: var(--space-2);
+        }
+      }
+
+      /* ダークモード対応 */
+      html.dark .category-section {
+        background: var(--color-gray-800);
+        border-color: var(--color-gray-700);
+      }
+
+      html.dark .category-stats {
+        background-color: oklch(25% 0.12 var(--category-hue) / 0.3);
+        border-color: oklch(32% 0.15 var(--category-hue));
+      }
+
+      html.dark .page-header {
+        border-bottom-color: var(--color-gray-700);
+      }
+    </style>
+  </head>
+
+  <body>
+    <Header />
+    <main style="view-transition-name: main-content;">
+      <div class="category-container">
+        <Breadcrumb items={[
+          { label: t('breadcrumb.home'), href: '/' },
+          { label: t('breadcrumb.category') }
+        ]} />
+        <header class="page-header">
+          <h1 class="page-title">{pageTitle}</h1>
+          <p class="page-description">{pageDescription}</p>
+        </header>
+
+        {categories.length > 0 ? (
+          <>
+            <!-- 統計情報 -->
+            <section class="category-stats">
+              <div class="stat-item">
+                <span class="stat-number">{categories.length}</span>
+                <div class="stat-label">{t('category.totalCategories')}</div>
+              </div>
+              <div class="stat-item">
+                <span class="stat-number">{posts.length}</span>
+                <div class="stat-label">{lang === 'ja' ? '総記事数' : 'Total Posts'}</div>
+              </div>
+            </section>
+
+            <!-- カテゴリ一覧 -->
+            <section class="category-section">
+              <div class="category-grid" role="list" aria-label={t('category.ariaLabel')}>
+                {categories.map(category => (
+                  <CategoryBadge
+                    category={category.name}
+                    href={`/category/${category.slug}/`}
+                    count={category.count}
+                  />
+                ))}
+              </div>
+            </section>
+          </>
+        ) : (
+          <!-- 空の状態 -->
+          <section class="empty-state">
+            <h2>{t('category.noPostsFound')}</h2>
+            <p>{t('category.noPostsFoundDesc')}</p>
+          </section>
+        )}
+      </div>
+    </main>
+    <Footer />
+  </body>
+</html>

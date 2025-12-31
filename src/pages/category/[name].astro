@@ -1,8 +1,7 @@
 ---
 /**
- * タグ詳細ページ
- * 特定のタグを持つ記事一覧を表示
- * 親タグの場合は子タグの記事も含む
+ * カテゴリ別記事一覧ページ
+ * 特定のカテゴリに属する記事一覧を表示
  */
 
 import { getCollection } from 'astro:content';
@@ -11,9 +10,8 @@ import Breadcrumb from '../../components/Breadcrumb.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
+import CategoryBadge from '../../components/CategoryBadge.astro';
 import TagBadge from '../../components/TagBadge.astro';
-import { TagService } from '../../utils/tag/service';
-import { slugToTag, isDescendantTag } from '../../utils/tag/validation';
 import { t, getLanguage } from '../../i18n';
 
 export async function getStaticPaths() {
@@ -22,110 +20,63 @@ export async function getStaticPaths() {
     return import.meta.env.PROD ? data.draft !== true : true;
   });
 
-  // タグサービスを使ってタグ情報を収集
-  const tagService = new TagService();
-
+  // カテゴリごとにグループ化
+  const categories = new Map<string, typeof posts>();
   posts.forEach(post => {
-    const frontmatterTags = post.data.tags || [];
-    tagService.addPostTags(post.id, frontmatterTags, []);
-  });
-
-  // 全タグのスラッグを生成（公開記事が0件のタグは除外）
-  const allTags = tagService.getAllTags().filter(tag => tag.count > 0);
-
-  return allTags.map(tag => {
-    // タグ名を階層に応じて配列に分割（スラッシュをそのまま使用）
-    const slugParts = tag.name.split('/');
-
-    return {
-      params: {
-        slug: slugParts.length === 1 ? slugParts[0] : slugParts.join('/')  // 文字列として渡す
-      },
-      props: {
-        tag,
-        posts,
-        tagService
+    const category = post.data.category;
+    if (category && category.trim() !== '') {
+      if (!categories.has(category)) {
+        categories.set(category, []);
       }
-    };
+      categories.get(category)!.push(post);
+    }
   });
+
+  return Array.from(categories.entries()).map(([category, categoryPosts]) => ({
+    params: { name: category.toLowerCase() },
+    props: {
+      category,
+      posts: categoryPosts.sort(
+        (a, b) => b.data.published.valueOf() - a.data.published.valueOf()
+      )
+    }
+  }));
 }
 
-const { tag, posts, tagService } = Astro.props;
-const { slug } = Astro.params;
+interface Props {
+  category: string;
+  posts: Awaited<ReturnType<typeof getCollection<'blog'>>>;
+}
 
-// スラッグ配列からタグ名を復元（スラッシュで結合）
-const tagName = Array.isArray(slug) ? slug.join('/') : slug;
-
-// このタグとその子孫タグを取得
-const hierarchy = tagService.getTagHierarchy();
-const relatedTags = tagService.getTagWithAllDescendants(tagName);
-const relatedTagNames = relatedTags.map(t => t.name);
-
-// タグに関連する記事をフィルタリング
-const relatedPosts = posts.filter(post => {
-  const postTags = post.data.tags || [];
-  
-  // frontmatterにこのタグまたは子孫タグが含まれているかチェック
-  return postTags.some(postTag => {
-    return relatedTagNames.includes(postTag) || 
-           postTag === tagName ||
-           isDescendantTag(postTag, tagName);
-  });
-});
-
-// 記事を日付順でソート（新しい順）
-const sortedPosts = relatedPosts.sort((a, b) =>
-  new Date(b.data.published).getTime() - new Date(a.data.published).getTime()
-);
+const { category, posts } = Astro.props;
 
 // パンくずリスト用のアイテム配列を構築
-function buildBreadcrumbItems(tagName: string) {
-  const items = [
-    { label: t('breadcrumb.home'), href: '/' },
-    { label: t('breadcrumb.tags'), href: '/tags/' }
-  ];
-
-  const parts = tagName.split('/');
-  for (let i = 0; i < parts.length; i++) {
-    const partialTag = parts.slice(0, i + 1).join('/');
-    const isLast = i === parts.length - 1;
-    items.push({
-      label: parts[i],
-      href: isLast ? undefined : `/tags/${partialTag.toLowerCase()}/`
-    });
-  }
-
-  return items;
-}
-
-const breadcrumbItems = buildBreadcrumbItems(tagName);
-const isHierarchical = tagName.includes('/');
-
-// 関連する子タグを取得
-const childTags = tagService.getAllTags().filter(t => 
-  t.parent === tagName && t.name !== tagName
-);
+const breadcrumbItems = [
+  { label: t('breadcrumb.home'), href: '/' },
+  { label: t('breadcrumb.category'), href: '/category/' },
+  { label: category }
+];
 
 // ページメタデータと翻訳
 const lang = getLanguage();
 const pageTitle = lang === 'ja'
-  ? `${tagName} のタグ記事`
-  : `Posts tagged: ${tagName}`;
+  ? `${category} のカテゴリ記事`
+  : `Category: ${category}`;
 const pageDescription = lang === 'ja'
-  ? `${tagName}タグが付けられた${sortedPosts.length}件の記事一覧`
-  : `${sortedPosts.length} posts tagged with ${tagName}`;
+  ? `${category}カテゴリの${posts.length}件の記事一覧`
+  : `${posts.length} posts in category ${category}`;
 ---
 
 <html lang={lang}>
   <head>
     <BaseHead title={pageTitle} description={pageDescription} />
     <style>
-      /* タグ用色相（primaryHueと同じ = シフトなし） */
+      /* カテゴリ用の色相シフト（+20°）を定義 */
       :root {
-        --tag-hue: var(--primary-hue);
+        --category-hue: calc(var(--primary-hue) + 20);
       }
 
-      .tag-page-container {
+      .category-page-container {
         width: var(--content-max-width);
         max-width: calc(100% - 2em);
         margin: var(--space-2) auto var(--space-8);
@@ -148,9 +99,9 @@ const pageDescription = lang === 'ja'
         gap: var(--space-2);
       }
 
-      .tag-icon {
+      .category-icon {
         font-size: var(--font-size-3xl);
-        color: oklch(55% 0.24 var(--tag-hue));
+        color: oklch(55% 0.24 var(--category-hue));
       }
 
       .page-meta {
@@ -165,22 +116,6 @@ const pageDescription = lang === 'ja'
         display: flex;
         align-items: center;
         gap: var(--space-1);
-      }
-
-      .child-tags {
-        margin-bottom: var(--space-8);
-      }
-
-      .child-tags h2 {
-        font-size: var(--font-size-lg);
-        margin-bottom: var(--space-2);
-        color: var(--color-text-primary);
-      }
-
-      .child-tags-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: var(--space-2);
       }
 
       .posts-section h2 {
@@ -209,7 +144,7 @@ const pageDescription = lang === 'ja'
       }
 
       .post-card:hover {
-        border-color: oklch(55% 0.24 var(--tag-hue));
+        border-color: oklch(55% 0.24 var(--category-hue));
         box-shadow: var(--shadow-md);
         transform: translateY(-2px);
       }
@@ -221,7 +156,7 @@ const pageDescription = lang === 'ja'
       }
 
       .post-link:hover .post-title {
-        color: oklch(55% 0.24 var(--tag-hue));
+        color: oklch(55% 0.24 var(--category-hue));
       }
 
       .post-date {
@@ -271,9 +206,29 @@ const pageDescription = lang === 'ja'
         color: var(--color-text-primary);
       }
 
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-2);
+        margin-top: var(--space-8);
+        padding: var(--space-3) var(--space-4);
+        background: var(--color-surface);
+        border: 1px solid var(--color-gray-200);
+        border-radius: var(--radius-lg);
+        color: var(--color-text-secondary);
+        text-decoration: none;
+        font-size: var(--font-size-sm);
+        transition: all var(--duration-fast) var(--easing-default);
+      }
+
+      .back-link:hover {
+        border-color: oklch(55% 0.24 var(--category-hue));
+        color: oklch(55% 0.24 var(--category-hue));
+      }
+
       /* レスポンシブ対応 */
       @media (max-width: 768px) {
-        .tag-page-container {
+        .category-page-container {
           margin: 0 auto var(--space-4);
           padding: 0 var(--space-2) var(--space-2);
         }
@@ -299,7 +254,6 @@ const pageDescription = lang === 'ja'
           order: -1;
           white-space: normal;
         }
-
       }
 
       /* ダークモード対応 */
@@ -317,8 +271,18 @@ const pageDescription = lang === 'ja'
       }
 
       html.dark .post-card:hover {
-        border-color: oklch(65% 0.20 var(--tag-hue));
+        border-color: oklch(65% 0.20 var(--category-hue));
         box-shadow: var(--shadow-lg);
+      }
+
+      html.dark .back-link {
+        background: var(--color-gray-800);
+        border-color: var(--color-gray-700);
+      }
+
+      html.dark .back-link:hover {
+        border-color: oklch(65% 0.20 var(--category-hue));
+        color: oklch(65% 0.20 var(--category-hue));
       }
     </style>
   </head>
@@ -326,57 +290,28 @@ const pageDescription = lang === 'ja'
   <body>
     <Header />
     <main style="view-transition-name: main-content;">
-      <div class="tag-page-container">
+      <div class="category-page-container">
         <!-- パンくずナビゲーション -->
         <Breadcrumb items={breadcrumbItems} />
 
         <!-- ページヘッダー -->
         <header class="page-header">
           <h1 class="page-title">
-            <span class="tag-icon">#</span>
-            {tagName}
+            <CategoryBadge category={category} />
           </h1>
-          
+
           <div class="page-meta">
             <div class="meta-item">
-              <strong>{sortedPosts.length}</strong>{t('tags.posts')}
+              <strong>{posts.length}</strong>{t('category.posts')}
             </div>
-            {isHierarchical && (
-              <div class="meta-item">
-                {t('tags.hierarchicalLevel').replace('{level}', String(tag.level + 1))}
-              </div>
-            )}
-            {relatedTags.length > 1 && (
-              <div class="meta-item">
-                {t('tags.relatedTags').replace('{count}', String(relatedTags.length))}
-              </div>
-            )}
           </div>
         </header>
 
-        <!-- 子タグ一覧 -->
-        {childTags.length > 0 && (
-          <section class="child-tags">
-            <h2>{t('tags.subTags')}</h2>
-            <div class="child-tags-list">
-              {childTags.map(childTag => (
-                <TagBadge
-                  tag={childTag.name}
-                  href={`/tags/${childTag.name.toLowerCase()}/`}
-                  count={childTag.count}
-                />
-              ))}
-            </div>
-          </section>
-        )}
-
         <!-- 記事一覧 -->
         <section class="posts-section">
-          <h2>{t('tags.postList')}</h2>
-          
-          {sortedPosts.length > 0 ? (
+          {posts.length > 0 ? (
             <div class="posts-grid">
-              {sortedPosts.map((post) => (
+              {posts.map((post) => (
                 <div class="post-card">
                   <div class="post-date">
                     <FormattedDate date={post.data.published} />
@@ -402,11 +337,17 @@ const pageDescription = lang === 'ja'
             </div>
           ) : (
             <div class="empty-state">
-              <h2>{t('tags.noPostsFound')}</h2>
-              <p>{t('tags.noPostsFoundDesc')}</p>
+              <h2>{t('category.noPostsFound')}</h2>
+              <p>{t('category.noPostsFoundDesc')}</p>
             </div>
           )}
         </section>
+
+        <!-- カテゴリ一覧へのリンク -->
+        <a href="/category/" class="back-link">
+          <span aria-hidden="true">&larr;</span>
+          {t('category.backToList')}
+        </a>
       </div>
     </main>
     <Footer />

@@ -1,0 +1,202 @@
+---
+/**
+ * カテゴリバッジコンポーネント
+ * 個別のカテゴリを表示するための再利用可能なコンポーネント
+ *
+ * タグバッジと視覚的に区別できる緑系のカラースキームを使用。
+ * CSS変数を使用してテーマとダークモードに対応。
+ */
+
+interface Props {
+  /** カテゴリ名 */
+  category: string;
+  /** カテゴリページへのURL（省略時はリンクなし） */
+  href?: string;
+  /** 記事数（省略時は表示しない） */
+  count?: number;
+  /** 追加のCSSクラス */
+  className?: string;
+  /** アクセシビリティ用のaria-label */
+  ariaLabel?: string;
+}
+
+const {
+  category,
+  href,
+  count,
+  className = '',
+  ariaLabel
+} = Astro.props;
+
+// 空カテゴリの場合は何も表示しない
+if (!category || category.trim() === '') {
+  return null;
+}
+
+// CSSクラスを構築
+const categoryClasses = [
+  'category-badge',
+  className
+].filter(Boolean).join(' ');
+
+// アクセシビリティ属性
+const accessibility = {
+  'aria-label': ariaLabel || `カテゴリ: ${category}${count ? ` (${count}件の記事)` : ''}`,
+  'role': href ? 'link' : 'text',
+  'tabindex': href ? '0' : undefined
+};
+---
+
+{href ? (
+  <a
+    href={href}
+    class={categoryClasses}
+    {...accessibility}
+  >
+    <span class="category-icon" aria-hidden="true"></span>
+    <span class="category-text">{category}</span>
+    {count && count > 0 && (
+      <span class="category-count" aria-hidden="true">
+        {count}
+      </span>
+    )}
+  </a>
+) : (
+  <span
+    class={categoryClasses}
+    {...accessibility}
+  >
+    <span class="category-icon" aria-hidden="true"></span>
+    <span class="category-text">{category}</span>
+    {count && count > 0 && (
+      <span class="category-count" aria-hidden="true">
+        {count}
+      </span>
+    )}
+  </span>
+)}
+
+<style>
+  /* カテゴリ用の色相シフト（+20°）を定義 */
+  .category-badge {
+    --category-hue: calc(var(--primary-hue) + 20);
+
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    padding: var(--category-padding-y, 0.25em) var(--category-padding-x, 0.7em);
+    margin: 0 var(--category-margin-x, 0.2em) var(--category-margin-y, 0.2em) 0;
+    background-color: var(--category-bg, oklch(97% 0.02 var(--category-hue)));
+    color: var(--category-color, oklch(48% 0.22 var(--category-hue)));
+    border: 1px solid var(--category-border, oklch(88% 0.10 var(--category-hue)));
+    border-radius: var(--category-border-radius, 0.5rem);
+    font-size: var(--category-font-size, 0.875rem);
+    font-weight: var(--category-font-weight, 500);
+    line-height: var(--category-line-height, 1.2);
+    text-decoration: none;
+    transition: all var(--category-transition-duration, 0.2s) var(--category-transition-easing, ease);
+    white-space: nowrap;
+    cursor: default;
+  }
+
+  .category-badge:where(a) {
+    cursor: pointer;
+  }
+
+  /* カテゴリアイコン（フォルダ風） */
+  .category-icon::before {
+    content: '';
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    background-color: currentColor;
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z'%3E%3C/path%3E%3C/svg%3E");
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z'%3E%3C/path%3E%3C/svg%3E");
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    -webkit-mask-size: contain;
+  }
+
+  /* ホバー効果 */
+  .category-badge:where(a):hover,
+  .category-badge:where(a):focus {
+    background-color: var(--category-hover-bg, oklch(55% 0.24 var(--category-hue)));
+    color: var(--category-hover-color, oklch(100% 0 0));
+    border-color: var(--category-hover-border, oklch(55% 0.24 var(--category-hue)));
+    transform: var(--category-hover-transform, translateY(-1px));
+    box-shadow: var(--category-hover-shadow, 0 2px 4px oklch(0% 0 0 / 0.1));
+  }
+
+  /* フォーカス表示 */
+  .category-badge:where(a):focus {
+    outline: 2px solid var(--category-focus-color, oklch(55% 0.24 var(--category-hue)));
+    outline-offset: var(--category-focus-offset, 2px);
+  }
+
+  .category-text {
+    font-family: inherit;
+  }
+
+  .category-count {
+    background-color: var(--category-count-bg, oklch(100% 0 0 / 0.3));
+    color: inherit;
+    padding: var(--category-count-padding-y, 0.1em) var(--category-count-padding-x, 0.4em);
+    border-radius: var(--category-count-border-radius, 0.75rem);
+    font-size: var(--category-count-font-size, 0.75em);
+    font-weight: var(--category-count-font-weight, 600);
+    min-width: var(--category-count-min-width, 1.2em);
+    text-align: center;
+  }
+
+  /* ダークモード対応 */
+  html.dark .category-badge {
+    background-color: var(--category-dark-bg, oklch(25% 0.12 var(--category-hue)));
+    color: var(--category-dark-color, oklch(88% 0.10 var(--category-hue)));
+    border-color: var(--category-dark-border, oklch(32% 0.15 var(--category-hue)));
+  }
+
+  html.dark .category-badge:where(a):hover,
+  html.dark .category-badge:where(a):focus {
+    background-color: var(--category-dark-hover-bg, oklch(55% 0.24 var(--category-hue)));
+    color: var(--category-dark-hover-color, oklch(100% 0 0));
+    border-color: var(--category-dark-hover-border, oklch(55% 0.24 var(--category-hue)));
+  }
+
+  /* 小さい画面での調整 */
+  @media (max-width: 640px) {
+    .category-badge {
+      font-size: var(--category-mobile-font-size, 0.8rem);
+      padding: var(--category-mobile-padding-y, 0.2em) var(--category-mobile-padding-x, 0.5em);
+    }
+
+    .category-count {
+      font-size: var(--category-mobile-count-font-size, 0.7em);
+      padding: var(--category-mobile-count-padding-y, 0.05em) var(--category-mobile-count-padding-x, 0.3em);
+    }
+  }
+
+  /* アクセシビリティ: タッチデバイス用の最小タップサイズ確保 */
+  @media (hover: none) and (pointer: coarse) {
+    .category-badge {
+      min-height: 32px;
+      padding: var(--category-mobile-padding-y, 0.15em) var(--category-mobile-padding-x, 0.5em);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  /* 小画面でのタッチターゲットサイズ確保 */
+  @media (max-width: 640px) {
+    .category-badge {
+      min-height: 32px;
+      padding: var(--category-mobile-padding-y, 0.15em) var(--category-mobile-padding-x, 0.5em);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+</style>

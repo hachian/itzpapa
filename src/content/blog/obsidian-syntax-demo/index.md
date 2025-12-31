@@ -3,6 +3,7 @@ title: Obsidian Syntax Guide
 description: >-
   A guide to Obsidian-compatible syntax and custom extensions supported in
   itzpapa blog
+category: Tutorial
 tags:
   - obsidian
   - itzpapa

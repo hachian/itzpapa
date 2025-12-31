@@ -83,6 +83,17 @@ export interface TranslationKeys {
   'error.notFound.goHome': string;
   'error.notFound.viewBlog': string;
 
+  // カテゴリ関連
+  'nav.category': string;
+  'category.title': string;
+  'category.backToList': string;
+  'category.ariaLabel': string;
+  'category.totalCategories': string;
+  'category.posts': string;
+  'category.noPostsFound': string;
+  'category.noPostsFoundDesc': string;
+  'breadcrumb.category': string;
+
   // Aboutページ
   'about.title': string;
   'about.description': string;
@@ -178,6 +189,16 @@ export const translations: Translations = {
     'error.notFound.message': 'お探しのページは存在しないか、移動した可能性があります。',
     'error.notFound.goHome': 'トップページへ戻る',
     'error.notFound.viewBlog': 'ブログ記事を見る',
+    // カテゴリ関連
+    'nav.category': 'カテゴリ',
+    'category.title': 'カテゴリ一覧',
+    'category.backToList': 'カテゴリ一覧に戻る',
+    'category.ariaLabel': 'カテゴリ',
+    'category.totalCategories': '総カテゴリ数',
+    'category.posts': '件の記事',
+    'category.noPostsFound': '記事が見つかりません',
+    'category.noPostsFoundDesc': 'このカテゴリの記事はまだありません。',
+    'breadcrumb.category': 'カテゴリ',
     // Aboutページ
     'about.title': 'About itzpapa',
     'about.description': 'Obsidian記事をそのまま公開できるAstroブログテンプレート',
@@ -269,6 +290,16 @@ export const translations: Translations = {
     'error.notFound.message': 'The page you are looking for does not exist or may have been moved.',
     'error.notFound.goHome': 'Go to Home',
     'error.notFound.viewBlog': 'View Blog Posts',
+    // Category
+    'nav.category': 'Category',
+    'category.title': 'Categories',
+    'category.backToList': 'Back to Categories',
+    'category.ariaLabel': 'Category',
+    'category.totalCategories': 'Total Categories',
+    'category.posts': ' posts',
+    'category.noPostsFound': 'No posts found',
+    'category.noPostsFoundDesc': 'There are no posts in this category yet.',
+    'breadcrumb.category': 'Category',
     // About page
     'about.title': 'About itzpapa',
     'about.description': 'An Astro blog template for publishing Obsidian articles',
