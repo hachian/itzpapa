@@ -1,8 +1,6 @@
 ---
-title: "Calloutのテスト"
-pubDate: 2025-08-14
-description: "Obsidianスタイルのcallout機能の包括的なテストです（13タイプ + エイリアス対応）"
-heroImage: "./itzpapa3.jpg"
+title: Calloutのテスト
+description: Obsidianスタイルのcallout機能の包括的なテストです（13タイプ + エイリアス対応）
 categories:
   - test
 tags:
@@ -11,6 +9,8 @@ tags:
   - markdown
   - test
 draft: true
+published: 2025-08-14T00:00:00.000Z
+image: ./itzpapa3.jpg
 ---
 
 # Calloutのテスト

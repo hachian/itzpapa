@@ -1,11 +1,14 @@
 ---
-title: "Obsidian Syntax Guide"
-pubDate: 2025-12-20
-description: "A guide to Obsidian-compatible syntax and custom extensions supported in itzpapa blog"
+title: Obsidian Syntax Guide
+description: >-
+  A guide to Obsidian-compatible syntax and custom extensions supported in
+  itzpapa blog
 tags:
   - obsidian
   - itzpapa
   - demo
+published: 2025-12-20T00:00:00.000Z
+updated: 2025-12-31T00:00:00.000Z
 ---
 
 # Obsidian Syntax Guide

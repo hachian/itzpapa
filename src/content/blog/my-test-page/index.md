@@ -1,8 +1,6 @@
 ---
-title: "My Test Page Example"
-pubDate: 2025-08-12
-description: "複数の単語を含むページ名のテスト"
-heroImage: "./itzpapa6.jpg"
+title: My Test Page Example
+description: 複数の単語を含むページ名のテスト
 categories:
   - test
   - example
@@ -10,6 +8,8 @@ tags:
   - wikilink
   - multi-word
 draft: true
+published: 2025-08-12T00:00:00.000Z
+image: ./itzpapa6.jpg
 ---
 
 # My Test Page Example

@@ -1,14 +1,14 @@
 ---
-title: "TASK-103 統合テスト"
-pubDate: 2025-01-01
-description: "Markdown記法の統合テスト"
-heroImage: "./itzpapa2.jpg"
+title: TASK-103 統合テスト
+description: Markdown記法の統合テスト
 categories:
   - test
 tags:
   - test
   - integration
 draft: true
+published: 2025-01-01T00:00:00.000Z
+image: ./itzpapa2.jpg
 ---
 
 # Markdown記法統合テスト

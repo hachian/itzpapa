@@ -1,8 +1,6 @@
 ---
-title: "Mermaidダイアグラムのテスト"
-pubDate: 2025-08-12
-description: "Mermaidによる各種ダイアグラムの表示をテストするための記事です"
-heroImage: "./itzpapa5.jpg"
+title: Mermaidダイアグラムのテスト
+description: Mermaidによる各種ダイアグラムの表示をテストするための記事です
 categories:
   - test
 tags:
@@ -11,6 +9,8 @@ tags:
   - flowchart
   - test
 draft: true
+published: 2025-08-12T00:00:00.000Z
+image: ./itzpapa5.jpg
 ---
 
 # Mermaidダイアグラムのテスト

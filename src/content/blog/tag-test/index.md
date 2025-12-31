@@ -1,10 +1,13 @@
 ---
-title: 'タグ機能テストページ'
-description: 'タグ機能の動作確認用テストページ'
-pubDate: 'Dec 17 2024'
-heroImage: './itzpapa-tag-test.jpg'
-tags: [programming, astro, 日本語タグ]
+title: タグ機能テストページ
+description: タグ機能の動作確認用テストページ
+tags:
+  - programming
+  - astro
+  - 日本語タグ
 draft: true
+published: Dec 17 2024
+image: ./itzpapa-tag-test.jpg
 ---
 
 # タグ機能の総合テスト

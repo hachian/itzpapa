@@ -1,11 +1,13 @@
 ---
-title: "Site Configuration Guide"
-pubDate: 2025-12-20
-description: "How to configure site.config.ts: site info, theme, navigation, social links, SEO, and more"
+title: Site Configuration Guide
+description: >-
+  How to configure site.config.ts: site info, theme, navigation, social links,
+  SEO, and more
 tags:
   - config
   - setup
   - guide
+published: 2025-12-20T00:00:00.000Z
 ---
 
 # Site Configuration Guide

@@ -1,8 +1,6 @@
 ---
-title: "マークハイライト機能のテスト"
-pubDate: 2025-08-18
-description: "マークハイライト機能の動作をテストするための総合的なテストページです"
-heroImage: "./itzpapa2.jpg"
+title: マークハイライト機能のテスト
+description: マークハイライト機能の動作をテストするための総合的なテストページです
 categories:
   - test
   - mark-highlight
@@ -12,6 +10,8 @@ tags:
   - test
   - plugins
 draft: true
+published: 2025-08-18T00:00:00.000Z
+image: ./itzpapa2.jpg
 ---
 
 # マークハイライト機能のテスト

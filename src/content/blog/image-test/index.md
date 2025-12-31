@@ -1,9 +1,9 @@
 ---
-title: 'Image Processing Test'
-description: 'Testing how Astro processes markdown images'
-pubDate: '2025-01-13'
-heroImage: './itzpapa1.jpg'
+title: Image Processing Test
+description: Testing how Astro processes markdown images
 draft: true
+published: '2025-01-13'
+image: ./itzpapa1.jpg
 ---
 
 # Testing Image Processing in Astro

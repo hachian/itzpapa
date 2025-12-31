@@ -74,8 +74,8 @@ const relatedPosts = posts.filter(post => {
 });
 
 // 記事を日付順でソート（新しい順）
-const sortedPosts = relatedPosts.sort((a, b) => 
-  new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+const sortedPosts = relatedPosts.sort((a, b) =>
+  new Date(b.data.published).getTime() - new Date(a.data.published).getTime()
 );
 
 // パンくずリスト用のアイテム配列を構築
@@ -374,7 +374,7 @@ const pageDescription = lang === 'ja'
               {sortedPosts.map((post) => (
                 <div class="post-card">
                   <div class="post-date">
-                    <FormattedDate date={post.data.pubDate} />
+                    <FormattedDate date={post.data.published} />
                   </div>
                   <div class="post-content">
                     <a href={`/blog/${post.id}/`} class="post-link">

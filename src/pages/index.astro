@@ -19,7 +19,7 @@ const allPosts = await getCollection('blog', ({ data }) => {
 	return import.meta.env.PROD ? data.draft !== true : true;
 });
 const latestPosts = allPosts
-	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+	.sort((a, b) => b.data.published.valueOf() - a.data.published.valueOf())
 	.slice(0, 6);
 
 const lang = getLanguage();
@@ -95,9 +95,9 @@ const siteDescription = getSiteDescription();
 							{latestPosts.map((post, index) => (
 								<article class="card card--link" aria-setsize={latestPosts.length} aria-posinset={index + 1}>
 									<a href={`/blog/${post.id}/`} class="post-card" aria-label={`${post.data.title} - ${post.data.description}`}>
-										{post.data.heroImage ? (
+										{post.data.image ? (
 											<Image
-												src={post.data.heroImage}
+												src={post.data.image}
 												alt=""
 												class="post-card__thumbnail"
 												width={400}
@@ -134,7 +134,7 @@ const siteDescription = getSiteDescription();
 											<h3 class="post-card__title">{post.data.title}</h3>
 											<p class="post-card__description">{post.data.description}</p>
 											<span class="post-card__date">
-												<FormattedDate date={post.data.pubDate} />
+												<FormattedDate date={post.data.published} />
 											</span>
 										</div>
 									</a>

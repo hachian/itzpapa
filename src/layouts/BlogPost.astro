@@ -26,12 +26,12 @@ type Props = CollectionEntry<'blog'>['data'] & {
   /** コメントセクションを表示するか（デフォルト: true） */
   showComments?: boolean;
   /** ライトモード用ヒーロー画像（ダークモード対応時に使用） */
-  heroImageLight?: ImageMetadata;
+  imageLight?: ImageMetadata;
   /** ダークモード用ヒーロー画像（ダークモード対応時に使用） */
-  heroImageDark?: ImageMetadata;
+  imageDark?: ImageMetadata;
 };
 
-const { title, description, pubDate, updatedDate, heroImage, heroImageLight, heroImageDark, tags, headings = [], readingTime, slug, showComments = true } = Astro.props;
+const { title, description, published, updated, image, imageLight, imageDark, tags, headings = [], readingTime, slug, showComments = true } = Astro.props;
 
 // 機能フラグを取得
 const { features, site } = siteConfig;
@@ -40,8 +40,8 @@ const lang = getLanguage();
 // 記事の絶対URL
 const articleUrl = new URL(Astro.url.pathname, Astro.site).toString();
 
-// OG画像URL（heroImageがある場合）
-const ogImageUrl = heroImage ? new URL(heroImage.src, Astro.site).toString() : undefined;
+// OG画像URL（imageがある場合）
+const ogImageUrl = image ? new URL(image.src, Astro.site).toString() : undefined;
 
 // パンくずリスト用データ
 const breadcrumbItems = [
@@ -57,11 +57,11 @@ const showTableOfContents = features.tableOfContents;
 		<BaseHead
 			title={title}
 			description={description}
-			image={heroImage}
+			image={image}
 			slug={slug}
 			article={{
-				publishedTime: pubDate,
-				modifiedTime: updatedDate,
+				publishedTime: published,
+				modifiedTime: updated,
 				tags: tags,
 			}}
 		/>
@@ -70,8 +70,8 @@ const showTableOfContents = features.tableOfContents;
 			article={{
 				title,
 				description,
-				datePublished: pubDate,
-				dateModified: updatedDate,
+				datePublished: published,
+				dateModified: updated,
 				image: ogImageUrl,
 				tags,
 				url: articleUrl,
@@ -213,8 +213,7 @@ const showTableOfContents = features.tableOfContents;
 			}
 
 			.article-meta__updated {
-				font-style: italic;
-				color: var(--color-text-secondary);
+				color: var(--color-primary);
 			}
 
 			/* タグ */
@@ -322,13 +321,13 @@ const showTableOfContents = features.tableOfContents;
 					]} />
 				</div>
 				<div class="hero-image">
-					{heroImageLight && heroImageDark ? (
+					{imageLight && imageDark ? (
 						<>
-							<Image width={1020} height={510} src={heroImageLight} alt="" loading="eager" decoding="async" format="webp" class="hero-image--light" />
-							<Image width={1020} height={510} src={heroImageDark} alt="" loading="eager" decoding="async" format="webp" class="hero-image--dark" />
+							<Image width={1020} height={510} src={imageLight} alt="" loading="eager" decoding="async" format="webp" class="hero-image--light" />
+							<Image width={1020} height={510} src={imageDark} alt="" loading="eager" decoding="async" format="webp" class="hero-image--dark" />
 						</>
-					) : heroImage ? (
-						<Image width={1020} height={510} src={heroImage} alt="" loading="eager" decoding="async" format="webp" />
+					) : image ? (
+						<Image width={1020} height={510} src={image} alt="" loading="eager" decoding="async" format="webp" />
 					) : import.meta.env.DEV ? (
 						/* dev環境: フォールバック画像を使用（動的生成が機能しないため） */
 						<>
@@ -350,19 +349,19 @@ const showTableOfContents = features.tableOfContents;
 								<span class="article-meta__item">
 									<span class="article-meta__icon" aria-hidden="true">📅</span>
 									<span class="article-meta__date">
-										<FormattedDate date={pubDate} />
+										<FormattedDate date={published} />
 									</span>
 								</span>
+								{updated && (
+									<span class="article-meta__item article-meta__updated">
+										<span class="article-meta__icon" aria-hidden="true">🔄</span>
+										<strong><FormattedDate date={updated} /></strong>
+									</span>
+								)}
 								{readingTime && (
 									<span class="article-meta__item">
 										<span class="article-meta__icon" aria-hidden="true">⏱️</span>
 										<span class="article-meta__reading-time">{t('article.readingTime').replace('{min}', String(readingTime))}</span>
-									</span>
-								)}
-								{updatedDate && (
-									<span class="article-meta__item article-meta__updated">
-										<span class="article-meta__icon" aria-hidden="true">🔄</span>
-										<span>{lang === 'ja' ? '（更新：' : '(Updated: '}<FormattedDate date={updatedDate} />{lang === 'ja' ? '）' : ')'}</span>
 									</span>
 								)}
 							</div>

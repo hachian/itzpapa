@@ -1,14 +1,14 @@
 ---
-title: "Test Page with Spaces"
-pubDate: 2025-08-11
-description: "スペースを含むページ名のテスト用ページです"
-heroImage: "./itzpapa7.jpg"
+title: Test Page with Spaces
+description: スペースを含むページ名のテスト用ページです
 categories:
   - test
 tags:
   - wikilink
   - space-test
 draft: true
+published: 2025-08-11T00:00:00.000Z
+image: ./itzpapa7.jpg
 ---
 
 # Test Page with Spaces

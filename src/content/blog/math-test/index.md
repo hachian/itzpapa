@@ -1,8 +1,6 @@
 ---
-title: "数式記法のテスト"
-pubDate: 2025-08-13
-description: "LaTeX記法による数式の表示をテストするための記事です"
-heroImage: "./itzpapa4.jpg"
+title: 数式記法のテスト
+description: LaTeX記法による数式の表示をテストするための記事です
 categories:
   - test
 tags:
@@ -11,6 +9,8 @@ tags:
   - katex
   - test
 draft: true
+published: 2025-08-13T00:00:00.000Z
+image: ./itzpapa4.jpg
 ---
 
 # 数式記法のテスト

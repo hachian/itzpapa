@@ -1,9 +1,11 @@
 ---
-title: "テーブルスタイルのテスト"
-description: "Markdownテーブルの新しいスタイリングをテストするページです。"
-pubDate: "2025-12-08"
-tags: ["test", "markdown"]
+title: テーブルスタイルのテスト
+description: Markdownテーブルの新しいスタイリングをテストするページです。
+tags:
+  - test
+  - markdown
 draft: true
+published: '2025-12-08'
 ---
 
 # テーブルスタイルのテスト

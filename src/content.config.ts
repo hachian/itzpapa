@@ -7,16 +7,21 @@ const blog = defineCollection({
 	// Type-check frontmatter using a schema
 	schema: ({ image }) =>
 		z.object({
+			// Required fields
 			title: z.string(),
-			description: z.string(),
-			// Transform string to Date object
-			pubDate: z.coerce.date(),
-			updatedDate: z.coerce.date().optional(),
-			heroImage: image().optional(),
-			// タグの配列（オプショナル）
-			tags: z.array(z.string()).optional(),
-			// 下書きフラグ（trueで非公開）
+			published: z.coerce.date(),
+
+			// Optional fields with defaults
+			updated: z.coerce.date().optional(),
+			description: z.string().optional().default(''),
+			image: image().optional(),
+			tags: z.array(z.string()).optional().default([]),
+			category: z.string().optional().default(''),
 			draft: z.boolean().optional().default(false),
+			lang: z.string().optional().default(''),
+
+			// Obsidian official property
+			aliases: z.array(z.string()).optional(),
 		}),
 });
 

@@ -1,8 +1,6 @@
 ---
-title: "WikiLink記法のテスト"
-pubDate: 2025-08-15
-description: "WikiLink記法の動作をテストするための記事です"
-heroImage: "./itzpapa2.jpg"
+title: WikiLink記法のテスト
+description: WikiLink記法の動作をテストするための記事です
 categories:
   - test
 tags:
@@ -10,6 +8,8 @@ tags:
   - markdown
   - test
 draft: true
+published: 2025-08-15T00:00:00.000Z
+image: ./itzpapa2.jpg
 ---
 
 # WikiLink記法のテスト

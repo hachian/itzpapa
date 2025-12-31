@@ -18,7 +18,7 @@ const posts = (await getCollection('blog', ({ data }) => {
 	// 本番環境ではdraft: trueの記事を除外
 	return import.meta.env.PROD ? data.draft !== true : true;
 })).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+	(a, b) => b.data.published.valueOf() - a.data.published.valueOf(),
 );
 
 const lang = getLanguage();
@@ -217,11 +217,11 @@ const siteDescription = getSiteDescription();
 						<li>
 							<a href={`/blog/${post.id}/`} class="post-card">
 								<div class="post-card__image-wrapper">
-									{post.data.heroImage ? (
+									{post.data.image ? (
 										<Image
 											width={720}
 											height={360}
-											src={post.data.heroImage}
+											src={post.data.image}
 											alt=""
 											class="post-card__image"
 											loading="lazy"
@@ -281,8 +281,8 @@ const siteDescription = getSiteDescription();
 									{post.data.description && (
 										<p class="post-card__description">{post.data.description}</p>
 									)}
-									<time class="post-card__date" datetime={post.data.pubDate.toISOString()}>
-										<FormattedDate date={post.data.pubDate} />
+									<time class="post-card__date" datetime={post.data.published.toISOString()}>
+										<FormattedDate date={post.data.published} />
 									</time>
 								</div>
 							</a>

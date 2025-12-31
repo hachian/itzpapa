@@ -1,14 +1,14 @@
 ---
-title: "基本的なMarkdownのテスト"
-pubDate: 2025-08-16
-description: "Markdownの基本的な記法をテストするための記事です"
-heroImage: "./itzpapa1.jpg"
+title: 基本的なMarkdownのテスト
+description: Markdownの基本的な記法をテストするための記事です
 categories:
   - test
 tags:
   - markdown
   - test
 draft: true
+published: 2025-08-16T00:00:00.000Z
+image: ./itzpapa1.jpg
 ---
 
 # 基本的なMarkdownのテスト

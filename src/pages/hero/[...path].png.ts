@@ -7,8 +7,8 @@ export const prerender = true;
 export const getStaticPaths: GetStaticPaths = async () => {
   const posts = await getCollection("blog");
 
-  // heroImageが未設定の記事のみをフィルタリング
-  const postsWithoutHero = posts.filter((post) => !post.data.heroImage);
+  // imageが未設定の記事のみをフィルタリング
+  const postsWithoutHero = posts.filter((post) => !post.data.image);
 
   // 各記事に対してlight/darkの2つのパスを生成
   const paths = postsWithoutHero.flatMap((post) => [
@@ -42,7 +42,7 @@ export const GET: APIRoute = async ({ props }) => {
       },
     });
   } catch (error) {
-    console.error("heroImageの生成に失敗しました:", error);
+    console.error("imageの生成に失敗しました:", error);
     return new Response("Failed to generate hero image", { status: 500 });
   }
 };

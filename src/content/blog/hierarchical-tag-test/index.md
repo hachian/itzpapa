@@ -1,8 +1,6 @@
 ---
-title: '階層タグテストページ'
-description: '階層タグ機能のテスト用記事'
-pubDate: 'Dec 18 2024'
-heroImage: './itzpapa-hierarchy.jpg'
+title: 階層タグテストページ
+description: 階層タグ機能のテスト用記事
 tags:
   - tech
   - tech/web
@@ -16,6 +14,8 @@ tags:
   - programming/typescript
   - programming/python
 draft: true
+published: Dec 18 2024
+image: ./itzpapa-hierarchy.jpg
 ---
 
 # 階層タグのテスト

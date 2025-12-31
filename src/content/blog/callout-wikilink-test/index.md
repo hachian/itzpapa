@@ -1,9 +1,9 @@
 ---
-title: 'Callout + Wikilink統合テスト'
-description: 'callout内でのwikilink機能をテストします'
-pubDate: '2025-01-15'
-heroImage: './itzpapa3.jpg'
+title: Callout + Wikilink統合テスト
+description: callout内でのwikilink機能をテストします
 draft: true
+published: '2025-01-15'
+image: ./itzpapa3.jpg
 ---
 
 # Callout + Wikilink統合テスト

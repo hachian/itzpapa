@@ -1,8 +1,6 @@
 ---
-title: "タスクステータス機能のテスト"
-pubDate: 2025-12-10
-description: "Obsidian形式のタスクステータス記法（22種類）の表示をテストするページです"
-heroImage: "./itzpapa2.jpg"
+title: タスクステータス機能のテスト
+description: Obsidian形式のタスクステータス記法（22種類）の表示をテストするページです
 categories:
   - test
   - task-status
@@ -12,6 +10,8 @@ tags:
   - test
   - plugins
 draft: true
+published: 2025-12-10T00:00:00.000Z
+image: ./itzpapa2.jpg
 ---
 
 # タスクステータス機能のテスト

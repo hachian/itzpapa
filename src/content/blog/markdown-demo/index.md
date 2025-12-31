@@ -1,11 +1,11 @@
 ---
-title: "Markdown Syntax Guide"
-pubDate: 2025-12-20
-description: "A comprehensive guide to standard Markdown syntax supported in itzpapa blog"
+title: Markdown Syntax Guide
+description: A comprehensive guide to standard Markdown syntax supported in itzpapa blog
 tags:
   - markdown
   - tutorial
   - demo
+published: 2025-12-20T00:00:00.000Z
 ---
 
 # Markdown Syntax Guide
