@@ -117,7 +117,7 @@ function generateFaviconSvg(targetHue) {
   return `<svg width="32" height="32" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
   <rect width="512" height="512" fill="#ffffff" opacity="0"/>
 
-  <g transform="translate(256, 256)">
+  <g transform="translate(256, 256) scale(1.5)">
     <g id="right-side">
       <path d="M10,-45 Q40,-90 60,-80" fill="none" stroke="${colors.light}" stroke-width="6" stroke-linecap="round"/>
       <circle cx="60" cy="-80" r="10" fill="${colors.lightest}" />
