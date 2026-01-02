@@ -29,10 +29,12 @@ export default defineConfig({
 	integrations: [
 		mdx({
 			remarkPlugins: [
-				// 単一改行を<br>に変換
-				remarkBreaks,
 				// Wikilinkを最初に処理（GFMの前）
 				[remarkWikilink, { priority: 'high' }],
+				// コールアウトパース（remarkBreaksより前に処理して、ヘッダー行の改行が<br>にならないようにする）
+				[remarkCallout, { maxNestingDepth: 3 }],
+				// 単一改行を<br>に変換（コールアウト処理後に実行）
+				remarkBreaks,
 				// タスクステータス処理（Obsidian形式）
 				remarkTaskStatus,
 				// ハイライト記法処理（セキュリティ強化設定）
@@ -43,9 +45,7 @@ export default defineConfig({
 					maxInputLength: 100000
 				}],
 				// タグ処理プラグイン
-				[remarkTags, { convertToLinks: true }],
-				// コールアウトパース（データ属性を追加、CSSでスタイリング）
-				[remarkCallout, { maxNestingDepth: 3 }]
+				[remarkTags, { convertToLinks: true }]
 			],
 			rehypePlugins: [
 				// テーブルをdiv.table-wrapperでラップ（水平スクロール対応）
@@ -59,10 +59,12 @@ export default defineConfig({
 	],
 	markdown: {
 		remarkPlugins: [
-			// 単一改行を<br>に変換
-			remarkBreaks,
 			// Wikilinkを最初に処理（最高優先度）
 			[remarkWikilink, { priority: 'high' }],
+			// コールアウトパース（remarkBreaksより前に処理して、ヘッダー行の改行が<br>にならないようにする）
+			[remarkCallout, { maxNestingDepth: 3 }],
+			// 単一改行を<br>に変換（コールアウト処理後に実行）
+			remarkBreaks,
 			// タスクステータス処理（Obsidian形式）
 			remarkTaskStatus,
 			// GFM処理後にハイライト記法とタグを処理（セキュリティ強化設定）
@@ -72,9 +74,7 @@ export default defineConfig({
 				securityMode: 'auto',
 				maxInputLength: 100000
 			}],
-			[remarkTags, { convertToLinks: true }],
-			// コールアウトパース（データ属性を追加、CSSでスタイリング）
-			[remarkCallout, { maxNestingDepth: 3 }]
+			[remarkTags, { convertToLinks: true }]
 		],
 		rehypePlugins: [
 			// テーブルをdiv.table-wrapperでラップ（水平スクロール対応）
