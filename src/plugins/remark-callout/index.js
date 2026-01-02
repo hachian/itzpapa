@@ -112,7 +112,7 @@ function parseCalloutHeader(text) {
 
   // Determine fold state
   const foldable = foldIndicator === '-' || foldIndicator === '+';
-  const defaultFolded = foldIndicator === '+';
+  const defaultFolded = foldIndicator === '-';
 
   // Determine title (エイリアス名を優先、なければ正規タイプ名)
   const title = customTitle || DEFAULT_TITLES[rawType] || DEFAULT_TITLES[type] || DEFAULT_TITLES.note;
