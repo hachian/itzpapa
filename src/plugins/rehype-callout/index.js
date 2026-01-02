@@ -1,4 +1,5 @@
 import { visit } from 'unist-util-visit';
+import { escapeHtml } from '../utils/index.js';
 
 /**
  * rehype-callout - Transform blockquotes with callout data to final HTML structure
@@ -40,21 +41,6 @@ const CALLOUT_ICONS = {
 
 // Fold icon for collapsible callouts
 const FOLD_ICON_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="callout-fold-icon"><path d="m6 9 6 6 6-6"/></svg>';
-
-/**
- * Escape HTML special characters
- * @param {string} text - Text to escape
- * @returns {string}
- */
-function escapeHtml(text) {
-  if (typeof text !== 'string') return '';
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
-}
 
 /**
  * Create a HAST element node

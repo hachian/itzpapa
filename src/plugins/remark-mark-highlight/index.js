@@ -1,4 +1,5 @@
 import { visit } from 'unist-util-visit';
+import { escapeHtml } from '../utils/index.js';
 
 // Pre-compiled regex for performance (optimized)
 const MARK_HIGHLIGHT_REGEX = /==([^=]+)==(?:\{([^}]+)\})?/g;
@@ -252,34 +253,4 @@ export default function remarkMarkHighlight(options = {}) {
       }
     });
   };
-}
-
-// Helper function to escape HTML with enhanced security
-function escapeHtml(text, securityMode = 'auto') {
-  const htmlEscapes = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#39;'
-  };
-
-  // 基本的なHTMLエスケープ
-  let escaped = text.replace(/[&<>"']/g, (match) => htmlEscapes[match]);
-
-  // strictモードでは追加のセキュリティチェック
-  if (securityMode === 'strict') {
-    // 制御文字の除去
-    escaped = escaped.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '');
-
-    // Unicode zero-width characters の除去
-    escaped = escaped.replace(/[\u200B-\u200D\uFEFF]/g, '');
-
-    // 潜在的に危険なプロトコルの検出と無効化
-    escaped = escaped.replace(/javascript:/gi, 'javascript&#58;');
-    escaped = escaped.replace(/vbscript:/gi, 'vbscript&#58;');
-    escaped = escaped.replace(/data:/gi, 'data&#58;');
-  }
-
-  return escaped;
 }

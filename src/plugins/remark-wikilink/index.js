@@ -1,4 +1,5 @@
 import { visit } from 'unist-util-visit';
+import { buildInternalLinkUrl, normalizeAnchor } from '../utils/index.js';
 
 export default function remarkWikilink() {
   // プラグインの実行順序を早めるために優先度を設定
@@ -14,32 +15,7 @@ export default function remarkWikilink() {
 
           if (linkPath && linkPath.startsWith('../')) {
             // 内部リンクの処理
-            const hashIndex = linkPath.indexOf('#');
-            let filePath = linkPath;
-            let hash = '';
-
-            if (hashIndex !== -1) {
-              filePath = linkPath.slice(0, hashIndex);
-              hash = linkPath.slice(hashIndex);
-            }
-
-            const cleanPath = filePath
-              .replace(/^\.\.\//, '')
-              .replace(/\.md$/, '')
-              .replace(/\/index$/, '')
-              .replace(/\s+/g, '-')
-              .toLowerCase();
-
-            let cleanHash = hash;
-            if (hash) {
-              const hashText = hash.slice(1);
-              cleanHash = '#' + hashText.toLowerCase()
-                .replace(/\./g, '')
-                .replace(/\s+/g, '-')
-                .replace(/[^\w\-\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/g, '');
-            }
-
-            node.url = cleanHash ? `/blog/${cleanPath}/${cleanHash}` : `/blog/${cleanPath}/`;
+            node.url = buildInternalLinkUrl(linkPath);
           }
         }
       }
@@ -72,35 +48,9 @@ export default function remarkWikilink() {
             const afterText = third.value.slice(2); // "]]"を除去
 
             // リンクURLを構築
-            let url = linkPath;
-            if (linkPath.startsWith('../')) {
-              const hashIndex = linkPath.indexOf('#');
-              let filePath = linkPath;
-              let hash = '';
-
-              if (hashIndex !== -1) {
-                filePath = linkPath.slice(0, hashIndex);
-                hash = linkPath.slice(hashIndex);
-              }
-
-              const cleanPath = filePath
-                .replace(/^\.\.\//, '')
-                .replace(/\.md$/, '')
-                .replace(/\/index$/, '')
-                .replace(/\s+/g, '-')
-                .toLowerCase();
-
-              let cleanHash = hash;
-              if (hash) {
-                const hashText = hash.slice(1);
-                cleanHash = '#' + hashText.toLowerCase()
-                  .replace(/\./g, '')
-                  .replace(/\s+/g, '-')
-                  .replace(/[^\w\-\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/g, '');
-              }
-
-              url = cleanHash ? `/blog/${cleanPath}/${cleanHash}` : `/blog/${cleanPath}/`;
-            }
+            const url = linkPath.startsWith('../')
+              ? buildInternalLinkUrl(linkPath)
+              : linkPath;
 
             // 新しいノードを構築
             const newNodes = [];
@@ -226,48 +176,10 @@ export default function remarkWikilink() {
           
           // Handle internal links (starting with ../)
           if (linkPath.startsWith('../')) {
-            // Split path and hash
-            const hashIndex = linkPath.indexOf('#');
-            let filePath = linkPath;
-            let hash = '';
-            
-            if (hashIndex !== -1) {
-              filePath = linkPath.slice(0, hashIndex);
-              hash = linkPath.slice(hashIndex);
-            }
-            
-            // Clean the file path and normalize for URL
-            const cleanPath = filePath
-              .replace(/^\.\.\//, '')
-              .replace(/\.md$/, '')
-              .replace(/\/index$/, '')
-              .replace(/\s+/g, '-')  // Convert spaces to hyphens
-              .toLowerCase();        // Lowercase for URL consistency
-            
-            // Convert hash to proper anchor format (spaces to hyphens, lowercase, etc.)
-            let cleanHash = hash;
-            if (hash) {
-              // Remove the # and convert to proper anchor format
-              const hashText = hash.slice(1);
-              cleanHash = '#' + hashText.toLowerCase()
-                .replace(/\./g, '')       // Remove dots first
-                .replace(/\s+/g, '-')     // Then replace spaces with hyphens
-                .replace(/[^\w\-\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/g, '');
-            }
-            
-            // 末尾スラッシュを追加（hashがある場合は/の後にhash）
-            url = cleanHash ? `/blog/${cleanPath}/${cleanHash}` : `/blog/${cleanPath}/`;
+            url = buildInternalLinkUrl(linkPath);
           } else if (linkPath.startsWith('#')) {
             // Handle same-page anchor links
-            // Convert hash to proper anchor format (spaces to hyphens, lowercase, etc.)
-            const hashText = linkPath.slice(1);
-            // Convert to lowercase and replace spaces/dots with hyphens
-            const cleanHash = '#' + hashText
-              .toLowerCase()
-              .replace(/\./g, '')       // Remove dots first
-              .replace(/\s+/g, '-')     // Then replace spaces with hyphens
-              .replace(/[^\w\-\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF\u3005\u3006\u3007\u30FC]/g, '');
-            url = cleanHash;
+            url = normalizeAnchor(linkPath);
           } else {
             // For other paths, use the trimmed linkPath
             url = linkPath;
