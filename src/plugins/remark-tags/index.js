@@ -215,14 +215,14 @@ function normalizeTag(tag, config) {
  * タグをURLセーフなスラッグに変換
  */
 function tagToSlug(tag, config) {
-  // スラッシュをハイフンに置換
-  let slug = tag.replace(
-    new RegExp(escapeRegExp(config.hierarchySeparator), 'g'),
-    '-'
-  );
+  // 階層タグのスラッシュはそのまま保持（URLパスの階層として使用）
+  let slug = tag;
   
   // URLエンコード（日本語文字を含む場合）
-  slug = encodeURIComponent(slug);
+  // スラッシュは保持するため、各セグメントを個別にエンコード
+  slug = tag.split(config.hierarchySeparator)
+    .map(segment => encodeURIComponent(segment))
+    .join('/');
   
   return slug;
 }
