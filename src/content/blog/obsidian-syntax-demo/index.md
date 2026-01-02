@@ -52,8 +52,6 @@ Use the pipe symbol `|` to specify an alias when you want to change the display 
 
 [[markdown-demo|Check out the Markdown Guide]]
 
----
-
 ## Mark Highlight
 
 Wrap text with `==` to highlight it. This is useful for emphasizing important information.
@@ -106,8 +104,6 @@ Highlights can be combined with bold or italic text.
 
 > [!note]
 > Bold and italic have custom styles in this blog. See the [Markdown Syntax Guide](../markdown-demo/index#text-emphasis) for details.
-
----
 
 ## Callouts
 
@@ -209,8 +205,6 @@ Add `-` after the type to make the callout collapsed by default. Add `+` to make
 - **warning**: Cautionary notes and known issues
 - **caution**: Warnings about dangerous operations
 - **important**: Critical information that shouldn't be missed
-
----
 
 ## Task Status (Extended Checkboxes)
 
@@ -377,8 +371,6 @@ Indicate actions and outcomes.
   - [ ] Pending review
   - [!] Critical bug fix needed
 
----
-
 ## Tags
 
 Tags help you categorize and organize your articles. itzpapa supports both frontmatter tags and inline tags.
@@ -455,8 +447,6 @@ Hierarchical tags allow you to search articles by parent tag or filter by child 
 | `tech/web` | Web technology related |
 | `tools/obsidian` | Obsidian tool |
 | `project/itzpapa` | itzpapa project |
-
----
 
 ## Summary
 

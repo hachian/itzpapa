@@ -136,6 +136,25 @@ export interface CommentsConfig {
 }
 
 /**
+ * OG画像設定
+ * 背景画像のパスを指定
+ */
+export interface OgImageConfig {
+  /**
+   * ライトモード用の背景画像パス
+   * src/assets/ からの相対パス
+   * デフォルト: 'itzpapa-light_16_9.png'
+   */
+  lightBackground?: string;
+  /**
+   * ダークモード用の背景画像パス
+   * src/assets/ からの相対パス
+   * デフォルト: 'itzpapa-dark_16_9.png'
+   */
+  darkBackground?: string;
+}
+
+/**
  * 機能フラグ
  * 各機能の有効/無効を制御
  */
@@ -169,4 +188,6 @@ export interface SiteConfig {
   seo: SeoConfig;
   /** 機能フラグ */
   features: FeatureFlags;
+  /** OG画像設定（オプション） */
+  ogImage?: OgImageConfig;
 }

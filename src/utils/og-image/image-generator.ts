@@ -3,6 +3,7 @@ import sharp from "sharp";
 import { readFile } from "fs/promises";
 import { join } from "path";
 import { loadFonts } from "./font-loader";
+import { siteConfig } from "../../../site.config";
 
 // プロジェクトルートからの絶対パスを使用
 const ASSETS_DIR = join(process.cwd(), "src/assets");
@@ -120,15 +121,25 @@ function createTemplate(options: TemplateOptions) {
   };
 }
 
+// デフォルトの背景画像ファイル名
+const DEFAULT_LIGHT_BG = "itzpapa-light_16_9.png";
+const DEFAULT_DARK_BG = "itzpapa-dark_16_9.png";
+
 async function loadBackgroundImage(
   theme: "light" | "dark"
 ): Promise<string> {
+  const ogImageConfig = siteConfig.ogImage;
   const filename =
-    theme === "light" ? "itzpapa-light_16_9.png" : "itzpapa-dark_16_9.png";
+    theme === "light"
+      ? ogImageConfig?.lightBackground ?? DEFAULT_LIGHT_BG
+      : ogImageConfig?.darkBackground ?? DEFAULT_DARK_BG;
   const imagePath = join(ASSETS_DIR, filename);
   const imageBuffer = await readFile(imagePath);
   const base64 = imageBuffer.toString("base64");
-  return `data:image/png;base64,${base64}`;
+  // 拡張子から MIME タイプを判定
+  const ext = filename.split(".").pop()?.toLowerCase();
+  const mimeType = ext === "jpg" || ext === "jpeg" ? "image/jpeg" : "image/png";
+  return `data:${mimeType};base64,${base64}`;
 }
 
 export async function generateOgImage(

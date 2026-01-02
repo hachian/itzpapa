@@ -28,6 +28,7 @@ Customizing your itzpapa blog is done through the `site.config.ts` file in the p
 | `footer` | Footer settings |
 | `seo` | SEO-related settings |
 | `features` | Feature flags (table of contents, tag cloud, etc.) |
+| `ogImage` | OG image background settings |
 
 ```typescript
 export const siteConfig: SiteConfig = {
@@ -38,12 +39,11 @@ export const siteConfig: SiteConfig = {
   footer: { /* Footer */ },
   seo: { /* SEO settings */ },
   features: { /* Feature flags */ },
+  ogImage: { /* OG image settings */ },
 };
 ```
 
 Below is a detailed explanation of each section.
-
----
 
 ## Site Information (site)
 
@@ -89,8 +89,6 @@ site: {
 ```
 
 Setting `language` to `'en'` displays UI text and descriptions in English.
-
----
 
 ## Theme Settings (theme)
 
@@ -153,8 +151,6 @@ theme: {
 },
 ```
 
----
-
 ## Navigation Menu (navigation)
 
 Configure the navigation menu displayed in the header.
@@ -204,8 +200,6 @@ navigation: [
   { label: 'Contact', href: '/contact/' },     // Added
 ],
 ```
-
----
 
 ## Social Links (social)
 
@@ -264,8 +258,6 @@ social: {
 > [!tip]
 > Keep `enabled: false` for platforms you don't use - their icons won't be displayed.
 
----
-
 ## Footer Settings (footer)
 
 Configure the copyright information displayed at the bottom of the page.
@@ -305,8 +297,6 @@ footer: {
 },
 ```
 
----
-
 ## SEO Settings (seo)
 
 Configure search engine optimization and analytics settings.
@@ -329,6 +319,8 @@ seo: {
 
 OG images are automatically generated for each article at `/og/{slug}.png`. The default OG image is located at `/og/default.png`.
 
+To customize the background images used for OG image generation, see [OG Image Settings](#og-image-settings-ogimage).
+
 ### Google Analytics
 
 - Set the tracking ID in `googleAnalyticsId` to enable analytics
@@ -345,8 +337,6 @@ seo: {
   googleAnalyticsId: '',
 },
 ```
-
----
 
 ## Feature Flags (features)
 
@@ -416,7 +406,51 @@ features: {
 > [!note]
 > Get your Giscus configuration values from [giscus.app](https://giscus.app/).
 
----
+## OG Image Settings (ogImage)
+
+Configure the background images used for auto-generated OG images.
+
+### Configuration Options
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `lightBackground` | string | Light mode background image (relative path from `src/assets/`) |
+| `darkBackground` | string | Dark mode background image (relative path from `src/assets/`) |
+
+### Example
+
+```typescript
+ogImage: {
+  lightBackground: 'itzpapa-light_16_9.png',
+  darkBackground: 'itzpapa-dark_16_9.png',
+},
+```
+
+### Custom Background Images
+
+To use your own background images:
+
+1. Place your images in the `src/assets/` directory
+2. Images should be 16:9 aspect ratio (recommended: 1200×630px or larger)
+3. Update the configuration with your filenames
+
+```typescript
+// Using custom background images
+ogImage: {
+  lightBackground: 'my-custom-light-bg.png',
+  darkBackground: 'my-custom-dark-bg.jpg',
+},
+```
+
+> [!tip]
+> Both PNG and JPEG formats are supported. The OG image generator automatically detects the format from the file extension.
+
+### Default Values
+
+If `ogImage` is not configured, these defaults are used:
+
+- Light mode: `itzpapa-light_16_9.png`
+- Dark mode: `itzpapa-dark_16_9.png`
 
 ## Summary
 
@@ -427,8 +461,9 @@ By editing `site.config.ts`, you can customize:
 - **navigation**: Navigation menu
 - **social**: Social media links
 - **footer**: Footer copyright
-- **seo**: OG image and analytics
+- **seo**: Analytics settings
 - **features**: Table of contents, tag cloud, related posts, comments
+- **ogImage**: OG image background images
 
 After making changes, restart the development server to see them:
 

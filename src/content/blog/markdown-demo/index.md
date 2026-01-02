@@ -35,8 +35,6 @@ This page demonstrates the standard Markdown syntax supported in itzpapa blog. E
 ##### Heading 5
 ###### Heading 6
 
----
-
 ## Paragraphs and Line Breaks
 
 ### Syntax
@@ -56,8 +54,6 @@ A line break within the same paragraph continues on the next line.
 
 An empty line creates a new paragraph.
 Paragraphs have more spacing between them.
-
----
 
 ## Text Emphasis
 
@@ -79,8 +75,6 @@ Paragraphs have more spacing between them.
 
 > [!note]
 > In this blog, bold and italic have custom styles that override the browser defaults. Bold text appears with enhanced weight, and italic text has distinctive styling for better readability.
-
----
 
 ## Lists
 
@@ -140,8 +134,6 @@ Paragraphs have more spacing between them.
 - [ ] Incomplete task
 - [ ] Another task
 
----
-
 ## Links
 
 ### Syntax
@@ -159,8 +151,6 @@ Paragraphs have more spacing between them.
 [Link with title](https://example.com "Example Site")
 <https://example.com>
 [Internal link](/blog/)
-
----
 
 ## Blockquotes
 
@@ -187,8 +177,6 @@ Paragraphs have more spacing between them.
 > Nested quote
 >> Double nested
 >>> Triple nested
-
----
 
 ## Horizontal Rules
 
@@ -285,8 +273,6 @@ def greet(name: str) -> str:
 print(greet("World"))
 ```
 
----
-
 ## Tables
 
 ### Basic Table
@@ -325,8 +311,6 @@ print(greet("World"))
 | Left      | Center    | Right     |
 | Text      | Text      | Text      |
 
----
-
 ## Images
 
 ### Basic Image Embedding
@@ -350,8 +334,6 @@ Alt text is displayed when the image cannot be loaded and is read by screen read
 ```
 
 ![itzpapa sample image - Blog demo](./sample-image.jpg)
-
----
 
 ## Summary
 

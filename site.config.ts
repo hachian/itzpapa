@@ -183,6 +183,22 @@ export const siteConfig: SiteConfig = {
       },
     },
   },
+
+  // ========================================
+  // OG画像設定
+  // ========================================
+  ogImage: {
+    /**
+     * ライトモード用の背景画像
+     * src/assets/ からの相対パス
+     */
+    lightBackground: 'itzpapa-light_16_9.png',
+    /**
+     * ダークモード用の背景画像
+     * src/assets/ からの相対パス
+     */
+    darkBackground: 'itzpapa-dark_16_9.png',
+  },
 };
 
 // ========================================
