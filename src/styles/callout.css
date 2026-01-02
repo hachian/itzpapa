@@ -665,7 +665,7 @@ html.dark blockquote[data-callout] :not(pre) > code {
 blockquote:not([data-callout]) {
   border-left: 4px solid var(--color-gray-300, oklch(85% 0.012 280));
   background-color: var(--color-gray-50, oklch(98% 0.005 280));
-  padding: var(--space-4, 1rem);
+  padding: 0 var(--space-4, 1rem);
   margin: var(--space-4, 1rem) 0;
   border-radius: var(--radius-md, 0.375rem);
   color: var(--color-text-secondary, oklch(55% 0.015 280));
