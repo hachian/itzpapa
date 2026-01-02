@@ -57,11 +57,11 @@
   left: 0;
   bottom: 0;
   width: 100%;
-  height: 7px;
+  height: 6px;
   background: repeating-linear-gradient(
     -45deg,
-    var(--color-primary-400),
-    var(--color-primary-400) 2px,
+    var(--color-primary-500-alpha40),
+    var(--color-primary-500-alpha40) 2px,
     transparent 2px,
     transparent 4px
   );
@@ -70,7 +70,7 @@
 .prose h4 {
   font-size: 1.25em;
   /* 見出し装飾: 実線下線 */
-  border-bottom: 2px solid var(--color-primary-400);
+  border-bottom: 2px solid var(--color-primary-500-alpha40);
   padding-bottom: var(--space-1);
   margin-top: var(--space-5);
 }
@@ -106,15 +106,15 @@ html.dark .prose h2 {
 html.dark .prose h3::after {
   background: repeating-linear-gradient(
     -45deg,
-    var(--color-primary-300),
-    var(--color-primary-300) 2px,
+    var(--color-primary-dark-alpha50),
+    var(--color-primary-dark-alpha50) 2px,
     transparent 2px,
     transparent 4px
   );
 }
 
 html.dark .prose h4 {
-  border-bottom-color: var(--color-primary-300);
+  border-bottom-color: var(--color-primary-dark-alpha50);
 }
 
 /* OS Dark Mode Preference */
@@ -126,15 +126,15 @@ html.dark .prose h4 {
   :root:not(.light) .prose h3::after {
     background: repeating-linear-gradient(
       -45deg,
-      var(--color-primary-300),
-      var(--color-primary-300) 2px,
+      var(--color-primary-dark-alpha50),
+      var(--color-primary-dark-alpha50) 2px,
       transparent 2px,
       transparent 4px
     );
   }
 
   :root:not(.light) .prose h4 {
-    border-bottom-color: var(--color-primary-300);
+    border-bottom-color: var(--color-primary-dark-alpha50);
   }
 }
 
