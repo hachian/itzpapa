@@ -61,6 +61,7 @@ export interface TranslationKeys {
   'article.readingTime': string;
   'article.updated': string;
   'article.relatedTags': string;
+  'article.relatedPosts': string;
 
   // パンくずナビ
   'breadcrumb.ariaLabel': string;
@@ -172,6 +173,7 @@ export const translations: Translations = {
     'article.readingTime': '{min}分で読めます',
     'article.updated': '（更新：{date}）',
     'article.relatedTags': '関連タグ',
+    'article.relatedPosts': '関連記事',
     // パンくずナビ
     'breadcrumb.ariaLabel': 'パンくずナビゲーション',
     'breadcrumb.home': 'ホーム',
@@ -273,6 +275,7 @@ export const translations: Translations = {
     'article.readingTime': '{min} min read',
     'article.updated': '(Updated: {date})',
     'article.relatedTags': 'Related Tags',
+    'article.relatedPosts': 'Related Posts',
     // Breadcrumb
     'breadcrumb.ariaLabel': 'Breadcrumb navigation',
     'breadcrumb.home': 'Home',

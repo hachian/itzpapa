@@ -12,6 +12,7 @@ import CategoryBadge from '../components/CategoryBadge.astro';
 import TableOfContents from '../components/TableOfContents.astro';
 import Comments from '../components/Comments.astro';
 import ImageLightbox from '../components/ImageLightbox.astro';
+import RelatedPosts from '../components/RelatedPosts.astro';
 import { siteConfig } from '../../site.config';
 import { t, getLanguage } from '../i18n';
 import '../styles/table-of-contents.css';
@@ -445,6 +446,10 @@ const showTableOfContents = features.tableOfContents;
 				</div>
 				<!-- コメントセクション -->
 				{showComments && <Comments articleUrl={articleUrl} articleTitle={title} />}
+				<!-- 関連記事セクション -->
+				{features.relatedPosts && tags && tags.length > 0 && slug && (
+					<RelatedPosts currentPostId={slug} currentTags={tags} currentCategory={category} />
+				)}
 			</article>
 		</main>
 		<Footer />

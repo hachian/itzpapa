@@ -1,0 +1,127 @@
+---
+/**
+ * 関連記事セクションコンポーネント
+ * タグベースで関連記事を取得し、グリッド表示する
+ */
+import { getCollection } from 'astro:content';
+import RelatedPostCard from './RelatedPostCard.astro';
+import { getRelatedPosts } from '../utils/related-posts';
+import { t } from '../i18n';
+
+interface Props {
+  /** 現在の記事ID */
+  currentPostId: string;
+  /** 現在の記事のタグ */
+  currentTags: string[];
+  /** 現在の記事のカテゴリ */
+  currentCategory?: string;
+}
+
+const { currentPostId, currentTags, currentCategory } = Astro.props;
+
+// 全記事を取得
+const allPosts = await getCollection('blog');
+
+// 関連記事を取得
+const relatedPosts = getRelatedPosts({
+  currentPostId,
+  currentTags,
+  currentCategory,
+  allPosts,
+  limit: 6,
+});
+---
+
+{relatedPosts.length > 0 && (
+  <section class="related-posts" aria-labelledby="related-posts-title">
+    <h3 id="related-posts-title" class="related-posts__title">
+      {t('article.relatedPosts')}
+    </h3>
+    <ul class="related-posts__grid" role="list">
+      {relatedPosts.map((post) => (
+        <li>
+          <RelatedPostCard
+            id={post.id}
+            title={post.data.title}
+            published={post.data.published}
+            description={post.data.description}
+            image={post.data.image}
+          />
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+<style>
+  .related-posts {
+    max-width: 1000px;
+    margin: var(--space-12) auto 0;
+    padding: var(--space-8) var(--space-4) 0;
+    border-top: 1px solid var(--color-gray-200);
+  }
+
+  .related-posts__title {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--space-8);
+    text-align: center;
+  }
+
+  .related-posts__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .related-posts__grid li {
+    display: flex;
+    list-style: none;
+  }
+
+  .related-posts__grid li::marker {
+    content: none;
+  }
+
+  .related-posts__grid li > :global(*) {
+    width: 100%;
+  }
+
+  /* タブレット */
+  @media (max-width: 1023px) {
+    .related-posts__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* モバイル */
+  @media (max-width: 767px) {
+    .related-posts {
+      padding: var(--space-6) var(--space-4) 0;
+    }
+
+    .related-posts__title {
+      font-size: var(--font-size-xl);
+    }
+
+    .related-posts__grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-6);
+    }
+  }
+
+  /* ダークモード */
+  html.dark .related-posts {
+    border-top-color: var(--color-gray-700);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    html:not(.light) .related-posts {
+      border-top-color: var(--color-gray-700);
+    }
+  }
+</style>
