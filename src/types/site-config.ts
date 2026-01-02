@@ -91,8 +91,6 @@ export interface FooterConfig {
  * SEO 設定
  */
 export interface SeoConfig {
-  /** デフォルトの OG 画像パス */
-  defaultOgImage?: string;
   /** デフォルトの説明文 */
   defaultDescription?: string;
   /** Google Analytics トラッキング ID（空の場合はスクリプト出力なし） */

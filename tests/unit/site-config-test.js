@@ -126,12 +126,10 @@ describe('SiteConfig 型定義', () => {
   describe('SeoConfig 構造', () => {
     it('オプションのプロパティを持てる', () => {
       const validSeoConfig = {
-        defaultOgImage: '/og-image.png',
         defaultDescription: 'Default description',
         googleAnalyticsId: 'G-XXXXXXX'
       };
 
-      assert.strictEqual(typeof validSeoConfig.defaultOgImage, 'string');
       assert.strictEqual(typeof validSeoConfig.defaultDescription, 'string');
       assert.strictEqual(typeof validSeoConfig.googleAnalyticsId, 'string');
     });
@@ -198,9 +196,7 @@ describe('SiteConfig 型定義', () => {
           copyrightText: 'All rights reserved.',
           startYear: 2024
         },
-        seo: {
-          defaultOgImage: '/og-image.png'
-        },
+        seo: {},
         features: {
           tableOfContents: true,
           tagCloud: true,

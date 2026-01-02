@@ -71,7 +71,6 @@ describe('Task 7.1: 設定変更がビルド結果に反映されることを検
     it('seo 設定が含まれている', () => {
       const content = readFileSync(configPath, 'utf-8');
       assert.ok(content.includes('seo:'), 'seo 設定が含まれている');
-      assert.ok(content.includes('defaultOgImage:'), 'defaultOgImage が含まれている');
       assert.ok(content.includes('googleAnalyticsId:'), 'googleAnalyticsId が含まれている');
     });
 

@@ -120,8 +120,6 @@ export const siteConfig: SiteConfig = {
   // SEO設定
   // ========================================
   seo: {
-    /** デフォルトのOG画像パス（記事に個別のOG画像がない場合に使用） */
-    defaultOgImage: '/og-image.png',
     /**
      * Google Analytics トラッキングID
      * 空文字または未設定の場合、トラッキングスクリプトは出力されません

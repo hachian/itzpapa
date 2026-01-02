@@ -315,23 +315,19 @@ Configure search engine optimization and analytics settings.
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `defaultOgImage` | string | Default OG image path |
 | `googleAnalyticsId` | string | Google Analytics tracking ID |
 
 ### Example
 
 ```typescript
 seo: {
-  defaultOgImage: '/og-image.png',
   googleAnalyticsId: 'G-XXXXXXXXXX',
 },
 ```
 
 ### OG Image
 
-- `defaultOgImage` is used when an article doesn't have its own OG image
-- Place the image in the `public/` folder
-- Recommended size: 1200 x 630 pixels
+OG images are automatically generated for each article at `/og/{slug}.png`. The default OG image is located at `/og/default.png`.
 
 ### Google Analytics
 
@@ -341,13 +337,11 @@ seo: {
 ```typescript
 // Enable Google Analytics
 seo: {
-  defaultOgImage: '/og-image.png',
   googleAnalyticsId: 'G-XXXXXXXXXX',
 },
 
 // Disable Google Analytics
 seo: {
-  defaultOgImage: '/og-image.png',
   googleAnalyticsId: '',
 },
 ```
