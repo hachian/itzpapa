@@ -12,6 +12,7 @@ import remarkMarkHighlight from './src/plugins/remark-mark-highlight/index.js';
 import remarkCallout from './src/plugins/remark-callout/index.js';
 import rehypeTableWrapper from './src/plugins/rehype-table-wrapper/index.js';
 import rehypeTaskStatus from './src/plugins/rehype-task-status/index.js';
+import rehypeTrailingSlash from './src/plugins/rehype-trailing-slash/index.js';
 
 // https://astro.build/config
 export default defineConfig({
@@ -51,7 +52,9 @@ export default defineConfig({
 				// テーブルをdiv.table-wrapperでラップ（水平スクロール対応）
 				rehypeTableWrapper,
 				// GFMのcheckbox要素をカスタムスタイルに置き換え
-				rehypeTaskStatus
+				rehypeTaskStatus,
+				// 相対リンクに末尾スラッシュを追加（Obsidian互換）
+				rehypeTrailingSlash
 			],
 			extendMarkdownConfig: false
 		}),
@@ -80,7 +83,9 @@ export default defineConfig({
 			// テーブルをdiv.table-wrapperでラップ（水平スクロール対応）
 			rehypeTableWrapper,
 			// GFMのcheckbox要素をカスタムスタイルに置き換え
-			rehypeTaskStatus
+			rehypeTaskStatus,
+			// 相対リンクに末尾スラッシュを追加（Obsidian互換）
+			rehypeTrailingSlash
 		],
 		// GFMを明示的に設定（remarkPluginsより前に処理される）
 		gfm: true

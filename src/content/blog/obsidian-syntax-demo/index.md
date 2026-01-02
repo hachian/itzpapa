@@ -105,7 +105,7 @@ Highlights can be combined with bold or italic text.
 *==Italic and highlighted==*
 
 > [!note]
-> Bold and italic have custom styles in this blog. See the [Markdown Syntax Guide](/blog/markdown-demo/#text-emphasis) for details.
+> Bold and italic have custom styles in this blog. See the [Markdown Syntax Guide](../markdown-demo/index#text-emphasis) for details.
 
 ---
 
@@ -470,4 +470,4 @@ This page covered the Obsidian-compatible syntax available in itzpapa blog:
 
 Using these features, you can publish your Obsidian notes directly as blog posts.
 
-For standard Markdown syntax, see the [Markdown Syntax Guide](/blog/markdown-demo/).
+For standard Markdown syntax, see the [Markdown Syntax Guide](../markdown-demo/index).

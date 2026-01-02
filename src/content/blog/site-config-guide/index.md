@@ -443,5 +443,5 @@ npm run dev
 ```
 
 Other syntax guides:
-- [Markdown Syntax Guide](/blog/markdown-demo/)
-- [Obsidian Syntax Guide](/blog/obsidian-syntax-demo/)
+- [Markdown Syntax Guide](../markdown-demo/index)
+- [Obsidian Syntax Guide](../obsidian-syntax-demo/index)

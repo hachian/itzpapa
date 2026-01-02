@@ -357,4 +357,4 @@ Alt text is displayed when the image cannot be loaded and is read by screen read
 
 This page covered the standard Markdown syntax available in itzpapa blog. By combining these elements, you can create well-structured and readable content.
 
-For Obsidian-specific syntax (WikiLinks, highlights, Callouts), see the [Obsidian Syntax Guide](/blog/obsidian-syntax-demo/).
+For Obsidian-specific syntax (WikiLinks, highlights, Callouts), see the [Obsidian Syntax Guide](../obsidian-syntax-demo/index).
