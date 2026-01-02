@@ -73,6 +73,8 @@ export const siteConfig: SiteConfig = {
     { label: 'Blog', href: '/blog/' },
     /** タグ一覧ページ */
     { label: 'Tags', href: '/tags/' },
+    /** カテゴリ一覧ページ */
+    { label: 'Category', href: '/category/' },
     /** アバウトページ */
     { label: 'About', href: '/about/' },
     // 外部リンクの例（http/https で始まるURLは自動的に新しいタブで開きます）
