@@ -14,6 +14,7 @@ type MockPost = {
     published: Date;
     tags?: string[];
     description?: string;
+    draft?: boolean;
   };
 };
 
@@ -103,6 +104,26 @@ describe('getRelatedPosts', () => {
       assert.ok(!ids.includes('post-1'));
     });
 
+    it('日付プレフィックス付きIDでも現在の記事自身を除外する', () => {
+      // 記事IDがYYYYMMDD-形式のプレフィックスを持つ場合のテスト
+      const postsWithDatePrefix: MockPost[] = [
+        { id: '20240101-obsidian-demo', data: { title: 'Demo', published: new Date('2024-01-01'), tags: ['javascript', 'react'] } },
+        { id: '20240102-other-post', data: { title: 'Other', published: new Date('2024-01-02'), tags: ['javascript'] } },
+      ];
+
+      const result = getRelatedPosts({
+        currentPostId: 'obsidian-demo', // 日付プレフィックスなしで渡される
+        currentTags: ['javascript', 'react'],
+        allPosts: postsWithDatePrefix as unknown as CollectionEntry<'blog'>[],
+      });
+
+      const ids = result.map((p) => p.id);
+      // 20240101-obsidian-demo は現在の記事なので除外される
+      assert.ok(!ids.includes('20240101-obsidian-demo'));
+      // 他の記事は含まれる
+      assert.ok(ids.includes('20240102-other-post'));
+    });
+
     it('共通タグが0の記事を除外する', () => {
       const result = getRelatedPosts({
         currentPostId: 'post-1',
@@ -125,6 +146,27 @@ describe('getRelatedPosts', () => {
       const ids = result.map((p) => p.id);
       // post-6 はタグなし
       assert.ok(!ids.includes('post-6'));
+    });
+
+    it('draft記事を除外する', () => {
+      const postsWithDraft: MockPost[] = [
+        { id: 'post-a', data: { title: 'A', published: new Date('2024-01-01'), tags: ['javascript'], draft: false } },
+        { id: 'post-b', data: { title: 'B', published: new Date('2024-01-02'), tags: ['javascript'], draft: true } },
+        { id: 'post-c', data: { title: 'C', published: new Date('2024-01-03'), tags: ['javascript', 'react'] } },
+      ];
+
+      const result = getRelatedPosts({
+        currentPostId: 'post-current',
+        currentTags: ['javascript', 'react'],
+        allPosts: postsWithDraft as unknown as CollectionEntry<'blog'>[],
+      });
+
+      const ids = result.map((p) => p.id);
+      // post-b は draft: true なので除外される
+      assert.ok(!ids.includes('post-b'));
+      // post-a と post-c は含まれる
+      assert.ok(ids.includes('post-a'));
+      assert.ok(ids.includes('post-c'));
     });
   });
 

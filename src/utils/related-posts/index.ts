@@ -49,14 +49,22 @@ export function getRelatedPosts(options: GetRelatedPostsOptions): RelatedPost[] 
     return [];
   }
 
+  // YYYYMMDD-プレフィックスを除去するヘルパー
+  const removeDatePrefix = (id: string): string => id.replace(/^\d{8}-/, '');
+
   // 現在のタグをSetに変換（高速な検索のため）
   const currentTagSet = new Set(currentTags);
 
   // 関連記事を計算
   const relatedPosts: RelatedPost[] = allPosts
     .filter((post) => {
-      // 現在の記事自身を除外
-      if (post.id === currentPostId) {
+      // 現在の記事自身を除外（日付プレフィックスを除去して比較）
+      if (removeDatePrefix(post.id) === currentPostId) {
+        return false;
+      }
+
+      // draft記事を除外
+      if (post.data.draft === true) {
         return false;
       }
 
