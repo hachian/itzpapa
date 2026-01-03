@@ -13,6 +13,7 @@ import Footer from '../../components/Footer.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 import TagBadge from '../../components/TagBadge.astro';
 import { TagService } from '../../utils/tag/service';
+import { removeDatePrefix } from '../../plugins/utils/index.js';
 import { slugToTag, isDescendantTag } from '../../utils/tag/validation';
 import { t, getLanguage } from '../../i18n';
 
@@ -382,7 +383,7 @@ const pageDescription = lang === 'ja'
                     <FormattedDate date={post.data.published} />
                   </div>
                   <div class="post-content">
-                    <a href={`/blog/${post.id}/`} class="post-link">
+                    <a href={`/blog/${removeDatePrefix(post.id)}/`} class="post-link">
                       <h3 class="post-title">{post.data.title}</h3>
                       <p class="post-description">{post.data.description}</p>
                     </a>

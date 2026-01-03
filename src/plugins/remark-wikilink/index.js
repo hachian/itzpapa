@@ -5,7 +5,7 @@ export default function remarkWikilink() {
   // プラグインの実行順序を早めるために優先度を設定
   const plugin = function transformer(tree, file) {
 
-    // リンクURL内のWikiLinkを解決する
+    // リンクURL内のWikiLinkを解決する + 通常のMarkdownリンクも処理
     visit(tree, 'link', (node) => {
       if (node.url && node.url.includes('[[') && node.url.includes(']]')) {
         // WikiLink形式のURLを解決
@@ -18,6 +18,9 @@ export default function remarkWikilink() {
             node.url = buildInternalLinkUrl(linkPath);
           }
         }
+      } else if (node.url && node.url.startsWith('../')) {
+        // 通常のMarkdownリンク（../で始まる相対リンク）も日付プレフィックス除去を適用
+        node.url = buildInternalLinkUrl(node.url);
       }
     });
 

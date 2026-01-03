@@ -6,7 +6,7 @@ tags:
   - markdown
   - tutorial
   - demo
-published: 2025-12-20T00:00:00.000Z
+published: 2026-01-03
 ---
 
 # Markdown Syntax Guide
@@ -339,4 +339,4 @@ Alt text is displayed when the image cannot be loaded and is read by screen read
 
 This page covered the standard Markdown syntax available in itzpapa blog. By combining these elements, you can create well-structured and readable content.
 
-For Obsidian-specific syntax (WikiLinks, highlights, Callouts), see the [Obsidian Syntax Guide](../obsidian-syntax-demo/index).
+For Obsidian-specific syntax (WikiLinks, highlights, Callouts), see the [Obsidian Syntax Guide](../20260102-obsidian-syntax-demo/index).

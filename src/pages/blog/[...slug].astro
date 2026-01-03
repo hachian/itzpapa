@@ -3,18 +3,23 @@ import { type CollectionEntry, getCollection, render } from 'astro:content';
 import BlogPost from '../../layouts/BlogPost.astro';
 
 export async function getStaticPaths() {
+	// YYYYMMDD-プレフィックスを除去してslugを生成
+	const removeDatePrefix = (id: string): string => {
+		return id.replace(/^\d{8}-/, '');
+	};
+
 	const posts = await getCollection('blog', ({ data }) => {
 		// 本番環境ではdraft: trueの記事を除外
 		return import.meta.env.PROD ? data.draft !== true : true;
 	});
 	return posts.map((post) => ({
-		params: { slug: post.id },
-		props: post,
+		params: { slug: removeDatePrefix(post.id) },
+		props: { post, slug: removeDatePrefix(post.id) },
 	}));
 }
-type Props = CollectionEntry<'blog'>;
+type Props = { post: CollectionEntry<'blog'>; slug: string };
 
-const post = Astro.props;
+const { post, slug } = Astro.props;
 const { Content, headings, remarkPluginFrontmatter } = await render(post);
 
 // 読了時間の計算（日本語: 約500文字/分）
@@ -29,6 +34,6 @@ const calculateReadingTime = (content: string): number => {
 const readingTime = post.body ? calculateReadingTime(post.body) : undefined;
 ---
 
-<BlogPost {...post.data} headings={headings} readingTime={readingTime} slug={post.id}>
+<BlogPost {...post.data} headings={headings} readingTime={readingTime} slug={slug}>
 	<Content />
 </BlogPost>

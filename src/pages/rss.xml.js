@@ -2,6 +2,7 @@ import { getCollection } from 'astro:content';
 import rss from '@astrojs/rss';
 import { SITE_TITLE } from '../../site.config';
 import { getSiteDescription } from '../i18n';
+import { removeDatePrefix } from '../plugins/utils/index.js';
 
 export async function GET(context) {
 	const posts = await getCollection('blog', ({ data }) => {
@@ -14,7 +15,7 @@ export async function GET(context) {
 		site: context.site,
 		items: posts.map((post) => ({
 			...post.data,
-			link: `/blog/${post.id}/`,
+			link: `/blog/${removeDatePrefix(post.id)}/`,
 		})),
 	});
 }

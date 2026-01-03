@@ -41,17 +41,30 @@ export function escapeHtml(text, securityMode = 'auto') {
 }
 
 /**
+ * YYYYMMDD-プレフィックスを除去
+ * @param {string} slug - 処理するスラッグ
+ * @returns {string} プレフィックス除去後のスラッグ
+ */
+export function removeDatePrefix(slug) {
+  // 8桁の数字 + ハイフンで始まる場合、そのプレフィックスを除去
+  return slug.replace(/^\d{8}-/, '');
+}
+
+/**
  * ファイルパスを正規化（URL用）
  * @param {string} filePath - 正規化するファイルパス（../で始まる相対パス）
  * @returns {string} 正規化されたパス
  */
 export function normalizeFilePath(filePath) {
-  return filePath
+  const normalized = filePath
     .replace(/^\.\.\//, '')
     .replace(/\.md$/, '')
     .replace(/\/index$/, '')
     .replace(/\s+/g, '-')
     .toLowerCase();
+
+  // YYYYMMDD-プレフィックスを除去
+  return removeDatePrefix(normalized);
 }
 
 /**

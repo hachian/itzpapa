@@ -1,6 +1,7 @@
 import type { APIRoute, GetStaticPaths } from "astro";
 import { getCollection } from "astro:content";
 import { generateHeroImage } from "../../utils/og-image";
+import { removeDatePrefix } from "../../plugins/utils/index.js";
 
 export const prerender = true;
 
@@ -11,16 +12,20 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const postsWithoutHero = posts.filter((post) => !post.data.image);
 
   // 各記事に対してlight/darkの2つのパスを生成
-  const paths = postsWithoutHero.flatMap((post) => [
-    {
-      params: { path: `${post.id}-light` },
-      props: { title: post.data.title, theme: "light" as const },
-    },
-    {
-      params: { path: `${post.id}-dark` },
-      props: { title: post.data.title, theme: "dark" as const },
-    },
-  ]);
+  // YYYYMMDD-プレフィックスを除去したslugを使用
+  const paths = postsWithoutHero.flatMap((post) => {
+    const slug = removeDatePrefix(post.id);
+    return [
+      {
+        params: { path: `${slug}-light` },
+        props: { title: post.data.title, theme: "light" as const },
+      },
+      {
+        params: { path: `${slug}-dark` },
+        props: { title: post.data.title, theme: "dark" as const },
+      },
+    ];
+  });
 
   return paths;
 };

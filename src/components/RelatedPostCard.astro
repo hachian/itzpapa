@@ -5,6 +5,7 @@
  */
 import { Image } from 'astro:assets';
 import FormattedDate from './FormattedDate.astro';
+import { removeDatePrefix } from '../plugins/utils/index.js';
 
 // フォールバック用のデフォルトhero画像
 import defaultHeroLight from '../assets/itzpapa-light_16_9.png';
@@ -24,7 +25,8 @@ interface Props {
 }
 
 const { id, title, published, description, image } = Astro.props;
-const href = `/blog/${id}/`;
+const slug = removeDatePrefix(id);
+const href = `/blog/${slug}/`;
 ---
 
 <article class="post-card">
@@ -69,7 +71,7 @@ const href = `/blog/${id}/`;
           <img
             width="720"
             height="360"
-            src={`/hero/${id}-light.png`}
+            src={`/hero/${slug}-light.png`}
             alt=""
             class="post-card__image post-card__image--light"
             loading="lazy"
@@ -78,7 +80,7 @@ const href = `/blog/${id}/`;
           <img
             width="720"
             height="360"
-            src={`/hero/${id}-dark.png`}
+            src={`/hero/${slug}-dark.png`}
             alt=""
             class="post-card__image post-card__image--dark"
             loading="lazy"

@@ -13,6 +13,7 @@ import itzpapaLight from '../assets/itzpapa-light.png';
 import defaultHeroLight from '../assets/itzpapa-light_16_9.png';
 import defaultHeroDark from '../assets/itzpapa-dark_16_9.png';
 import { t, getLanguage } from '../i18n';
+import { removeDatePrefix } from '../plugins/utils/index.js';
 
 // 最新ブログ記事を取得（本番環境ではdraft記事を除外）
 const allPosts = await getCollection('blog', ({ data }) => {
@@ -94,7 +95,7 @@ const siteDescription = getSiteDescription();
 						<div class="card-grid card-grid--3" role="feed" aria-label={t('home.latestPosts')}>
 							{latestPosts.map((post, index) => (
 								<article class="card card--link" aria-setsize={latestPosts.length} aria-posinset={index + 1}>
-									<a href={`/blog/${post.id}/`} class="post-card" aria-label={`${post.data.title} - ${post.data.description}`}>
+									<a href={`/blog/${removeDatePrefix(post.id)}/`} class="post-card" aria-label={`${post.data.title} - ${post.data.description}`}>
 										{post.data.image ? (
 											<Image
 												src={post.data.image}

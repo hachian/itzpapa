@@ -8,8 +8,8 @@ tags:
   - obsidian
   - itzpapa
   - demo
-published: 2025-12-20T00:00:00.000Z
-updated: 2025-12-31T00:00:00.000Z
+published: 2025-12-31
+updated: 2025-01-02
 ---
 
 # Obsidian Syntax Guide
@@ -461,3 +461,5 @@ This page covered the Obsidian-compatible syntax available in itzpapa blog:
 Using these features, you can publish your Obsidian notes directly as blog posts.
 
 For standard Markdown syntax, see the [Markdown Syntax Guide](../markdown-demo/index).
+
+![[../20260103-markdown-demo/sample-image.jpg]]

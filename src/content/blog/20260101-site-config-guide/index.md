@@ -8,7 +8,7 @@ tags:
   - config
   - setup
   - guide
-published: 2025-12-20T00:00:00.000Z
+published: 2026-01-01
 ---
 
 # Site Configuration Guide

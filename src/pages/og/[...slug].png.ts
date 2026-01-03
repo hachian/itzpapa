@@ -1,13 +1,14 @@
 import type { APIRoute, GetStaticPaths } from "astro";
 import { getCollection } from "astro:content";
 import { generateOgImage } from "../../utils/og-image";
+import { removeDatePrefix } from "../../plugins/utils/index.js";
 
 export const prerender = true;
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const posts = await getCollection("blog");
   return posts.map((post) => ({
-    params: { slug: post.id },
+    params: { slug: removeDatePrefix(post.id) },
     props: { title: post.data.title },
   }));
 };

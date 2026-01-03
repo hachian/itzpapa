@@ -13,6 +13,7 @@ import FormattedDate from '../../components/FormattedDate.astro';
 import CategoryBadge from '../../components/CategoryBadge.astro';
 import TagBadge from '../../components/TagBadge.astro';
 import { t, getLanguage } from '../../i18n';
+import { removeDatePrefix } from '../../plugins/utils/index.js';
 
 export async function getStaticPaths() {
   // 全ブログ記事を取得（本番環境ではdraft記事を除外）
@@ -317,7 +318,7 @@ const pageDescription = lang === 'ja'
                     <FormattedDate date={post.data.published} />
                   </div>
                   <div class="post-content">
-                    <a href={`/blog/${post.id}/`} class="post-link">
+                    <a href={`/blog/${removeDatePrefix(post.id)}/`} class="post-link">
                       <h3 class="post-title">{post.data.title}</h3>
                       <p class="post-description">{post.data.description}</p>
                     </a>

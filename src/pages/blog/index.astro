@@ -10,6 +10,7 @@ import CategoryBadge from '../../components/CategoryBadge.astro';
 import { SITE_TITLE } from '../../../site.config';
 import { getSiteDescription } from '../../i18n';
 import { t, getLanguage } from '../../i18n';
+import { removeDatePrefix } from '../../plugins/utils/index.js';
 
 // フォールバック用のデフォルトhero画像
 import defaultHeroLight from '../../assets/itzpapa-light_16_9.png';
@@ -231,7 +232,7 @@ const siteDescription = getSiteDescription();
 					posts.map((post) => (
 						<li>
 							<article class="post-card">
-								<a href={`/blog/${post.id}/`} class="post-card__image-link">
+								<a href={`/blog/${removeDatePrefix(post.id)}/`} class="post-card__image-link">
 									<div class="post-card__image-wrapper">
 										{post.data.image ? (
 											<Image
@@ -274,7 +275,7 @@ const siteDescription = getSiteDescription();
 												<img
 													width="720"
 													height="360"
-													src={`/hero/${post.id}-light.png`}
+													src={`/hero/${removeDatePrefix(post.id)}-light.png`}
 													alt=""
 													class="post-card__image post-card__image--light"
 													loading="lazy"
@@ -283,7 +284,7 @@ const siteDescription = getSiteDescription();
 												<img
 													width="720"
 													height="360"
-													src={`/hero/${post.id}-dark.png`}
+													src={`/hero/${removeDatePrefix(post.id)}-dark.png`}
 													alt=""
 													class="post-card__image post-card__image--dark"
 													loading="lazy"
@@ -302,7 +303,7 @@ const siteDescription = getSiteDescription();
 											/>
 										</div>
 									)}
-									<a href={`/blog/${post.id}/`} class="post-card__title-link">
+									<a href={`/blog/${removeDatePrefix(post.id)}/`} class="post-card__title-link">
 										<h2 class="post-card__title">{post.data.title}</h2>
 									</a>
 									{post.data.description && (
