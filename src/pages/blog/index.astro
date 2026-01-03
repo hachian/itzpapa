@@ -19,9 +19,12 @@ import defaultHeroDark from '../../assets/itzpapa-dark_16_9.png';
 const posts = (await getCollection('blog', ({ data }) => {
 	// 本番環境ではdraft: trueの記事を除外
 	return import.meta.env.PROD ? data.draft !== true : true;
-})).sort(
-	(a, b) => b.data.published.valueOf() - a.data.published.valueOf(),
-);
+})).sort((a, b) => {
+	// 更新日時順でソート（updatedがない場合はpublishedを使用）
+	const dateA = a.data.updated ?? a.data.published;
+	const dateB = b.data.updated ?? b.data.published;
+	return dateB.valueOf() - dateA.valueOf();
+});
 
 const lang = getLanguage();
 const pageTitle = `${t('blog.pageTitle')} | ${SITE_TITLE}`;

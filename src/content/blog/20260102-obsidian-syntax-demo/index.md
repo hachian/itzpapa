@@ -9,7 +9,7 @@ tags:
   - itzpapa
   - demo
 published: 2025-12-31
-updated: 2025-01-02
+updated: 2026-01-02
 ---
 
 # Obsidian Syntax Guide
