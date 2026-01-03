@@ -183,14 +183,18 @@ const enabledSocialLinks = Object.entries(social)
 		max-width: 1200px;
 		margin: 0 auto;
 		padding: var(--space-4) var(--space-6);
+		gap: var(--space-2);
 	}
 
 	.header__brand {
+		flex: 0 0 auto;
+		max-width: 16.67%; /* 2/12 */
 		font-size: var(--font-size-xl);
 		font-weight: var(--font-weight-bold);
 		color: var(--color-primary-500);
 		text-decoration: none;
 		transition: color var(--duration-fast) var(--easing-default);
+		white-space: nowrap;
 	}
 
 	.header__brand:hover {
@@ -198,23 +202,30 @@ const enabledSocialLinks = Object.entries(social)
 	}
 
 	.header__links {
+		flex: 1 1 50%; /* 6/12 */
 		display: flex;
 		align-items: center;
+		justify-content: center;
+		flex-wrap: wrap;
 		gap: var(--space-1);
+		min-width: 0;
 	}
 
 	.header__actions {
+		flex: 0 1 33.33%; /* 4/12 */
 		display: flex;
 		align-items: center;
-		gap: var(--space-2);
+		justify-content: flex-end;
+		flex-wrap: wrap;
+		gap: var(--space-1);
 	}
 
 	.header__social-link {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		width: var(--touch-target-min);
-		height: var(--touch-target-min);
+		width: 28px;
+		height: 28px;
 		color: var(--color-text-secondary);
 		border-radius: var(--radius-full);
 		transition: color var(--duration-fast) var(--easing-default),
@@ -319,6 +330,31 @@ const enabledSocialLinks = Object.entries(social)
 	.header__mobile-social-link:hover {
 		color: var(--color-primary-500);
 		background-color: var(--color-primary-50);
+	}
+
+	/* レスポンシブ：タブレット (768px〜1023px) */
+	@media (min-width: 768px) and (max-width: 1023px) {
+		.header__actions {
+			display: none;
+		}
+
+		.header__menu-toggle {
+			display: flex;
+		}
+
+		.header__mobile-menu:not([hidden]) {
+			display: flex;
+			flex-direction: column;
+			gap: var(--space-2);
+			position: absolute;
+			top: 100%;
+			left: 0;
+			right: 0;
+			background: var(--color-surface);
+			box-shadow: var(--shadow-lg);
+			padding: var(--space-4) var(--space-6);
+			animation: slideDown var(--duration-fast) var(--easing-out);
+		}
 	}
 
 	/* レスポンシブ：モバイル (768px未満) */
