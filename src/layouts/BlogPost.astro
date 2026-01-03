@@ -49,6 +49,29 @@ const articleUrl = new URL(Astro.url.pathname, Astro.site).toString();
 // OG画像URL（imageがある場合）
 const ogImageUrl = image ? new URL(image.src, Astro.site).toString() : undefined;
 
+// ヒーロー画像preload情報（LCP最適化）
+// ライトモード画像を優先（ほとんどのユーザーのデフォルト設定）
+const getHeroPreload = (): { src: string; type?: string } | undefined => {
+  // カスタムヒーロー画像がある場合（ライト/ダーク分離）
+  if (imageLight) {
+    return { src: imageLight.src, type: 'image/webp' };
+  }
+  // 単一ヒーロー画像がある場合
+  if (image) {
+    return { src: image.src, type: 'image/webp' };
+  }
+  // 本番環境: 動的生成画像
+  if (!import.meta.env.DEV && slug) {
+    return { src: `/hero/${slug}-light.png`, type: 'image/png' };
+  }
+  // 開発環境: デフォルト画像
+  if (import.meta.env.DEV) {
+    return { src: defaultHeroLight.src, type: 'image/webp' };
+  }
+  return undefined;
+};
+const heroPreload = getHeroPreload();
+
 // パンくずリスト用データ
 const breadcrumbItems = [
   { name: t('breadcrumb.home'), url: site.baseUrl + '/' },
@@ -70,6 +93,7 @@ const showTableOfContents = features.tableOfContents;
 				modifiedTime: updated,
 				tags: tags,
 			}}
+			heroPreload={heroPreload}
 		/>
 		<JsonLd
 			type="article"
@@ -216,7 +240,7 @@ const showTableOfContents = features.tableOfContents;
 			}
 
 			.article-meta__published {
-				color: var(--color-primary-500);
+				color: var(--color-text-accent);
 				font-weight: var(--font-weight-medium);
 			}
 

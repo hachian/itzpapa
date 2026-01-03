@@ -152,7 +152,15 @@ b {
 em,
 i {
 	font-style: normal;
-	color: oklch(50% 0.20 var(--primary-hue));
+	color: var(--color-text-accent);
+}
+
+/* em内のstrong/bはアクセシビリティ考慮で色を調整 */
+em strong,
+em b,
+i strong,
+i b {
+	color: var(--color-text-accent-muted);
 }
 a {
 	color: var(--color-link, var(--accent));
@@ -343,7 +351,14 @@ html.dark b {
 
 html.dark em,
 html.dark i {
-	color: oklch(70% 0.18 var(--primary-hue));
+	color: var(--color-text-accent);
+}
+
+html.dark em strong,
+html.dark em b,
+html.dark i strong,
+html.dark i b {
+	color: var(--color-text-accent-muted);
 }
 
 html.dark blockquote:not(.callout) {
@@ -379,7 +394,14 @@ html.dark blockquote:not(.callout) {
 
 	:root:not(.light) em,
 	:root:not(.light) i {
-		color: oklch(70% 0.18 var(--primary-hue));
+		color: var(--color-text-accent);
+	}
+
+	:root:not(.light) em strong,
+	:root:not(.light) em b,
+	:root:not(.light) i strong,
+	:root:not(.light) i b {
+		color: var(--color-text-accent-muted);
 	}
 
 	:root:not(.light) blockquote:not(.callout) {

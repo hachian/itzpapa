@@ -98,6 +98,10 @@
   --color-link: var(--color-primary-600);
   --color-link-hover: var(--color-primary-700);
 
+  /* アクセシブルテキストカラー (WCAG AA 4.5:1以上を保証) */
+  --color-text-accent: oklch(50% 0.20 var(--primary-hue));
+  --color-text-accent-muted: oklch(45% 0.18 var(--primary-hue));
+
   /* Semantic State Colors (Light Mode) */
   --color-success: oklch(65% 0.20 145);
   --color-success-bg: oklch(65% 0.20 145 / 0.1);
@@ -275,6 +279,10 @@ html.dark {
   --color-link: oklch(72% 0.18 var(--primary-hue));
   --color-link-hover: oklch(78% 0.16 var(--primary-hue));
 
+  /* アクセシブルテキストカラー - Dark Mode (WCAG AA 4.5:1以上を保証) */
+  --color-text-accent: oklch(75% 0.18 var(--primary-hue));
+  --color-text-accent-muted: oklch(80% 0.16 var(--primary-hue));
+
   /* Semantic State Colors - Dark Mode */
   --color-success: oklch(75% 0.18 145);
   --color-success-bg: oklch(75% 0.18 145 / 0.15);
@@ -315,6 +323,10 @@ html.dark {
     --color-accent: var(--color-primary-500);
     --color-link: oklch(72% 0.18 var(--primary-hue));
     --color-link-hover: oklch(78% 0.16 var(--primary-hue));
+
+    /* アクセシブルテキストカラー - OS Dark Mode (WCAG AA 4.5:1以上を保証) */
+    --color-text-accent: oklch(75% 0.18 var(--primary-hue));
+    --color-text-accent-muted: oklch(80% 0.16 var(--primary-hue));
 
     /* Semantic State Colors - Dark Mode */
     --color-success: oklch(75% 0.18 145);

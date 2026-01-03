@@ -59,6 +59,8 @@
   transform: scale(0.95);
   transition: opacity var(--duration-normal) var(--easing-out),
               transform var(--duration-normal) var(--easing-out);
+  /* CLS防止: 画像読み込み前にレイアウト領域を確保 */
+  aspect-ratio: 16 / 9;
 }
 
 .lightbox-overlay[data-open="true"] .lightbox-image {

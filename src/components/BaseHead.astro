@@ -20,11 +20,16 @@ interface Props {
 		modifiedTime?: Date;
 		tags?: string[];
 	};
+	/** ヒーロー画像preload情報（LCP最適化用） */
+	heroPreload?: {
+		src: string;
+		type?: string; // 'image/webp' | 'image/png' など
+	};
 }
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
-const { title, description, image: propsImage, isHomePage, slug, article } = Astro.props;
+const { title, description, image: propsImage, isHomePage, slug, article, heroPreload } = Astro.props;
 
 // タイトル形式: トップページ以外は「記事タイトル | サイト名」形式
 const formattedTitle = isHomePage ? title : `${title} | ${SITE_TITLE}`;
@@ -86,6 +91,16 @@ const googleAdsenseId = seo.googleAdsenseId || '';
 <!-- Font preloads - Local fonts (優先度高) -->
 <link rel="preload" href="/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin />
 <link rel="preload" href="/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin />
+
+<!-- Hero image preload (LCP最適化) -->
+{heroPreload && (
+	<link
+		rel="preload"
+		as="image"
+		href={heroPreload.src}
+		type={heroPreload.type || 'image/webp'}
+	/>
+)}
 
 <!-- Google Fonts - Noto Sans JP (Japanese font) with performance optimizations -->
 <link rel="dns-prefetch" href="https://fonts.googleapis.com" />

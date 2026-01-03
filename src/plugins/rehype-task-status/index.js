@@ -51,30 +51,51 @@ export default function rehypeTaskStatus(options = {}) {
         const ariaLabel = ARIA_LABELS[statusName];
 
         // カスタムspan要素に置き換え
+        // アクセシビリティ: aria-labelの代わりにsr-only spanを使用
+        // (span要素でのaria-labelはWCAG違反のため)
         const customCheckbox = {
           type: 'element',
           tagName: 'span',
           properties: {
             className: [className],
             'data-task-status': statusName,
-            ...(accessibility && { role: 'img', 'aria-label': ariaLabel })
+            'aria-hidden': 'true'
           },
           children: [
             {
               type: 'element',
               tagName: 'span',
               properties: {
-                className: ['task-icon'],
-                'aria-hidden': 'true'
+                className: ['task-icon']
               },
               children: []
             }
           ]
         };
 
+        // スクリーンリーダー用の非表示テキスト（sr-only）
+        const srOnlySpan = accessibility ? {
+          type: 'element',
+          tagName: 'span',
+          properties: {
+            className: ['sr-only']
+          },
+          children: [
+            {
+              type: 'text',
+              value: ariaLabel
+            }
+          ]
+        } : null;
+
         // 親要素のchildrenを更新
         if (parent && typeof index === 'number') {
           parent.children[index] = customCheckbox;
+
+          // sr-onlyスパンをcustomCheckboxの直後に挿入
+          if (srOnlySpan) {
+            parent.children.splice(index + 1, 0, srOnlySpan);
+          }
 
           // 親のliにtask-list-itemクラスを追加
           const grandparent = findParentLi(tree, parent);
