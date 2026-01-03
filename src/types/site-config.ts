@@ -95,6 +95,8 @@ export interface SeoConfig {
   defaultDescription?: string;
   /** Google Analytics トラッキング ID（空の場合はスクリプト出力なし） */
   googleAnalyticsId?: string;
+  /** Google AdSense パブリッシャー ID（空の場合はスクリプト出力なし） */
+  googleAdsenseId?: string;
 }
 
 /**

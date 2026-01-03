@@ -299,19 +299,21 @@ footer: {
 
 ## SEO Settings (seo)
 
-Configure search engine optimization and analytics settings.
+Configure search engine optimization, analytics, and ad settings.
 
 ### Configuration Options
 
 | Property | Type | Description |
 |----------|------|-------------|
 | `googleAnalyticsId` | string | Google Analytics tracking ID |
+| `googleAdsenseId` | string | Google AdSense publisher ID |
 
 ### Example
 
 ```typescript
 seo: {
   googleAnalyticsId: 'G-XXXXXXXXXX',
+  googleAdsenseId: 'ca-pub-XXXXXXXXXXXXXXXX',
 },
 ```
 
@@ -337,6 +339,27 @@ seo: {
   googleAnalyticsId: '',
 },
 ```
+
+### Google AdSense
+
+- Set the publisher ID in `googleAdsenseId` to enable auto ads
+- Publisher ID format: `ca-pub-XXXXXXXXXXXXXXXX` (16-digit number)
+- Leave empty or undefined to disable AdSense
+
+```typescript
+// Enable Google AdSense
+seo: {
+  googleAdsenseId: 'ca-pub-1234567890123456',
+},
+
+// Disable Google AdSense
+seo: {
+  googleAdsenseId: '',
+},
+```
+
+> [!note]
+> Google AdSense uses automatic ad placement. After setting the publisher ID, Google's algorithm will determine optimal ad positions on your pages.
 
 ## Feature Flags (features)
 

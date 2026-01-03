@@ -65,6 +65,9 @@ const primaryHue = resolveThemeColor(theme.primaryHue);
 
 // Google Analytics ID（空でない場合のみ使用）
 const googleAnalyticsId = seo.googleAnalyticsId || '';
+
+// Google AdSense ID（空でない場合のみ使用）
+const googleAdsenseId = seo.googleAdsenseId || '';
 ---
 
 <!-- Global Metadata -->
@@ -212,5 +215,16 @@ const googleAnalyticsId = seo.googleAnalyticsId || '';
 			gtag('js', new Date());
 			gtag('config', googleAnalyticsId);
 		</script>
+	</Fragment>
+)}
+
+{googleAdsenseId && (
+	<Fragment>
+		<!-- Google AdSense Auto Ads -->
+		<script
+			async
+			src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${googleAdsenseId}`}
+			crossorigin="anonymous"
+		></script>
 	</Fragment>
 )}

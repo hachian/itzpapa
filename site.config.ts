@@ -127,6 +127,12 @@ export const siteConfig: SiteConfig = {
      * 空文字または未設定の場合、トラッキングスクリプトは出力されません
      */
     googleAnalyticsId: '',
+    /**
+     * Google AdSense パブリッシャーID
+     * 形式: ca-pub-XXXXXXXXXXXXXXXX（16桁の数字）
+     * 空文字または未設定の場合、AdSenseスクリプトは出力されません
+     */
+    googleAdsenseId: '',
   },
 
   // ========================================
