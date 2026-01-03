@@ -249,8 +249,8 @@ describe('remark-callout Plugin', () => {
       );
       assert.strictEqual(
         blockquote.data?.hProperties?.['data-callout-folded'],
-        'false',
-        'Should not be folded by default with minus'
+        'true',
+        'Should be folded by default with minus'
       );
     });
 
@@ -266,8 +266,8 @@ describe('remark-callout Plugin', () => {
       );
       assert.strictEqual(
         blockquote.data?.hProperties?.['data-callout-folded'],
-        'true',
-        'Should be folded by default with plus'
+        'false',
+        'Should not be folded by default with plus'
       );
     });
 
@@ -409,7 +409,7 @@ describe('rehype-callout Plugin (HTML Output)', () => {
     });
 
     test('expanded foldable callout has open attribute', async () => {
-      const input = '> [!info]-\n> Expanded by default';
+      const input = '> [!info]+\n> Expanded by default';
       const html = await processToHtml(input);
 
       assert(html.includes('<details'), 'Should generate details');
