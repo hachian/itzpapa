@@ -70,16 +70,18 @@ function tagToSlug(tag: string): string {
 
 <div class={listClasses} role="list" aria-label="タグ一覧">
   {displayTags.map((tag) => (
-    <TagBadge
-      tag={tag}
-      href={`${baseUrl}${tagToSlug(tag)}`}
-      count={showCount ? tagCounts[tag] : undefined}
-      ariaLabel={`${tag}タグの記事を表示`}
-    />
+    <span role="listitem">
+      <TagBadge
+        tag={tag}
+        href={`${baseUrl}${tagToSlug(tag)}`}
+        count={showCount ? tagCounts[tag] : undefined}
+        ariaLabel={`${tag}タグの記事を表示`}
+      />
+    </span>
   ))}
-  
+
   {hiddenCount > 0 && (
-    <span class="tag-more" aria-label={`他に${hiddenCount}個のタグがあります`}>
+    <span class="tag-more" role="listitem" aria-label={`他に${hiddenCount}個のタグがあります`}>
       +{hiddenCount}個
     </span>
   )}

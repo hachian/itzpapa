@@ -366,22 +366,22 @@ const showTableOfContents = features.tableOfContents;
 				<div class="hero-image">
 					{imageLight && imageDark ? (
 						<>
-							<Image width={1020} height={510} src={imageLight} alt="" loading="eager" decoding="async" format="webp" class="hero-image--light" />
-							<Image width={1020} height={510} src={imageDark} alt="" loading="eager" decoding="async" format="webp" class="hero-image--dark" />
+							<Image width={1020} height={510} src={imageLight} alt="" loading="eager" decoding="async" format="webp" fetchpriority="high" class="hero-image--light" />
+							<Image width={1020} height={510} src={imageDark} alt="" loading="eager" decoding="async" format="webp" fetchpriority="high" class="hero-image--dark" />
 						</>
 					) : image ? (
-						<Image width={1020} height={510} src={image} alt="" loading="eager" decoding="async" format="webp" />
+						<Image width={1020} height={510} src={image} alt="" loading="eager" decoding="async" format="webp" fetchpriority="high" />
 					) : import.meta.env.DEV ? (
 						/* dev環境: フォールバック画像を使用（動的生成が機能しないため） */
 						<>
-							<Image width={1020} height={510} src={defaultHeroLight} alt="" loading="eager" decoding="async" format="webp" class="hero-image--light" />
-							<Image width={1020} height={510} src={defaultHeroDark} alt="" loading="eager" decoding="async" format="webp" class="hero-image--dark" />
+							<Image width={1020} height={510} src={defaultHeroLight} alt="" loading="eager" decoding="async" format="webp" fetchpriority="high" class="hero-image--light" />
+							<Image width={1020} height={510} src={defaultHeroDark} alt="" loading="eager" decoding="async" format="webp" fetchpriority="high" class="hero-image--dark" />
 						</>
 					) : (
 						/* 本番環境: ビルド時に生成されたタイトル入り画像を使用 */
 						<>
-							<img width="1020" height="510" src={`/hero/${slug}-light.png`} alt="" loading="eager" decoding="async" class="hero-image--light" />
-							<img width="1020" height="510" src={`/hero/${slug}-dark.png`} alt="" loading="eager" decoding="async" class="hero-image--dark" />
+							<img width="1020" height="510" src={`/hero/${slug}-light.png`} alt="" loading="eager" decoding="async" fetchpriority="high" class="hero-image--light" />
+							<img width="1020" height="510" src={`/hero/${slug}-dark.png`} alt="" loading="eager" decoding="async" fetchpriority="high" class="hero-image--dark" />
 						</>
 					)}
 				</div>

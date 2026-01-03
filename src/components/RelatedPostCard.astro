@@ -30,7 +30,7 @@ const href = `/blog/${slug}/`;
 ---
 
 <article class="post-card">
-  <a href={href} class="post-card__image-link">
+  <a href={href} class="post-card__image-link" aria-label={`${title}の記事を読む`}>
     <div class="post-card__image-wrapper">
       {image ? (
         <Image

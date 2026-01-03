@@ -68,7 +68,7 @@
   --color-primary-200: oklch(88% 0.10 var(--primary-hue));
   --color-primary-300: oklch(78% 0.16 var(--primary-hue));
   --color-primary-400: oklch(68% 0.20 var(--primary-hue));
-  --color-primary-500: oklch(55% 0.24 var(--primary-hue));
+  --color-primary-500: oklch(65% 0.24 var(--primary-hue));
   --color-primary-600: oklch(48% 0.22 var(--primary-hue));
   --color-primary-700: oklch(40% 0.19 var(--primary-hue));
   --color-primary-800: oklch(32% 0.15 var(--primary-hue));

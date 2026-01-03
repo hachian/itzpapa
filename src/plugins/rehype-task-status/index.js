@@ -57,7 +57,7 @@ export default function rehypeTaskStatus(options = {}) {
           properties: {
             className: [className],
             'data-task-status': statusName,
-            ...(accessibility && { 'aria-label': ariaLabel })
+            ...(accessibility && { role: 'img', 'aria-label': ariaLabel })
           },
           children: [
             {
