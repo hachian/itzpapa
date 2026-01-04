@@ -30,6 +30,7 @@ Customizing your itzpapa blog is done through the `site.config.ts` file in the p
 | `features` | Feature flags (table of contents, tag cloud, etc.) |
 | `ogImage` | OG image background settings |
 | `imageHosting` | External image hosting settings (S3/R2) |
+| `pagination` | Pagination settings for blog listing |
 
 ```typescript
 export const siteConfig: SiteConfig = {
@@ -41,6 +42,7 @@ export const siteConfig: SiteConfig = {
   seo: { /* SEO settings */ },
   features: { /* Feature flags */ },
   ogImage: { /* OG image settings */ },
+  pagination: { /* Pagination settings */ },
 };
 ```
 
@@ -573,6 +575,43 @@ R2_ACCOUNT_ID=your_account_id
 - **Differential uploads**: Only changed files are uploaded on subsequent builds
 - **Immutable caching**: Images are uploaded with `Cache-Control: max-age=31536000, immutable`
 
+## Pagination Settings (pagination)
+
+Configure how blog posts are paginated on listing pages.
+
+### Configuration Options
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `postsPerPage` | number | Number of posts to display per page |
+
+### Example
+
+```typescript
+pagination: {
+  postsPerPage: 24,
+},
+```
+
+### Customization
+
+Adjust the number of posts per page based on your content style:
+
+```typescript
+// Fewer posts per page (more pages)
+pagination: {
+  postsPerPage: 10,
+},
+
+// More posts per page (fewer pages)
+pagination: {
+  postsPerPage: 50,
+},
+```
+
+> [!tip]
+> A good rule of thumb is 12-24 posts per page for card layouts, or 10-15 for list layouts with excerpts.
+
 ## Summary
 
 By editing `site.config.ts`, you can customize:
@@ -582,10 +621,11 @@ By editing `site.config.ts`, you can customize:
 - **navigation**: Navigation menu
 - **social**: Social media links
 - **footer**: Footer copyright
-- **seo**: Analytics settings
+- **seo**: Analytics and advertising settings
 - **features**: Table of contents, tag cloud, related posts, comments
 - **ogImage**: OG image background images
 - **imageHosting**: External image hosting (S3/R2)
+- **pagination**: Posts per page settings
 
 After making changes, restart the development server to see them:
 

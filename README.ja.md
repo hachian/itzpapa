@@ -10,13 +10,19 @@ Astroをベースにしたブログサイトで、Obsidian風の記法（WikiLin
 - シンプルでカスタマイズ可能なデザイン（`site.config.ts`で一元設定）
 - 高パフォーマンス設計
 - SEO最適化（canonical URLs、OpenGraphデータ）
-- **動的OG画像生成** - 記事タイトル入りのOG画像を自動生成
+- **動的OG画像生成** - 記事タイトル入りのOG画像を自動生成（WebP形式で最適化）
 - **ロゴ/ファビコン自動生成** - primaryHue設定に連動したカラー
 - サイトマップ自動生成
 - RSSフィード対応
 - **多言語対応（i18n）** - 日本語と英語をサポート
 - **giscusコメントシステム** - GitHub Discussionsベースのコメント機能
+- **Google AdSense統合** - 自動広告配置
 - **パンくずリスト** - ブログ・タグページに表示
+- **月別アーカイブ** - 投稿を月ごとに整理
+- **ページネーション** - ブログ一覧の分割表示
+- **カテゴリ機能** - 記事のカテゴリ分類と一覧ページ
+- **画像ライトボックス** - 画像クリックで拡大表示
+- **クリーンURL** - 日付プレフィックスを自動除去
 
 ### Obsidian風機能
 - **WikiLink記法** - `[[ページ名]]`形式のリンク記法をサポート
@@ -92,6 +98,13 @@ export const siteConfig = {
     tagCloud: true,
     relatedPosts: true,
     comments: { enabled: true, provider: 'giscus', config: {...} },
+  },
+  seo: {
+    googleAnalyticsId: 'G-XXXXXXXXXX',
+    googleAdsenseId: 'ca-pub-XXXXXXXXXXXXXXXX',
+  },
+  pagination: {
+    postsPerPage: 24,  // 1ページあたりの記事数
   },
 };
 ```

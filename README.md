@@ -12,13 +12,19 @@ An Astro-based blog site that supports Obsidian-style syntax (WikiLink, Callout,
 - Simple, customizable design with centralized configuration (`site.config.ts`)
 - High performance architecture
 - SEO optimized (canonical URLs, OpenGraph)
-- **Dynamic OG image generation** - Auto-generates OG images with article titles
+- **Dynamic OG image generation** - Auto-generates OG images with article titles (WebP optimized)
 - **Auto-generated logo/favicon** - Colors adapt to your primaryHue setting
 - Auto-generated sitemap
 - RSS feed support
 - **Multilingual support (i18n)** - Japanese and English
 - **giscus comment system** - GitHub Discussions-based comments
+- **Google AdSense integration** - Automatic ad placement
 - **Breadcrumb navigation** - For blog and tag pages
+- **Monthly archive** - Organize posts by month
+- **Pagination** - Split blog listing across pages
+- **Category system** - Categorize articles with dedicated listing page
+- **Image lightbox** - Click to enlarge images
+- **Clean URLs** - Auto-removes date prefixes from URLs
 
 ### Obsidian-style Features
 - **WikiLink syntax** - Support for `[[page name]]` link format
@@ -94,6 +100,13 @@ export const siteConfig = {
     tagCloud: true,
     relatedPosts: true,
     comments: { enabled: true, provider: 'giscus', config: {...} },
+  },
+  seo: {
+    googleAnalyticsId: 'G-XXXXXXXXXX',
+    googleAdsenseId: 'ca-pub-XXXXXXXXXXXXXXXX',
+  },
+  pagination: {
+    postsPerPage: 24,  // Posts per page
   },
 };
 ```
