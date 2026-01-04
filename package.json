@@ -21,6 +21,7 @@
     "generate:logo": "node scripts/generate-logo.js",
     "dev": "npm run generate:logo && astro dev",
     "build": "npm run generate:logo && node --env-file=.env node_modules/.bin/astro build",
+    "build:ci": "npm run generate:logo && astro build",
     "preview": "astro preview",
     "astro": "astro",
     "test": "node tests/test-runner.js",
