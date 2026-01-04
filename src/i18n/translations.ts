@@ -103,6 +103,20 @@ export interface TranslationKeys {
   'category.noPostsFoundDesc': string;
   'breadcrumb.category': string;
 
+  // アーカイブ関連
+  'nav.archive': string;
+  'archive.title': string;
+  'archive.posts': string;
+  'archive.totalMonths': string;
+  'archive.mostActive': string;
+  'archive.noPostsFound': string;
+  'archive.noPostsFoundDesc': string;
+  'archive.yearPosts': string;
+  'archive.monthPosts': string;
+  'archive.backToArchive': string;
+  'archive.backToYear': string;
+  'breadcrumb.archive': string;
+
   // Aboutページ
   'about.title': string;
   'about.description': string;
@@ -216,6 +230,19 @@ export const translations: Translations = {
     'category.noPostsFound': '記事が見つかりません',
     'category.noPostsFoundDesc': 'このカテゴリの記事はまだありません。',
     'breadcrumb.category': 'カテゴリ',
+    // アーカイブ関連
+    'nav.archive': 'アーカイブ',
+    'archive.title': 'アーカイブ',
+    'archive.posts': '件の記事',
+    'archive.totalMonths': '総月数',
+    'archive.mostActive': '最多記事月',
+    'archive.noPostsFound': '記事が見つかりません',
+    'archive.noPostsFoundDesc': 'まだ記事が公開されていません。',
+    'archive.yearPosts': '{year}年の記事',
+    'archive.monthPosts': '{year}年{month}月の記事',
+    'archive.backToArchive': 'アーカイブ一覧に戻る',
+    'archive.backToYear': '{year}年のアーカイブに戻る',
+    'breadcrumb.archive': 'アーカイブ',
     // Aboutページ
     'about.title': 'About itzpapa',
     'about.description': 'Obsidian記事をそのまま公開できるAstroブログテンプレート',
@@ -325,6 +352,19 @@ export const translations: Translations = {
     'category.noPostsFound': 'No posts found',
     'category.noPostsFoundDesc': 'There are no posts in this category yet.',
     'breadcrumb.category': 'Category',
+    // Archive
+    'nav.archive': 'Archive',
+    'archive.title': 'Archive',
+    'archive.posts': ' posts',
+    'archive.totalMonths': 'Total Months',
+    'archive.mostActive': 'Most Active',
+    'archive.noPostsFound': 'No posts found',
+    'archive.noPostsFoundDesc': 'No posts have been published yet.',
+    'archive.yearPosts': 'Posts from {year}',
+    'archive.monthPosts': 'Posts from {month} {year}',
+    'archive.backToArchive': 'Back to Archive',
+    'archive.backToYear': 'Back to {year} Archive',
+    'breadcrumb.archive': 'Archive',
     // About page
     'about.title': 'About itzpapa',
     'about.description': 'An Astro blog template for publishing Obsidian articles',

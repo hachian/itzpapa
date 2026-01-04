@@ -1,0 +1,52 @@
+---
+/**
+ * PostsGrid - 記事グリッドコンポーネント
+ * 記事カードをグリッドレイアウトで表示
+ */
+import type { CollectionEntry } from 'astro:content';
+import PostCard from './PostCard.astro';
+
+interface Props {
+  posts: CollectionEntry<'blog'>[];
+}
+
+const { posts } = Astro.props;
+---
+
+<ul class="posts-grid" role="list">
+  {posts.map((post) => (
+    <li>
+      <PostCard post={post} />
+    </li>
+  ))}
+</ul>
+
+<style>
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .posts-grid li {
+    display: flex;
+  }
+
+  /* レスポンシブ: タブレット */
+  @media (max-width: 1023px) {
+    .posts-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* レスポンシブ: モバイル */
+  @media (max-width: 767px) {
+    .posts-grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-6);
+    }
+  }
+</style>

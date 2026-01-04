@@ -1,0 +1,396 @@
+---
+/**
+ * アーカイブ一覧ページ
+ * 全ブログ記事を年月別にグループ化して表示
+ */
+
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { t, getLanguage } from '../../i18n';
+
+// 全ブログ記事を取得（本番環境ではdraft記事を除外）
+const posts = await getCollection('blog', ({ data }) => {
+  return import.meta.env.PROD ? data.draft !== true : true;
+});
+
+// 年月別にグループ化
+interface YearMonthData {
+  months: Map<number, { count: number; posts: typeof posts }>;
+  totalPosts: number;
+}
+
+const archiveData = new Map<number, YearMonthData>();
+
+posts.forEach(post => {
+  const date = new Date(post.data.published);
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+
+  if (!archiveData.has(year)) {
+    archiveData.set(year, { months: new Map(), totalPosts: 0 });
+  }
+
+  const yearData = archiveData.get(year)!;
+  if (!yearData.months.has(month)) {
+    yearData.months.set(month, { count: 0, posts: [] });
+  }
+
+  const monthData = yearData.months.get(month)!;
+  monthData.count++;
+  monthData.posts.push(post);
+  yearData.totalPosts++;
+});
+
+// 年を降順（新しい順）でソート
+const sortedYears = Array.from(archiveData.keys()).sort((a, b) => b - a);
+
+// 統計情報を計算
+const totalPosts = posts.length;
+const totalMonths = Array.from(archiveData.values()).reduce(
+  (sum, yearData) => sum + yearData.months.size,
+  0
+);
+
+// 最多記事月を見つける
+let mostActiveMonth = { year: 0, month: 0, count: 0 };
+archiveData.forEach((yearData, year) => {
+  yearData.months.forEach((monthData, month) => {
+    if (monthData.count > mostActiveMonth.count) {
+      mostActiveMonth = { year, month, count: monthData.count };
+    }
+  });
+});
+
+// ページメタデータ
+const lang = getLanguage();
+const archiveTitle = t('archive.title');
+const pageDescription = lang === 'ja'
+  ? `${totalPosts}件の記事を年月別に整理しています。`
+  : `Organizing ${totalPosts} posts by year and month.`;
+
+// 月名を取得する関数
+function getMonthName(month: number, lang: string): string {
+  const date = new Date(2024, month - 1, 1);
+  return date.toLocaleDateString(lang === 'ja' ? 'ja-JP' : 'en-US', { month: 'long' });
+}
+
+// 最多記事月の表示テキスト
+const mostActiveText = mostActiveMonth.count > 0
+  ? lang === 'ja'
+    ? `${mostActiveMonth.year}年${mostActiveMonth.month}月 (${mostActiveMonth.count}件)`
+    : `${getMonthName(mostActiveMonth.month, 'en')} ${mostActiveMonth.year} (${mostActiveMonth.count})`
+  : '-';
+---
+
+<html lang={lang}>
+  <head>
+    <BaseHead title={archiveTitle} description={pageDescription} />
+    <style>
+      .archive-container {
+        width: var(--content-max-width);
+        max-width: calc(100% - 2em);
+        margin: var(--space-2) auto var(--space-8);
+        padding: 0 var(--space-4) var(--space-4);
+      }
+
+      .page-header {
+        text-align: center;
+        margin-bottom: var(--space-8);
+        padding-bottom: var(--space-4);
+        border-bottom: 2px solid var(--color-gray-200);
+      }
+
+      .page-title {
+        font-size: var(--font-size-4xl);
+        font-weight: var(--font-weight-bold);
+        color: var(--color-text-primary);
+        margin: 0 0 var(--space-2) 0;
+      }
+
+      .page-description {
+        font-size: var(--font-size-lg);
+        color: var(--color-text-secondary);
+        margin: 0;
+      }
+
+      .archive-stats {
+        --archive-hue: var(--primary-hue);
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: var(--space-4);
+        margin-bottom: var(--space-8);
+        padding: var(--space-4);
+        background-color: oklch(97% 0.02 var(--archive-hue) / 0.5);
+        border-radius: var(--radius-lg);
+        border: 1px solid oklch(88% 0.10 var(--archive-hue));
+      }
+
+      .stat-item {
+        text-align: center;
+      }
+
+      .stat-number {
+        font-size: var(--font-size-3xl);
+        font-weight: var(--font-weight-bold);
+        color: oklch(55% 0.24 var(--archive-hue));
+        display: block;
+      }
+
+      .stat-label {
+        font-size: var(--font-size-sm);
+        color: var(--color-text-secondary);
+        margin-top: var(--space-1);
+      }
+
+      .stat-text {
+        font-size: var(--font-size-lg);
+        font-weight: var(--font-weight-semibold);
+        color: oklch(55% 0.24 var(--archive-hue));
+        display: block;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: var(--space-12) var(--space-4);
+        color: var(--color-text-secondary);
+      }
+
+      .empty-state h2 {
+        font-size: var(--font-size-2xl);
+        margin-bottom: var(--space-2);
+      }
+
+      .year-section {
+        margin: var(--space-6) 0;
+        padding: var(--space-6);
+        background: var(--color-surface);
+        border-radius: var(--radius-xl);
+        border: 1px solid var(--color-gray-200);
+      }
+
+      .year-header {
+        display: flex;
+        align-items: baseline;
+        gap: var(--space-3);
+        margin-bottom: var(--space-4);
+        padding-bottom: var(--space-2);
+        border-bottom: 2px solid var(--color-primary-200);
+      }
+
+      .year-title {
+        font-size: var(--font-size-2xl);
+        font-weight: var(--font-weight-bold);
+        color: var(--color-text-primary);
+        margin: 0;
+      }
+
+      .year-title a {
+        color: inherit;
+        text-decoration: none;
+        transition: color var(--duration-fast) var(--easing-default);
+      }
+
+      .year-title a:hover {
+        color: var(--color-link);
+      }
+
+      .year-count {
+        font-size: var(--font-size-sm);
+        color: var(--color-text-secondary);
+      }
+
+      .months-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: var(--space-3);
+      }
+
+      .month-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: var(--space-4);
+        background: var(--color-bg);
+        border-radius: var(--radius-md);
+        border: 1px solid var(--color-gray-200);
+        text-decoration: none;
+        transition: all var(--duration-fast) var(--easing-default);
+      }
+
+      .month-card:hover {
+        border-color: var(--color-primary-400);
+        box-shadow: 0 2px 8px oklch(55% 0.24 var(--archive-hue) / 0.15);
+        transform: translateY(-2px);
+      }
+
+      .month-name {
+        font-size: var(--font-size-lg);
+        font-weight: var(--font-weight-semibold);
+        color: var(--color-text-primary);
+        margin-bottom: var(--space-1);
+      }
+
+      .month-count {
+        font-size: var(--font-size-sm);
+        color: var(--color-text-secondary);
+      }
+
+      /* レスポンシブ対応 */
+      @media (max-width: 768px) {
+        .archive-container {
+          margin: 0 auto var(--space-4);
+          padding: 0 var(--space-2) var(--space-2);
+        }
+
+        .page-title {
+          font-size: var(--font-size-2xl);
+        }
+
+        .archive-stats {
+          grid-template-columns: repeat(2, 1fr);
+          gap: var(--space-2);
+          padding: var(--space-3);
+        }
+
+        .stat-number {
+          font-size: var(--font-size-2xl);
+        }
+
+        .stat-text {
+          font-size: var(--font-size-base);
+        }
+
+        .months-grid {
+          grid-template-columns: repeat(3, 1fr);
+          gap: var(--space-2);
+        }
+
+        .month-card {
+          padding: var(--space-3);
+        }
+
+        .month-name {
+          font-size: var(--font-size-base);
+        }
+      }
+
+      /* ダークモード対応 */
+      html.dark .year-section {
+        background: var(--color-gray-800);
+        border-color: var(--color-gray-700);
+      }
+
+      html.dark .archive-stats {
+        background-color: oklch(25% 0.12 var(--archive-hue) / 0.3);
+        border-color: oklch(32% 0.15 var(--archive-hue));
+      }
+
+      html.dark .page-header {
+        border-bottom-color: var(--color-gray-700);
+      }
+
+      html.dark .year-header {
+        border-bottom-color: oklch(40% 0.19 var(--archive-hue));
+      }
+
+      html.dark .month-card {
+        background: var(--color-gray-900);
+        border-color: var(--color-gray-700);
+      }
+
+      html.dark .month-card:hover {
+        border-color: oklch(50% 0.19 var(--archive-hue));
+      }
+    </style>
+  </head>
+
+  <body>
+    <Header />
+    <main style="view-transition-name: main-content;">
+      <div class="archive-container">
+        <Breadcrumb items={[
+          { label: t('breadcrumb.home'), href: '/' },
+          { label: t('breadcrumb.archive') }
+        ]} />
+        <header class="page-header">
+          <h1 class="page-title">{archiveTitle}</h1>
+          <p class="page-description">{pageDescription}</p>
+        </header>
+
+        {posts.length > 0 ? (
+          <>
+            <!-- 統計情報 -->
+            <section class="archive-stats">
+              <div class="stat-item">
+                <span class="stat-number">{totalPosts}</span>
+                <div class="stat-label">{t('tags.totalPosts')}</div>
+              </div>
+              <div class="stat-item">
+                <span class="stat-number">{totalMonths}</span>
+                <div class="stat-label">{t('archive.totalMonths')}</div>
+              </div>
+              <div class="stat-item">
+                <span class="stat-text">{mostActiveText}</span>
+                <div class="stat-label">{t('archive.mostActive')}</div>
+              </div>
+            </section>
+
+            <!-- 年別セクション -->
+            {sortedYears.map(year => {
+              const yearData = archiveData.get(year)!;
+              // 月を降順（新しい順）でソート
+              const sortedMonths = Array.from(yearData.months.keys()).sort((a, b) => b - a);
+
+              return (
+                <section class="year-section">
+                  <header class="year-header">
+                    <h2 class="year-title">
+                      <a href={`/archive/${year}/`}>
+                        {lang === 'ja' ? `${year}年` : year}
+                      </a>
+                    </h2>
+                    <span class="year-count">
+                      {yearData.totalPosts}{t('archive.posts')}
+                    </span>
+                  </header>
+                  <div class="months-grid">
+                    {sortedMonths.map(month => {
+                      const monthData = yearData.months.get(month)!;
+                      const monthName = getMonthName(month, lang);
+                      const monthStr = String(month).padStart(2, '0');
+
+                      return (
+                        <a
+                          href={`/archive/${year}/${monthStr}/`}
+                          class="month-card"
+                        >
+                          <span class="month-name">
+                            {lang === 'ja' ? `${month}月` : monthName}
+                          </span>
+                          <span class="month-count">
+                            {monthData.count}{t('archive.posts')}
+                          </span>
+                        </a>
+                      );
+                    })}
+                  </div>
+                </section>
+              );
+            })}
+          </>
+        ) : (
+          <!-- 空の状態 -->
+          <section class="empty-state">
+            <h2>{t('archive.noPostsFound')}</h2>
+            <p>{t('archive.noPostsFoundDesc')}</p>
+          </section>
+        )}
+      </div>
+    </main>
+    <Footer />
+  </body>
+</html>
