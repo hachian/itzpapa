@@ -1,6 +1,6 @@
 import type { APIRoute, GetStaticPaths } from "astro";
 import { getCollection } from "astro:content";
-import { generateOgImage } from "../../utils/og-image";
+import { generateOgImage, getOgImageContentType } from "../../utils/og-image";
 import { removeDatePrefix } from "../../plugins/utils/index.js";
 
 export const prerender = true;
@@ -24,7 +24,7 @@ export const GET: APIRoute = async ({ props }) => {
 
     return new Response(pngBuffer, {
       headers: {
-        "Content-Type": "image/png",
+        "Content-Type": getOgImageContentType(),
         "Cache-Control": "public, max-age=31536000, immutable",
       },
     });

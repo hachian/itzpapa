@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import { generateDefaultOgImage } from "../../utils/og-image";
+import { generateDefaultOgImage, getOgImageContentType } from "../../utils/og-image";
 
 export const prerender = true;
 
@@ -9,7 +9,7 @@ export const GET: APIRoute = async () => {
 
     return new Response(pngBuffer, {
       headers: {
-        "Content-Type": "image/png",
+        "Content-Type": getOgImageContentType(),
         "Cache-Control": "public, max-age=31536000, immutable",
       },
     });

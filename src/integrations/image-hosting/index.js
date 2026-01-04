@@ -24,19 +24,64 @@ import { createS3Client, createUploadService } from './s3-upload-service.js';
  */
 
 /**
- * 画像ファイルのContent-Typeを取得
- * @param {string} fileName
+ * 画像ファイルのContent-Typeをmagic bytesから判定
+ * @param {Buffer} content - ファイル内容
+ * @param {string} fileName - ファイル名（フォールバック用）
  * @returns {string}
  */
-function getContentType(fileName) {
+function getContentType(content, fileName) {
+  // Magic bytes による判定
+  if (content.length >= 12) {
+    // WebP: RIFF....WEBP
+    if (content[0] === 0x52 && content[1] === 0x49 && content[2] === 0x46 && content[3] === 0x46 &&
+        content[8] === 0x57 && content[9] === 0x45 && content[10] === 0x42 && content[11] === 0x50) {
+      return 'image/webp';
+    }
+  }
+
+  if (content.length >= 8) {
+    // PNG: 89 50 4E 47 0D 0A 1A 0A
+    if (content[0] === 0x89 && content[1] === 0x50 && content[2] === 0x4E && content[3] === 0x47 &&
+        content[4] === 0x0D && content[5] === 0x0A && content[6] === 0x1A && content[7] === 0x0A) {
+      return 'image/png';
+    }
+  }
+
+  if (content.length >= 3) {
+    // JPEG: FF D8 FF
+    if (content[0] === 0xFF && content[1] === 0xD8 && content[2] === 0xFF) {
+      return 'image/jpeg';
+    }
+
+    // GIF: GIF87a or GIF89a
+    if (content[0] === 0x47 && content[1] === 0x49 && content[2] === 0x46) {
+      return 'image/gif';
+    }
+  }
+
+  if (content.length >= 12) {
+    // AVIF: ....ftypavif or ....ftypmif1
+    if (content[4] === 0x66 && content[5] === 0x74 && content[6] === 0x79 && content[7] === 0x70) {
+      const brand = content.slice(8, 12).toString('ascii');
+      if (brand === 'avif' || brand === 'mif1') {
+        return 'image/avif';
+      }
+    }
+  }
+
+  // SVGはテキストベースなのでファイル名で判定
   const ext = path.extname(fileName).toLowerCase();
+  if (ext === '.svg') {
+    return 'image/svg+xml';
+  }
+
+  // フォールバック: 拡張子ベース
   const contentTypes = {
     '.png': 'image/png',
     '.jpg': 'image/jpeg',
     '.jpeg': 'image/jpeg',
     '.gif': 'image/gif',
     '.webp': 'image/webp',
-    '.svg': 'image/svg+xml',
     '.avif': 'image/avif'
   };
   return contentTypes[ext] || 'application/octet-stream';
@@ -286,11 +331,11 @@ export function astroImageHosting(options = {}) {
               }
             }
 
-            // アップロード
+            // アップロード（contentからContent-Typeを判定）
             await uploadService.upload({
               key: image.key,
               body: content,
-              contentType: getContentType(image.fileName),
+              contentType: getContentType(content, image.fileName),
               cacheControl: 'max-age=31536000, immutable'
             });
 

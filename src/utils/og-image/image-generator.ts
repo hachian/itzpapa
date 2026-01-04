@@ -4,9 +4,53 @@ import { readFile } from "fs/promises";
 import { join } from "path";
 import { loadFonts } from "./font-loader";
 import { siteConfig } from "../../../site.config";
+import {
+  getCompressionConfig,
+  getOgImageContentType as getContentType,
+  getOgImageFormat as getFormat,
+  type OgImageFormat,
+} from "./compression-config";
 
 // プロジェクトルートからの絶対パスを使用
 const ASSETS_DIR = join(process.cwd(), "src/assets");
+
+/**
+ * siteConfigから圧縮設定を取得
+ */
+function getResolvedCompressionConfig() {
+  return getCompressionConfig(siteConfig.ogImage?.compression);
+}
+
+/**
+ * Content-Typeを取得（siteConfig参照）
+ */
+export function getOgImageContentType(): "image/webp" | "image/png" {
+  return getContentType(siteConfig.ogImage?.compression);
+}
+
+/**
+ * 出力フォーマットを取得（siteConfig参照）
+ */
+export function getOgImageFormat(): OgImageFormat {
+  return getFormat(siteConfig.ogImage?.compression);
+}
+
+/**
+ * SVG BufferをWebP/PNGに変換
+ */
+async function convertSvgToImage(svgBuffer: Buffer): Promise<Buffer> {
+  const config = getResolvedCompressionConfig();
+
+  if (config.format === "webp") {
+    return sharp(svgBuffer)
+      .webp({ quality: config.webpQuality })
+      .toBuffer();
+  } else {
+    return sharp(svgBuffer)
+      .png({ compressionLevel: config.pngCompressionLevel })
+      .toBuffer();
+  }
+}
 
 export interface OgImageOptions {
   title: string;
@@ -168,9 +212,9 @@ export async function generateOgImage(
     fonts,
   });
 
-  const pngBuffer = await sharp(Buffer.from(svg)).png().toBuffer();
+  const imageBuffer = await convertSvgToImage(Buffer.from(svg));
 
-  return pngBuffer;
+  return imageBuffer;
 }
 
 export async function generateHeroImage(
@@ -199,9 +243,9 @@ export async function generateHeroImage(
     fonts,
   });
 
-  const pngBuffer = await sharp(Buffer.from(svg)).png().toBuffer();
+  const imageBuffer = await convertSvgToImage(Buffer.from(svg));
 
-  return pngBuffer;
+  return imageBuffer;
 }
 
 export async function generateDefaultOgImage(): Promise<Buffer> {
@@ -300,7 +344,7 @@ export async function generateDefaultOgImage(): Promise<Buffer> {
     fonts,
   });
 
-  const pngBuffer = await sharp(Buffer.from(svg)).png().toBuffer();
+  const imageBuffer = await convertSvgToImage(Buffer.from(svg));
 
-  return pngBuffer;
+  return imageBuffer;
 }

@@ -138,6 +138,24 @@ export interface CommentsConfig {
 }
 
 /**
+ * OG画像出力フォーマット
+ */
+export type OgImageFormat = 'webp' | 'png';
+
+/**
+ * OG画像圧縮設定
+ * WebP/PNGの圧縮パラメータを管理
+ */
+export interface OgImageCompressionConfig {
+  /** 出力フォーマット（デフォルト: 'webp'） */
+  format?: OgImageFormat;
+  /** WebP品質 0-100（デフォルト: 80） */
+  webpQuality?: number;
+  /** PNG圧縮レベル 0-9（デフォルト: 9） */
+  pngCompressionLevel?: number;
+}
+
+/**
  * OG画像設定
  * 背景画像のパスを指定
  */
@@ -154,6 +172,11 @@ export interface OgImageConfig {
    * デフォルト: 'itzpapa-dark_16_9.png'
    */
   darkBackground?: string;
+  /**
+   * 圧縮設定（オプション）
+   * WebP/PNGの品質・圧縮レベルを設定
+   */
+  compression?: OgImageCompressionConfig;
 }
 
 /**
