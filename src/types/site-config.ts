@@ -217,6 +217,18 @@ export interface FeatureFlags {
 }
 
 /**
+ * ページネーション設定
+ * ブログ一覧ページなどのページ分割を制御
+ */
+export interface PaginationConfig {
+  /**
+   * 1ページあたりの記事表示数
+   * @default 24
+   */
+  postsPerPage?: number;
+}
+
+/**
  * サイト設定全体の型
  * site.config.ts でエクスポートするオブジェクトの型
  */
@@ -239,4 +251,6 @@ export interface SiteConfig {
   ogImage?: OgImageConfig;
   /** 画像外部ホスティング設定（オプション） */
   imageHosting?: ImageHostingConfig;
+  /** ページネーション設定（オプション） */
+  pagination?: PaginationConfig;
 }

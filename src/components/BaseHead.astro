@@ -25,11 +25,18 @@ interface Props {
 		src: string;
 		type?: string; // 'image/webp' | 'image/png' など
 	};
+	/** ページネーション情報（一覧ページ用） */
+	pagination?: {
+		currentPage: number;
+		lastPage: number;
+		prevUrl: string | undefined;
+		nextUrl: string | undefined;
+	};
 }
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
-const { title, description, image: propsImage, isHomePage, slug, article, heroPreload } = Astro.props;
+const { title, description, image: propsImage, isHomePage, slug, article, heroPreload, pagination } = Astro.props;
 
 // タイトル形式: トップページ以外は「記事タイトル | サイト名」形式
 const formattedTitle = isHomePage ? title : `${title} | ${SITE_TITLE}`;
@@ -121,6 +128,14 @@ const googleAdsenseId = seo.googleAdsenseId || '';
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
+
+{/* ページネーション用 prev/next リンク */}
+{pagination?.prevUrl && (
+	<link rel="prev" href={new URL(pagination.prevUrl, Astro.site)} />
+)}
+{pagination?.nextUrl && (
+	<link rel="next" href={new URL(pagination.nextUrl, Astro.site)} />
+)}
 
 <!-- Primary Meta Tags -->
 <title>{formattedTitle}</title>

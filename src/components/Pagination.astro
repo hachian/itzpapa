@@ -1,0 +1,307 @@
+---
+/**
+ * ページネーションコンポーネント
+ * ブログ一覧ページなどでページ間ナビゲーションを提供
+ */
+import { t } from '../i18n';
+
+interface Props {
+  /** 現在のページ番号（1始まり） */
+  currentPage: number;
+  /** 総ページ数 */
+  lastPage: number;
+  /** 前ページURL（1ページ目はundefined） */
+  prevUrl: string | undefined;
+  /** 次ページURL（最終ページはundefined） */
+  nextUrl: string | undefined;
+  /** ベースURL（ページ番号リンク生成用） */
+  baseUrl?: string;
+}
+
+const { currentPage, lastPage, prevUrl, nextUrl, baseUrl = '/blog/' } = Astro.props;
+
+/**
+ * ページ番号からURLを生成
+ * Astroのpaginate()のデフォルトURL形式: /blog/, /blog/2/, /blog/3/
+ */
+function getPageUrl(page: number): string {
+  if (page === 1) {
+    return baseUrl;
+  }
+  return `${baseUrl}${page}/`;
+}
+
+/**
+ * 表示するページ番号の配列を計算
+ * 7ページ以下: すべて表示
+ * 7ページ超: 省略記号を使用
+ */
+function getPageNumbers(): (number | 'ellipsis')[] {
+  if (lastPage <= 7) {
+    return Array.from({ length: lastPage }, (_, i) => i + 1);
+  }
+
+  const pages: (number | 'ellipsis')[] = [];
+
+  if (currentPage <= 4) {
+    // 前半: 1, 2, 3, 4, 5, ..., lastPage
+    for (let i = 1; i <= 5; i++) {
+      pages.push(i);
+    }
+    pages.push('ellipsis');
+    pages.push(lastPage);
+  } else if (currentPage >= lastPage - 3) {
+    // 後半: 1, ..., lastPage-4, lastPage-3, lastPage-2, lastPage-1, lastPage
+    pages.push(1);
+    pages.push('ellipsis');
+    for (let i = lastPage - 4; i <= lastPage; i++) {
+      pages.push(i);
+    }
+  } else {
+    // 中間: 1, ..., current-1, current, current+1, ..., lastPage
+    pages.push(1);
+    pages.push('ellipsis');
+    pages.push(currentPage - 1);
+    pages.push(currentPage);
+    pages.push(currentPage + 1);
+    pages.push('ellipsis');
+    pages.push(lastPage);
+  }
+
+  return pages;
+}
+
+const pageNumbers = getPageNumbers();
+---
+
+<nav class="pagination" aria-label={t('pagination.ariaLabel')}>
+  {/* 前へボタン */}
+  {prevUrl ? (
+    <a href={prevUrl} class="pagination__nav pagination__nav--prev" aria-label={t('pagination.prev')}>
+      <svg class="pagination__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+      <span class="pagination__nav-text">{t('pagination.prev')}</span>
+    </a>
+  ) : (
+    <span class="pagination__nav pagination__nav--prev pagination__nav--disabled" aria-disabled="true">
+      <svg class="pagination__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+      <span class="pagination__nav-text">{t('pagination.prev')}</span>
+    </span>
+  )}
+
+  {/* ページ番号 */}
+  <ul class="pagination__pages">
+    {pageNumbers.map((item) => (
+      item === 'ellipsis' ? (
+        <li class="pagination__item">
+          <span class="pagination__ellipsis" aria-hidden="true">…</span>
+        </li>
+      ) : (
+        <li class="pagination__item">
+          {item === currentPage ? (
+            <span
+              class="pagination__link pagination__link--current"
+              aria-current="page"
+              aria-label={t('pagination.goToPage').replace('{page}', String(item))}
+            >
+              {item}
+            </span>
+          ) : (
+            <a
+              href={getPageUrl(item)}
+              class="pagination__link"
+              aria-label={t('pagination.goToPage').replace('{page}', String(item))}
+            >
+              {item}
+            </a>
+          )}
+        </li>
+      )
+    ))}
+  </ul>
+
+  {/* 次へボタン */}
+  {nextUrl ? (
+    <a href={nextUrl} class="pagination__nav pagination__nav--next" aria-label={t('pagination.next')}>
+      <span class="pagination__nav-text">{t('pagination.next')}</span>
+      <svg class="pagination__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </a>
+  ) : (
+    <span class="pagination__nav pagination__nav--next pagination__nav--disabled" aria-disabled="true">
+      <span class="pagination__nav-text">{t('pagination.next')}</span>
+      <svg class="pagination__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </span>
+  )}
+</nav>
+
+<style>
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    margin-top: var(--space-12);
+    padding: var(--space-4) 0;
+  }
+
+  .pagination__nav {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-lg);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-primary);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    text-decoration: none;
+    transition: all var(--duration-fast) var(--easing-default);
+  }
+
+  .pagination__nav:hover:not(.pagination__nav--disabled) {
+    background: var(--color-primary-100);
+    border-color: var(--color-primary-300);
+    color: var(--color-primary-700);
+  }
+
+  .pagination__nav:focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus-ring-color);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  .pagination__nav--disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  .pagination__icon {
+    width: 1em;
+    height: 1em;
+  }
+
+  .pagination__pages {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .pagination__item {
+    display: flex;
+  }
+
+  .pagination__link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.5rem;
+    height: 2.5rem;
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-lg);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-primary);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    text-decoration: none;
+    transition: all var(--duration-fast) var(--easing-default);
+  }
+
+  .pagination__link:hover:not(.pagination__link--current) {
+    background: var(--color-primary-100);
+    border-color: var(--color-primary-300);
+    color: var(--color-primary-700);
+  }
+
+  .pagination__link:focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus-ring-color);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  .pagination__link--current {
+    background: var(--color-primary-500);
+    border-color: var(--color-primary-500);
+    color: white;
+    cursor: default;
+  }
+
+  .pagination__ellipsis {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2rem;
+    height: 2.5rem;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+  }
+
+  /* レスポンシブ: モバイル */
+  @media (max-width: 639px) {
+    .pagination {
+      gap: var(--space-1);
+    }
+
+    .pagination__nav-text {
+      display: none;
+    }
+
+    .pagination__nav {
+      padding: var(--space-2);
+    }
+
+    .pagination__icon {
+      width: 1.25em;
+      height: 1.25em;
+    }
+
+    .pagination__link {
+      min-width: 2rem;
+      height: 2rem;
+      padding: var(--space-1);
+    }
+
+    .pagination__ellipsis {
+      min-width: 1.5rem;
+      height: 2rem;
+    }
+  }
+
+  /* ダークモード */
+  html.dark .pagination__nav {
+    background: var(--color-gray-800);
+    border-color: var(--color-gray-700);
+  }
+
+  html.dark .pagination__nav:hover:not(.pagination__nav--disabled) {
+    background: var(--color-primary-900);
+    border-color: var(--color-primary-700);
+    color: var(--color-primary-300);
+  }
+
+  html.dark .pagination__link {
+    background: var(--color-gray-800);
+    border-color: var(--color-gray-700);
+  }
+
+  html.dark .pagination__link:hover:not(.pagination__link--current) {
+    background: var(--color-primary-900);
+    border-color: var(--color-primary-700);
+    color: var(--color-primary-300);
+  }
+
+  html.dark .pagination__link--current {
+    background: var(--color-primary-600);
+    border-color: var(--color-primary-600);
+  }
+</style>

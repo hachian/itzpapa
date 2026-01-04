@@ -55,7 +55,15 @@ export interface TranslationKeys {
   // ブログ一覧ページ
   'blog.title': string;
   'blog.pageTitle': string;
+  'blog.pageTitle.paginated': string;
   'blog.description': string;
+
+  // ページネーション
+  'pagination.page': string;
+  'pagination.prev': string;
+  'pagination.next': string;
+  'pagination.goToPage': string;
+  'pagination.ariaLabel': string;
 
   // 記事ページ
   'article.readingTime': string;
@@ -168,7 +176,14 @@ export const translations: Translations = {
     // ブログ一覧ページ
     'blog.title': 'ブログ記事',
     'blog.pageTitle': 'ブログ記事一覧',
+    'blog.pageTitle.paginated': 'ブログ記事一覧 - ページ {page}',
     'blog.description': '技術的な洞察、プログラミングのヒント、そして日々の学びを共有しています。',
+    // ページネーション
+    'pagination.page': 'ページ {current} / {total}',
+    'pagination.prev': '前へ',
+    'pagination.next': '次へ',
+    'pagination.goToPage': 'ページ {page} へ移動',
+    'pagination.ariaLabel': 'ページネーション',
     // 記事ページ
     'article.readingTime': '{min}分で読めます',
     'article.updated': '（更新：{date}）',
@@ -270,7 +285,14 @@ export const translations: Translations = {
     // Blog index page
     'blog.title': 'Blog',
     'blog.pageTitle': 'Blog Posts',
+    'blog.pageTitle.paginated': 'Blog Posts - Page {page}',
     'blog.description': 'Sharing technical insights, programming tips, and daily learnings.',
+    // Pagination
+    'pagination.page': 'Page {current} / {total}',
+    'pagination.prev': 'Previous',
+    'pagination.next': 'Next',
+    'pagination.goToPage': 'Go to page {page}',
+    'pagination.ariaLabel': 'Pagination',
     // Article page
     'article.readingTime': '{min} min read',
     'article.updated': '(Updated: {date})',
