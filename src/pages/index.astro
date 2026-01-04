@@ -10,6 +10,9 @@ import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 import itzpapaDark from '../assets/itzpapa-dark.png';
 import itzpapaLight from '../assets/itzpapa-light.png';
+// フォールバック用のデフォルトhero画像
+import defaultHeroLight from '../assets/itzpapa-light_16_9.png';
+import defaultHeroDark from '../assets/itzpapa-dark_16_9.png';
 import { t, getLanguage } from '../i18n';
 import { removeDatePrefix } from '../plugins/utils/index.js';
 
@@ -105,6 +108,29 @@ const siteDescription = getSiteDescription();
 												decoding="async"
 												format="webp"
 											/>
+										) : import.meta.env.DEV ? (
+											<>
+												<Image
+													src={defaultHeroLight}
+													alt=""
+													class="post-card__thumbnail post-card__thumbnail--light"
+													width={400}
+													height={225}
+													loading="lazy"
+													decoding="async"
+													format="webp"
+												/>
+												<Image
+													src={defaultHeroDark}
+													alt=""
+													class="post-card__thumbnail post-card__thumbnail--dark"
+													width={400}
+													height={225}
+													loading="lazy"
+													decoding="async"
+													format="webp"
+												/>
+											</>
 										) : (
 											<>
 												<img
