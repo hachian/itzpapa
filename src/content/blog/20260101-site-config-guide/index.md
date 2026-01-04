@@ -29,6 +29,7 @@ Customizing your itzpapa blog is done through the `site.config.ts` file in the p
 | `seo` | SEO-related settings |
 | `features` | Feature flags (table of contents, tag cloud, etc.) |
 | `ogImage` | OG image background settings |
+| `imageHosting` | External image hosting settings (S3/R2) |
 
 ```typescript
 export const siteConfig: SiteConfig = {
@@ -475,6 +476,103 @@ If `ogImage` is not configured, these defaults are used:
 - Light mode: `itzpapa-light_16_9.png`
 - Dark mode: `itzpapa-dark_16_9.png`
 
+## Image External Hosting (imageHosting)
+
+Configure external image hosting to serve images from S3 or Cloudflare R2 CDN. This reduces your deployment size and improves load times through CDN delivery.
+
+### How It Works
+
+When enabled, the build process:
+
+1. **Collects images** from the `dist` directory based on include/exclude patterns
+2. **Uploads to S3/R2** with differential upload (skips unchanged files)
+3. **Rewrites HTML** to replace local image URLs with external CDN URLs
+4. **Deletes images** from `dist` to reduce deployment size
+
+### Configuration Options (site.config.ts)
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `include` | string[] | Glob patterns for files to upload |
+| `exclude` | string[] | Glob patterns for files to exclude |
+| `failOnError` | boolean | Abort build on upload failure |
+| `useExternalUrlInDev` | boolean | Use external URLs in development |
+
+### Example
+
+```typescript
+imageHosting: {
+  include: ['**/*.{png,jpg,jpeg,gif,webp,svg}'],
+  exclude: [],
+  failOnError: false,
+  useExternalUrlInDev: false,
+},
+```
+
+> [!tip]
+> By default, all images are uploaded to external hosting. Use `exclude` patterns (e.g., `['hero/**', 'og/**']`) if you need to keep specific images in the local build output.
+
+### Environment Variables (.env)
+
+Sensitive configuration is stored in environment variables:
+
+| Variable | Description |
+|----------|-------------|
+| `IMAGE_HOSTING_ENABLED` | Enable/disable image hosting (`true`/`false`) |
+| `IMAGE_HOSTING_PROVIDER` | Provider type: `S3` or `R2` |
+| `IMAGE_HOSTING_BUCKET` | Bucket name |
+| `IMAGE_HOST_URL` | CDN base URL for serving images |
+
+#### Cloudflare R2 Configuration
+
+```bash
+# R2 Credentials (from R2 API Token)
+R2_ACCESS_KEY_ID=your_access_key_id
+R2_SECRET_ACCESS_KEY=your_secret_access_key
+R2_ACCOUNT_ID=your_account_id
+```
+
+#### AWS S3 Configuration
+
+```bash
+# S3 Credentials
+AWS_ACCESS_KEY_ID=your_access_key_id
+AWS_SECRET_ACCESS_KEY=your_secret_access_key
+AWS_REGION=us-east-1
+```
+
+### Complete .env Example (R2)
+
+```bash
+# Image Hosting Configuration
+IMAGE_HOSTING_ENABLED=true
+IMAGE_HOSTING_PROVIDER=R2
+IMAGE_HOSTING_BUCKET=my-images-bucket
+IMAGE_HOST_URL=https://images.example.com
+
+# R2 Credentials
+R2_ACCESS_KEY_ID=your_access_key_id
+R2_SECRET_ACCESS_KEY=your_secret_access_key
+R2_ACCOUNT_ID=your_account_id
+```
+
+### Setting Up Cloudflare R2
+
+1. **Create an R2 bucket** in your Cloudflare dashboard
+2. **Create an API token** with R2 read/write permissions
+3. **Configure a custom domain** (optional but recommended for CDN caching)
+4. **Copy credentials** to your `.env` file
+
+> [!note]
+> The `IMAGE_HOST_URL` should be your custom domain or R2 public URL. Images will be served from `{IMAGE_HOST_URL}/{relative-path}`.
+
+### Benefits
+
+- **Reduced deployment size**: Images are removed from `dist` after upload
+- **CDN delivery**: Faster image loading through edge caching
+- **Differential uploads**: Only changed files are uploaded on subsequent builds
+- **Immutable caching**: Images are uploaded with `Cache-Control: max-age=31536000, immutable`
+
 ## Summary
 
 By editing `site.config.ts`, you can customize:
@@ -487,6 +585,7 @@ By editing `site.config.ts`, you can customize:
 - **seo**: Analytics settings
 - **features**: Table of contents, tag cloud, related posts, comments
 - **ogImage**: OG image background images
+- **imageHosting**: External image hosting (S3/R2)
 
 After making changes, restart the development server to see them:
 

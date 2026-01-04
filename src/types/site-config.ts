@@ -157,6 +157,28 @@ export interface OgImageConfig {
 }
 
 /**
+ * 画像外部ホスティング設定
+ * S3/R2への画像アップロードを制御
+ * 認証情報は環境変数から読み取り（セキュリティのため）
+ *
+ * 環境変数で設定する項目（.envファイル）:
+ * - IMAGE_HOSTING_ENABLED: 有効化フラグ
+ * - IMAGE_HOSTING_PROVIDER: プロバイダー（S3/R2）
+ * - IMAGE_HOSTING_BUCKET: バケット名
+ * - IMAGE_HOST_URL: 画像配信用URL
+ */
+export interface ImageHostingConfig {
+  /** アップロード対象のファイルパターン */
+  include?: string[];
+  /** アップロード除外のファイルパターン */
+  exclude?: string[];
+  /** アップロード失敗時にビルドを中断するか */
+  failOnError?: boolean;
+  /** 開発モードでも外部URLを使用するか */
+  useExternalUrlInDev?: boolean;
+}
+
+/**
  * 機能フラグ
  * 各機能の有効/無効を制御
  */
@@ -192,4 +214,6 @@ export interface SiteConfig {
   features: FeatureFlags;
   /** OG画像設定（オプション） */
   ogImage?: OgImageConfig;
+  /** 画像外部ホスティング設定（オプション） */
+  imageHosting?: ImageHostingConfig;
 }

@@ -13,6 +13,23 @@ import remarkCallout from './src/plugins/remark-callout/index.js';
 import rehypeTableWrapper from './src/plugins/rehype-table-wrapper/index.js';
 import rehypeTaskStatus from './src/plugins/rehype-task-status/index.js';
 import rehypeTrailingSlash from './src/plugins/rehype-trailing-slash/index.js';
+import astroImageHosting from './src/integrations/image-hosting/index.js';
+import { siteConfig } from './site.config.ts';
+
+// 画像外部ホスティング設定
+// site.config.tsの設定と環境変数をマージ
+// 有効化するには.envでIMAGE_HOSTING_ENABLEDをtrueに設定
+const imageHostingConfig = {
+	// 環境変数から読み込む設定（機密情報・環境依存）
+	enabled: process.env.IMAGE_HOSTING_ENABLED === 'true',
+	provider: process.env.IMAGE_HOSTING_PROVIDER || 'S3',
+	baseUrl: process.env.IMAGE_HOST_URL || '',
+	bucket: process.env.IMAGE_HOSTING_BUCKET || '',
+	region: process.env.AWS_REGION || 'ap-northeast-1',
+	accountId: process.env.R2_ACCOUNT_ID || '',
+	// site.config.tsから読み込む設定（プロジェクト共通）
+	...siteConfig.imageHosting
+};
 
 // https://astro.build/config
 export default defineConfig({
@@ -28,6 +45,8 @@ export default defineConfig({
 		},
 	},
 	integrations: [
+		// 画像外部ホスティングインテグレーション（ビルド後にS3/R2にアップロード）
+		astroImageHosting({ config: imageHostingConfig }),
 		mdx({
 			remarkPlugins: [
 				// Wikilinkを最初に処理（GFMの前）

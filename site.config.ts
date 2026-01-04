@@ -207,6 +207,29 @@ export const siteConfig: SiteConfig = {
      */
     darkBackground: 'itzpapa-dark_16_9.png',
   },
+
+  // ========================================
+  // 画像外部ホスティング設定
+  // ========================================
+  // ビルド時に画像をS3/R2にアップロードし、外部URLから配信
+  //
+  // 環境変数で設定する項目（.envファイル）:
+  // - IMAGE_HOSTING_ENABLED: 有効化フラグ（true/false）
+  // - IMAGE_HOSTING_PROVIDER: プロバイダー（S3/R2）
+  // - IMAGE_HOSTING_BUCKET: バケット名
+  // - IMAGE_HOST_URL: 画像配信用URL
+  // - R2の場合: R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_ACCOUNT_ID
+  // - S3の場合: AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION
+  imageHosting: {
+    /** アップロード対象のファイルパターン */
+    include: ['**/*.{png,jpg,jpeg,gif,webp,svg}'],
+    /** アップロード除外のファイルパターン */
+    exclude: [],
+    /** アップロード失敗時にビルドを中断するか */
+    failOnError: false,
+    /** 開発モードでも外部URLを使用するか */
+    useExternalUrlInDev: false,
+  },
 };
 
 // ========================================

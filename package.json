@@ -20,7 +20,7 @@
   "scripts": {
     "generate:logo": "node scripts/generate-logo.js",
     "dev": "npm run generate:logo && astro dev",
-    "build": "npm run generate:logo && astro build",
+    "build": "npm run generate:logo && node --env-file=.env node_modules/.bin/astro build",
     "preview": "astro preview",
     "astro": "astro",
     "test": "node tests/test-runner.js",
@@ -37,6 +37,7 @@
     "@astrojs/mdx": "^4.3.5",
     "@astrojs/rss": "^4.0.12",
     "@astrojs/sitemap": "^3.5.1",
+    "@aws-sdk/client-s3": "^3.962.0",
     "astro": "^5.13.7",
     "remark-breaks": "^4.0.0",
     "satori": "^0.18.3",
