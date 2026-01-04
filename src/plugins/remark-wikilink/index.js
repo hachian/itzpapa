@@ -123,7 +123,7 @@ export default function remarkWikilink() {
       let lastIndex = 0;
 
       while ((match = wikilinkRegex.exec(text)) !== null) {
-        // Add text before the match
+        // マッチ前のテキストを追加
         if (match.index > lastIndex) {
           parts.push({
             type: 'text',
@@ -175,16 +175,16 @@ export default function remarkWikilink() {
         } else {
           // 通常のリンクの処理
           const linkText = altOrLinkText || getDisplayName(linkPath);
-          let url = linkPath;  // Will be updated below if internal link
+          let url = linkPath;  // 内部リンクの場合は以下で更新される
           
-          // Handle internal links (starting with ../)
+          // 内部リンクの処理（../で始まる）
           if (linkPath.startsWith('../')) {
             url = buildInternalLinkUrl(linkPath);
           } else if (linkPath.startsWith('#')) {
-            // Handle same-page anchor links
+            // 同一ページ内アンカーリンクの処理
             url = normalizeAnchor(linkPath);
           } else {
-            // For other paths, use the trimmed linkPath
+            // その他のパスはトリム済みのlinkPathを使用
             url = linkPath;
           }
 
@@ -231,7 +231,7 @@ export default function remarkWikilink() {
         lastIndex = wikilinkRegex.lastIndex;
       }
 
-      // Add remaining text
+      // 残りのテキストを追加
       if (lastIndex < text.length) {
         parts.push({
           type: 'text',
@@ -239,7 +239,7 @@ export default function remarkWikilink() {
         });
       }
 
-      // Replace the node if we found wikilinks
+      // Wikilinkが見つかった場合はノードを置換
       if (parts.length > 1 || (parts.length === 1 && parts[0].type !== 'text')) {
         parent.children.splice(index, 1, ...parts);
         return index + parts.length;

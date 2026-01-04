@@ -1,15 +1,15 @@
 import { visit } from 'unist-util-visit';
 
 /**
- * remark-callout - Obsidian-style callout plugin for remark
+ * remark-callout - Obsidianスタイルのコールアウト用remarkプラグイン
  *
- * This remark plugin parses callout syntax and adds data to blockquote nodes.
- * A companion rehype plugin transforms them to the final HTML structure.
+ * コールアウト構文をパースし、blockquoteノードにデータを付加する。
+ * 最終的なHTML構造への変換は、対応するrehypeプラグインが行う。
  *
- * Supports Obsidian's 13 official callout types and their aliases.
+ * Obsidian公式13タイプとそのエイリアスをサポート。
  */
 
-// Valid callout types (Obsidian公式13タイプ)
+// 有効なコールアウトタイプ（Obsidian公式13タイプ）
 const VALID_TYPES = [
   'note', 'abstract', 'info', 'todo', 'tip', 'success',
   'question', 'warning', 'failure', 'danger', 'bug', 'example', 'quote'
@@ -52,7 +52,7 @@ function resolveType(rawType) {
   return 'note';
 }
 
-// Default titles for each callout type and aliases (with alias support)
+// 各コールアウトタイプとエイリアスのデフォルトタイトル
 const DEFAULT_TITLES = {
   // 正規タイプ
   note: 'Note',
@@ -86,12 +86,12 @@ const DEFAULT_TITLES = {
 };
 
 /**
- * Parse callout header from text
- * @param {string} text - The text to parse
- * @returns {Object|null} - Parsed callout header or null if not a callout
+ * テキストからコールアウトヘッダーをパースする
+ * @param {string} text - パースするテキスト
+ * @returns {Object|null} - パースされたコールアウトヘッダー、またはコールアウトでない場合はnull
  */
 function parseCalloutHeader(text) {
-  // Pattern: [!type](-|+)? (optional title)
+  // パターン: [!type](-|+)? (オプションのタイトル)
   const match = text.match(/^\[!(\w*)\]([-+])?\s*(.*)?$/);
 
   if (!match) {
@@ -102,19 +102,19 @@ function parseCalloutHeader(text) {
   const foldIndicator = match[2];
   const customTitle = match[3]?.trim() || null;
 
-  // If type is empty, return null
+  // タイプが空の場合はnullを返す
   if (!rawType) {
     return null;
   }
 
-  // Determine callout type (resolve aliases and fallback to 'note' for unknown types)
+  // コールアウトタイプを決定（エイリアス解決、不明なタイプは'note'にフォールバック）
   const type = resolveType(rawType);
 
-  // Determine fold state
+  // 折りたたみ状態を決定
   const foldable = foldIndicator === '-' || foldIndicator === '+';
   const defaultFolded = foldIndicator === '-';
 
-  // Determine title (エイリアス名を優先、なければ正規タイプ名)
+  // タイトルを決定（エイリアス名を優先、なければ正規タイプ名）
   const title = customTitle || DEFAULT_TITLES[rawType] || DEFAULT_TITLES[type] || DEFAULT_TITLES.note;
 
   return {
@@ -127,8 +127,8 @@ function parseCalloutHeader(text) {
 }
 
 /**
- * Check if a blockquote node is a callout
- * @param {Object} node - The blockquote node
+ * blockquoteノードがコールアウトかどうかをチェック
+ * @param {Object} node - blockquoteノード
  * @returns {boolean}
  */
 function isCallout(node) {
@@ -138,35 +138,35 @@ function isCallout(node) {
 
   const firstChild = node.children[0];
 
-  // First child should be a paragraph
+  // 最初の子要素はパラグラフでなければならない
   if (firstChild.type !== 'paragraph' || !firstChild.children || firstChild.children.length === 0) {
     return false;
   }
 
   const firstTextNode = firstChild.children[0];
 
-  // First text node should start with [!
+  // 最初のテキストノードは[!で始まる必要がある
   if (firstTextNode.type !== 'text' || !firstTextNode.value.trimStart().startsWith('[!')) {
     return false;
   }
 
-  // Try to parse the header
+  // ヘッダーのパースを試みる
   const firstLine = firstTextNode.value.split('\n')[0].trimStart();
   return parseCalloutHeader(firstLine) !== null;
 }
 
 /**
- * Process a callout blockquote node
- * Adds callout data and removes the header line from content
- * @param {Object} node - The blockquote node
- * @param {number} depth - Current nesting depth
- * @param {number} maxDepth - Maximum nesting depth
+ * コールアウトblockquoteノードを処理する
+ * コールアウトデータを追加し、コンテンツからヘッダー行を削除する
+ * @param {Object} node - blockquoteノード
+ * @param {number} depth - 現在のネスト深度
+ * @param {number} maxDepth - 最大ネスト深度
  */
 function processCallout(node, depth = 0, maxDepth = 3) {
   const firstChild = node.children[0];
   const firstTextNode = firstChild.children[0];
 
-  // Get the first line and parse the header
+  // 最初の行を取得してヘッダーをパース
   const lines = firstTextNode.value.split('\n');
   const firstLine = lines[0].trimStart();
   const header = parseCalloutHeader(firstLine);
@@ -175,7 +175,7 @@ function processCallout(node, depth = 0, maxDepth = 3) {
     return;
   }
 
-  // Add callout data to the blockquote node
+  // blockquoteノードにコールアウトデータを追加
   node.data = node.data || {};
   node.data.hProperties = node.data.hProperties || {};
   node.data.hProperties.className = ['callout', `callout-${header.type}`];
@@ -191,35 +191,35 @@ function processCallout(node, depth = 0, maxDepth = 3) {
     node.data.hProperties['data-nest-level'] = String(depth);
   }
 
-  // Remove the callout header line from content
+  // コンテンツからコールアウトヘッダー行を削除
   if (lines.length > 1) {
     const remainingText = lines.slice(1).join('\n');
     if (remainingText.trim()) {
       firstTextNode.value = remainingText;
     } else if (firstChild.children.length > 1) {
-      // Remove the text node, keep other children
+      // テキストノードを削除し、他の子要素は保持
       firstChild.children.shift();
     } else {
-      // Remove the first paragraph entirely if it only had the header
+      // ヘッダーのみだった場合、最初のパラグラフ全体を削除
       node.children.shift();
     }
   } else if (firstChild.children.length > 1) {
-    // Remove the header text node
+    // ヘッダーテキストノードを削除
     firstChild.children.shift();
   } else {
-    // Remove the first paragraph entirely
+    // 最初のパラグラフ全体を削除
     node.children.shift();
   }
 
-  // Process nested callouts
+  // ネストされたコールアウトを処理
   processNestedCallouts(node.children, depth, maxDepth);
 }
 
 /**
- * Process nested callouts in content nodes
- * @param {Array} nodes - Content nodes to process
- * @param {number} depth - Current nesting depth
- * @param {number} maxDepth - Maximum nesting depth
+ * コンテンツノード内のネストされたコールアウトを処理
+ * @param {Array} nodes - 処理するコンテンツノード
+ * @param {number} depth - 現在のネスト深度
+ * @param {number} maxDepth - 最大ネスト深度
  */
 function processNestedCallouts(nodes, depth, maxDepth) {
   for (const node of nodes) {
@@ -232,20 +232,20 @@ function processNestedCallouts(nodes, depth, maxDepth) {
 }
 
 /**
- * remark-callout plugin
- * @param {{maxNestingDepth?: number}} [options] - Plugin options
+ * remark-calloutプラグイン
+ * @param {{maxNestingDepth?: number}} [options] - プラグインオプション
  */
 export default function remarkCallout(options = {}) {
   const maxNestingDepth = options.maxNestingDepth ?? 3;
 
   return function transformer(tree) {
     visit(tree, 'blockquote', (node) => {
-      // Skip if not a callout
+      // コールアウトでない場合はスキップ
       if (!isCallout(node)) {
         return;
       }
 
-      // Process the callout (adds data, doesn't transform structure)
+      // コールアウトを処理（データを追加、構造は変換しない）
       processCallout(node, 0, maxNestingDepth);
     });
   };

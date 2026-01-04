@@ -1,8 +1,8 @@
 /**
  * rehype-table-wrapper
  *
- * Wraps table elements in a div.table-wrapper for horizontal scroll support.
- * This allows tables to scroll horizontally without affecting the rest of the page.
+ * テーブル要素をdiv.table-wrapperでラップし、水平スクロールをサポートする。
+ * これにより、テーブルがページの他の部分に影響を与えずに水平スクロールできる。
  */
 
 import { visit } from 'unist-util-visit';
@@ -11,13 +11,13 @@ export default function rehypeTableWrapper() {
   return (tree) => {
     visit(tree, 'element', (node, index, parent) => {
       if (node.tagName === 'table' && parent && typeof index === 'number') {
-        // Check if already wrapped
+        // 既にラップされているかチェック
         if (parent.tagName === 'div' &&
             parent.properties?.className?.includes('table-wrapper')) {
           return;
         }
 
-        // Create wrapper div
+        // ラッパーdivを作成
         const wrapper = {
           type: 'element',
           tagName: 'div',
@@ -27,7 +27,7 @@ export default function rehypeTableWrapper() {
           children: [node]
         };
 
-        // Replace table with wrapper containing table
+        // テーブルをラッパー付きのテーブルに置換
         parent.children[index] = wrapper;
       }
     });

@@ -1,12 +1,12 @@
 import { visit } from 'unist-util-visit';
 import { escapeHtml } from '../utils/index.js';
 
-// Pre-compiled regex for performance (optimized)
+// パフォーマンス最適化のための事前コンパイル済み正規表現
 const MARK_HIGHLIGHT_REGEX = /==([^=]+)==(?:\{([^}]+)\})?/g;
 const ESCAPE_REGEX = /\\==/g;
-const SIMPLE_HIGHLIGHT_CHECK = /==/; // Simple check without capture groups
+const SIMPLE_HIGHLIGHT_CHECK = /==/; // キャプチャグループなしの簡易チェック
 
-// Simple LRU cache for processed results
+// 処理結果用のシンプルなLRUキャッシュ
 class SimpleCache {
   constructor(maxSize = 100) {
     this.cache = new Map();
@@ -15,7 +15,7 @@ class SimpleCache {
 
   get(key) {
     if (this.cache.has(key)) {
-      // Move to end (most recently used)
+      // 末尾に移動（最近使用したものとして）
       const value = this.cache.get(key);
       this.cache.delete(key);
       this.cache.set(key, value);
@@ -28,7 +28,7 @@ class SimpleCache {
     if (this.cache.has(key)) {
       this.cache.delete(key);
     } else if (this.cache.size >= this.maxSize) {
-      // Remove least recently used (first item)
+      // 最も使われていないもの（最初のアイテム）を削除
       const firstKey = this.cache.keys().next().value;
       this.cache.delete(firstKey);
     }
@@ -52,7 +52,7 @@ export default function remarkMarkHighlight(options = {}) {
     securityMode = 'auto'    // セキュリティモード: 'auto', 'strict', 'disabled'
   } = options;
 
-  // Create cache instance
+  // キャッシュインスタンスを作成
   const processCache = cache ? new SimpleCache() : null;
 
   if (!enabled) {
@@ -63,7 +63,7 @@ export default function remarkMarkHighlight(options = {}) {
     visit(tree, 'text', (node, index, parent) => {
       if (!parent || index === null) return;
 
-      // Skip if already inside a link, code, or other special nodes
+      // リンク、コード、その他の特殊ノード内はスキップ
       if (
         parent.type === 'link' ||
         parent.type === 'inlineCode' ||
@@ -85,13 +85,13 @@ export default function remarkMarkHighlight(options = {}) {
         return; // 処理を停止して安全を確保
       }
 
-      // Early return if no highlight syntax found (performance optimization)
-      // Use faster test without string creation
+      // ハイライト構文がない場合は早期リターン（パフォーマンス最適化）
+      // 文字列生成なしの高速テストを使用
       if (!SIMPLE_HIGHLIGHT_CHECK.test(text)) {
         return;
       }
 
-      // Check cache first
+      // まずキャッシュを確認
       if (processCache) {
         const cacheKey = `${text}:${className}:${accessibility}:${focusable}`;
         const cached = processCache.get(cacheKey);
@@ -101,24 +101,24 @@ export default function remarkMarkHighlight(options = {}) {
         }
       }
 
-      // Escape processing: handle \== sequences
-      // Temporarily replace escaped sequences to prevent processing
+      // エスケープ処理: \==シーケンスを処理
+      // エスケープされたシーケンスを一時的に置換して処理を防ぐ
       const escapeToken = '__ESCAPED_MARK_TOKEN__';
       const escapedSequences = [];
 
-      // Handle escaped equals - both start and end of potential highlight sequences
+      // エスケープされた等号を処理 - ハイライトシーケンスの開始と終了の両方
       text = text.replace(ESCAPE_REGEX, (match) => {
         const token = `${escapeToken}${escapedSequences.length}${escapeToken}`;
         escapedSequences.push('==');
         return token;
       });
 
-      // Use pre-compiled regex
+      // 事前コンパイル済み正規表現を使用
       MARK_HIGHLIGHT_REGEX.lastIndex = 0;
 
-      // Early return if no highlight syntax found
+      // ハイライト構文がない場合は早期リターン
       if (!MARK_HIGHLIGHT_REGEX.test(text)) {
-        // Restore escaped sequences before returning
+        // リターン前にエスケープされたシーケンスを復元
         escapedSequences.forEach((sequence, index) => {
           const token = `${escapeToken}${index}${escapeToken}`;
           text = text.replace(token, sequence);
@@ -130,7 +130,7 @@ export default function remarkMarkHighlight(options = {}) {
         return;
       }
 
-      // Reset regex
+      // 正規表現をリセット
       MARK_HIGHLIGHT_REGEX.lastIndex = 0;
 
       const parts = [];
@@ -138,7 +138,7 @@ export default function remarkMarkHighlight(options = {}) {
       let match;
 
       while ((match = MARK_HIGHLIGHT_REGEX.exec(text)) !== null) {
-        // Add text before the match
+        // マッチ前のテキストを追加
         if (match.index > lastIndex) {
           parts.push({
             type: 'text',
@@ -147,24 +147,24 @@ export default function remarkMarkHighlight(options = {}) {
         }
 
         const highlightedText = match[1];
-        const customAttributes = match[2]; // Optional custom attributes {.class attr="value"}
+        const customAttributes = match[2]; // オプションのカスタム属性 {.class attr="value"}
 
-        // Handle empty highlight (e.g., ====) - leave as-is
+        // 空のハイライト（例：====）はそのまま残す
         if (!highlightedText || highlightedText.length === 0) {
           parts.push({
             type: 'text',
             value: match[0]
           });
         } else {
-          // Create HTML node for <mark> element with escaped content and accessibility attributes
+          // エスケープ済みコンテンツとアクセシビリティ属性を持つ<mark>要素用のHTMLノードを作成
           const attributes = [];
 
-          // Parse custom attributes if provided (optimized)
+          // カスタム属性をパース（最適化済み）
           let customClass = '';
           let customAriaLabel = '';
 
           if (customAttributes) {
-            // Fast parsing with pre-compiled regex (cache these if needed)
+            // 事前コンパイル済み正規表現による高速パース（必要に応じてキャッシュ）
             if (customAttributes.startsWith('.')) {
               const spaceIndex = customAttributes.indexOf(' ');
               customClass = spaceIndex === -1
@@ -172,7 +172,7 @@ export default function remarkMarkHighlight(options = {}) {
                 : customAttributes.slice(1, spaceIndex);
             }
 
-            // Parse aria-label with optimized approach
+            // 最適化されたアプローチでaria-labelをパース
             const ariaIndex = customAttributes.indexOf('aria-label=');
             if (ariaIndex !== -1) {
               const start = ariaIndex + 11; // 'aria-label='.length
@@ -186,23 +186,23 @@ export default function remarkMarkHighlight(options = {}) {
             }
           }
 
-          // Add class attribute (prioritize custom class, fallback to plugin option)
+          // class属性を追加（カスタムクラスを優先、なければプラグインオプション）
           const finalClass = customClass || className;
           if (finalClass) {
             attributes.push(`class="${finalClass}"`);
           }
 
-          // Add accessibility attributes if enabled
+          // アクセシビリティ属性を追加（有効な場合）
           if (accessibility) {
             attributes.push('role="mark"');
 
-            // Add custom aria-label if specified
+            // 指定されている場合はカスタムaria-labelを追加
             if (customAriaLabel) {
               attributes.push(`aria-label="${escapeHtml(customAriaLabel, securityMode)}"`);
             }
           }
 
-          // Add focusable attribute if enabled
+          // フォーカス可能属性を追加（有効な場合）
           if (focusable) {
             attributes.push('tabindex="0"');
           }
@@ -219,7 +219,7 @@ export default function remarkMarkHighlight(options = {}) {
         lastIndex = match.index + match[0].length;
       }
 
-      // Add remaining text after last match
+      // 最後のマッチ後の残りのテキストを追加
       if (lastIndex < text.length) {
         parts.push({
           type: 'text',
@@ -227,7 +227,7 @@ export default function remarkMarkHighlight(options = {}) {
         });
       }
 
-      // Restore escaped sequences in all text nodes
+      // 全テキストノードでエスケープされたシーケンスを復元
       if (escapedSequences.length > 0) {
         parts.forEach(part => {
           if (part.type === 'text') {
@@ -239,16 +239,16 @@ export default function remarkMarkHighlight(options = {}) {
         });
       }
 
-      // Replace the original node with the processed parts
+      // 元のノードを処理済みパーツで置換
       if (parts.length > 0) {
-        // Cache the result if caching is enabled
+        // キャッシュが有効な場合は結果をキャッシュ
         if (processCache) {
           const cacheKey = `${node.value}:${className}:${accessibility}:${focusable}`;
-          processCache.set(cacheKey, [...parts]); // Clone array for cache
+          processCache.set(cacheKey, [...parts]); // キャッシュ用に配列を複製
         }
 
         parent.children.splice(index, 1, ...parts);
-        // Adjust index to skip the newly inserted nodes
+        // 新しく挿入されたノードをスキップするためにインデックスを調整
         return index + parts.length;
       }
     });

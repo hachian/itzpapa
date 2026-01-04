@@ -16,6 +16,38 @@ import rehypeTrailingSlash from './src/plugins/rehype-trailing-slash/index.js';
 import astroImageHosting from './src/integrations/image-hosting/index.js';
 import { siteConfig } from './site.config.ts';
 
+// 共通remarkプラグイン設定
+// markdownとMDXで同一の処理を適用
+const commonRemarkPlugins = [
+	// Wikilinkを最初に処理（最高優先度）
+	[remarkWikilink, { priority: 'high' }],
+	// コールアウトパース（remarkBreaksより前に処理して、ヘッダー行の改行が<br>にならないようにする）
+	[remarkCallout, { maxNestingDepth: 3 }],
+	// 単一改行を<br>に変換（コールアウト処理後に実行）
+	remarkBreaks,
+	// タスクステータス処理（Obsidian形式）
+	remarkTaskStatus,
+	// ハイライト記法処理（セキュリティ強化設定）
+	[remarkMarkHighlight, {
+		accessibility: true,
+		cache: true,
+		securityMode: 'auto',
+		maxInputLength: 100000
+	}],
+	// タグ処理プラグイン
+	[remarkTags, { convertToLinks: true }]
+];
+
+// 共通rehypeプラグイン設定
+const commonRehypePlugins = [
+	// テーブルをdiv.table-wrapperでラップ（水平スクロール対応）
+	rehypeTableWrapper,
+	// GFMのcheckbox要素をカスタムスタイルに置き換え
+	rehypeTaskStatus,
+	// 相対リンクに末尾スラッシュを追加（Obsidian互換）
+	rehypeTrailingSlash
+];
+
 // 画像外部ホスティング設定
 // site.config.tsの設定と環境変数をマージ
 // 有効化するには.envでIMAGE_HOSTING_ENABLEDをtrueに設定
@@ -48,64 +80,15 @@ export default defineConfig({
 		// 画像外部ホスティングインテグレーション（ビルド後にS3/R2にアップロード）
 		astroImageHosting({ config: imageHostingConfig }),
 		mdx({
-			remarkPlugins: [
-				// Wikilinkを最初に処理（GFMの前）
-				[remarkWikilink, { priority: 'high' }],
-				// コールアウトパース（remarkBreaksより前に処理して、ヘッダー行の改行が<br>にならないようにする）
-				[remarkCallout, { maxNestingDepth: 3 }],
-				// 単一改行を<br>に変換（コールアウト処理後に実行）
-				remarkBreaks,
-				// タスクステータス処理（Obsidian形式）
-				remarkTaskStatus,
-				// ハイライト記法処理（セキュリティ強化設定）
-				[remarkMarkHighlight, {
-					accessibility: true,
-					cache: true,
-					securityMode: 'auto',
-					maxInputLength: 100000
-				}],
-				// タグ処理プラグイン
-				[remarkTags, { convertToLinks: true }]
-			],
-			rehypePlugins: [
-				// テーブルをdiv.table-wrapperでラップ（水平スクロール対応）
-				rehypeTableWrapper,
-				// GFMのcheckbox要素をカスタムスタイルに置き換え
-				rehypeTaskStatus,
-				// 相対リンクに末尾スラッシュを追加（Obsidian互換）
-				rehypeTrailingSlash
-			],
+			remarkPlugins: commonRemarkPlugins,
+			rehypePlugins: commonRehypePlugins,
 			extendMarkdownConfig: false
 		}),
 		sitemap()
 	],
 	markdown: {
-		remarkPlugins: [
-			// Wikilinkを最初に処理（最高優先度）
-			[remarkWikilink, { priority: 'high' }],
-			// コールアウトパース（remarkBreaksより前に処理して、ヘッダー行の改行が<br>にならないようにする）
-			[remarkCallout, { maxNestingDepth: 3 }],
-			// 単一改行を<br>に変換（コールアウト処理後に実行）
-			remarkBreaks,
-			// タスクステータス処理（Obsidian形式）
-			remarkTaskStatus,
-			// GFM処理後にハイライト記法とタグを処理（セキュリティ強化設定）
-			[remarkMarkHighlight, {
-				accessibility: true,
-				cache: true,
-				securityMode: 'auto',
-				maxInputLength: 100000
-			}],
-			[remarkTags, { convertToLinks: true }]
-		],
-		rehypePlugins: [
-			// テーブルをdiv.table-wrapperでラップ（水平スクロール対応）
-			rehypeTableWrapper,
-			// GFMのcheckbox要素をカスタムスタイルに置き換え
-			rehypeTaskStatus,
-			// 相対リンクに末尾スラッシュを追加（Obsidian互換）
-			rehypeTrailingSlash
-		],
+		remarkPlugins: commonRemarkPlugins,
+		rehypePlugins: commonRehypePlugins,
 		// GFMを明示的に設定（remarkPluginsより前に処理される）
 		gfm: true
 	}

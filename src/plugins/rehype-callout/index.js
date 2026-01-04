@@ -2,13 +2,13 @@ import { visit } from 'unist-util-visit';
 import { escapeHtml } from '../utils/index.js';
 
 /**
- * rehype-callout - Transform blockquotes with callout data to final HTML structure
+ * rehype-callout - コールアウトデータを持つblockquoteを最終HTML構造に変換
  *
- * This rehype plugin runs AFTER Astro's image optimization, so images inside
- * callouts will be properly processed with optimized paths.
+ * このrehypeプラグインはAstroの画像最適化の後に実行されるため、
+ * コールアウト内の画像は適切に最適化されたパスで処理される。
  */
 
-// SVG icons for each callout type (Lucide icons)
+// 各コールアウトタイプ用のSVGアイコン（Lucideアイコン）
 // Obsidian公式13タイプ対応
 const CALLOUT_ICONS = {
   // note: pencil
@@ -39,15 +39,15 @@ const CALLOUT_ICONS = {
   quote: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"/><path d="M5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"/></svg>'
 };
 
-// Fold icon for collapsible callouts
+// 折りたたみ可能なコールアウト用の折りたたみアイコン
 const FOLD_ICON_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="callout-fold-icon"><path d="m6 9 6 6 6-6"/></svg>';
 
 /**
- * Create a HAST element node
- * @param {string} tagName - HTML tag name
- * @param {Object} properties - Element properties
- * @param {Array} children - Child nodes
- * @returns {Object} - HAST element node
+ * HAST要素ノードを作成
+ * @param {string} tagName - HTMLタグ名
+ * @param {Object} properties - 要素のプロパティ
+ * @param {Array} children - 子ノード
+ * @returns {Object} - HAST要素ノード
  */
 function h(tagName, properties = {}, children = []) {
   return {
@@ -59,9 +59,9 @@ function h(tagName, properties = {}, children = []) {
 }
 
 /**
- * Create a raw HTML node
- * @param {string} html - Raw HTML string
- * @returns {Object} - HAST raw node
+ * 生HTMLノードを作成
+ * @param {string} html - 生のHTML文字列
+ * @returns {Object} - HAST rawノード
  */
 function raw(html) {
   return {
@@ -71,8 +71,8 @@ function raw(html) {
 }
 
 /**
- * Check if a HAST element is a callout blockquote
- * @param {Object} node - HAST node
+ * HAST要素がコールアウトblockquoteかどうかをチェック
+ * @param {Object} node - HASTノード
  * @returns {boolean}
  */
 function isCalloutBlockquote(node) {
@@ -85,9 +85,9 @@ function isCalloutBlockquote(node) {
 }
 
 /**
- * Transform a callout blockquote to the final HTML structure
- * @param {Object} node - HAST blockquote node with callout data
- * @returns {Object} - Transformed HAST node
+ * コールアウトblockquoteを最終HTML構造に変換
+ * @param {Object} node - コールアウトデータを持つHAST blockquoteノード
+ * @returns {Object} - 変換されたHASTノード
  */
 function transformCallout(node) {
   const props = node.properties;
@@ -99,13 +99,13 @@ function transformCallout(node) {
 
   const icon = CALLOUT_ICONS[calloutType] || CALLOUT_ICONS.note;
 
-  // Build class names
+  // クラス名を構築
   const classNames = props.className || [];
   if (!classNames.includes('callout')) {
     classNames.unshift('callout');
   }
 
-  // Build properties for the wrapper element
+  // ラッパー要素のプロパティを構築
   const wrapperProps = {
     className: classNames,
     'data-callout': calloutType
@@ -115,7 +115,7 @@ function transformCallout(node) {
     wrapperProps['data-nest-level'] = nestLevel;
   }
 
-  // Create title structure
+  // タイトル構造を作成
   const titleChildren = [
     raw(`<div class="callout-icon">${icon}</div>`),
     raw(`<div class="callout-title-inner">${escapeHtml(calloutTitle)}</div>`)
@@ -125,11 +125,11 @@ function transformCallout(node) {
     titleChildren.push(raw(FOLD_ICON_SVG));
   }
 
-  // Create content wrapper with original blockquote children
+  // 元のblockquoteの子要素を持つコンテンツラッパーを作成
   const contentWrapper = h('div', { className: ['callout-content'] }, node.children);
 
   if (isFoldable) {
-    // Foldable callout: use details/summary structure
+    // 折りたたみ可能なコールアウト: details/summary構造を使用
     if (!isFolded) {
       wrapperProps.open = true;
     }
@@ -138,7 +138,7 @@ function transformCallout(node) {
 
     return h('details', wrapperProps, [summaryNode, contentWrapper]);
   } else {
-    // Non-foldable callout: use div structure
+    // 折りたたみ不可なコールアウト: div構造を使用
     const titleNode = h('div', { className: ['callout-title'] }, titleChildren);
 
     return h('div', wrapperProps, [titleNode, contentWrapper]);
@@ -146,7 +146,7 @@ function transformCallout(node) {
 }
 
 /**
- * rehype-callout plugin
+ * rehype-calloutプラグイン
  * @returns {Function}
  */
 export default function rehypeCallout() {
@@ -156,15 +156,15 @@ export default function rehypeCallout() {
         return;
       }
 
-      // Check if this is a callout blockquote
+      // コールアウトblockquoteかどうかをチェック
       if (!isCalloutBlockquote(node)) {
         return;
       }
 
-      // Transform to callout structure
+      // コールアウト構造に変換
       const calloutNode = transformCallout(node);
 
-      // Replace the blockquote with the callout
+      // blockquoteをコールアウトに置換
       parent.children[index] = calloutNode;
     });
   };
