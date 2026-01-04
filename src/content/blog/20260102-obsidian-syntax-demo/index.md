@@ -52,6 +52,26 @@ Use the pipe symbol `|` to specify an alias when you want to change the display 
 
 [[markdown-demo|Check out the Markdown Guide]]
 
+### Image Embedding with WikiLink
+
+Use `![[]]` syntax to embed images from other articles or directories.
+
+#### Syntax
+
+```markdown
+![[../20260103-markdown-demo/sample-image.jpg]]
+```
+
+#### Output
+
+![[../20260103-markdown-demo/sample-image.jpg]]
+
+#### Features
+
+- Use `!` prefix to embed instead of link
+- Supports relative paths to other directories
+- Works with jpg, png, gif, webp, and other image formats
+
 ## Mark Highlight
 
 Wrap text with `==` to highlight it. This is useful for emphasizing important information.
@@ -461,5 +481,3 @@ This page covered the Obsidian-compatible syntax available in itzpapa blog:
 Using these features, you can publish your Obsidian notes directly as blog posts.
 
 For standard Markdown syntax, see the [Markdown Syntax Guide](../markdown-demo/index).
-
-![[../20260103-markdown-demo/sample-image.jpg]]
