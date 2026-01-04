@@ -205,6 +205,14 @@ async function rewriteHtmlImageUrls(htmlPath, urlMap) {
       new RegExp(`(src=["'])/(${escapedPath})(["'])`, 'g'),
       // srcset="/_astro/xxx 1x" 形式（スペースや,が続く）
       new RegExp(`(srcset=["'][^"']*?)/(${escapedPath})(\\s|,)`, 'g'),
+      // href="/xxx" 形式（preload等 - 相対パス）
+      new RegExp(`(href=["'])/(${escapedPath})(["'])`, 'g'),
+      // content="/og/xxx" 形式（OGメタタグ用 - 相対パス）
+      new RegExp(`(content=["'])/(${escapedPath})(["'])`, 'g'),
+      // content="https://domain/og/xxx" 形式（OGメタタグ用 - 絶対URL）
+      new RegExp(`(content=["'])https?://[^/]+/(${escapedPath})(["'])`, 'g'),
+      // href="https://domain/og/xxx" 形式（hero preload等 - 絶対URL）
+      new RegExp(`(href=["'])https?://[^/]+/(${escapedPath})(["'])`, 'g'),
     ];
 
     for (const pattern of patterns) {
