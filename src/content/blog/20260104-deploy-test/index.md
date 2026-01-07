@@ -1,31 +1,42 @@
 ---
-title: Deploy Test Article
-description: A test article for verifying Cloudflare Pages deployment
-category: Tech
+title: itzpapa Feature Showcase
+description: Obsidian-compatible syntax and rich formatting features demonstration
+category: Tutorial
 tags:
-  - test
-  - deployment
+  - itzpapa
+  - demo
+  - obsidian
 published: 2026-01-04
 ---
 
-# Deploy Test Article
+## Welcome to itzpapa
 
-This article is created to test the deployment pipeline to Cloudflare Pages.
+**itzpapa** is an *Astro blog template* designed for **Obsidian users**. It supports WikiLinks, Callouts, and ==mark highlights== seamlessly.
 
-## Test Content
+### Inline Formatting
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. This is a simple test post to verify that:
+You can use `inline code` for technical terms, **bold text** for emphasis, *italic* for subtle highlights, and ==mark highlight== for important points.
 
-1. The build process works correctly
-2. Cloudflare Pages deployment succeeds
-3. The article is accessible on the live site
+> [!tip] Pro Tip
+> itzpapa automatically converts Obsidian syntax to beautiful HTML. No configuration needed!
 
-## Code Block Test
+### Code Example
 
-```javascript
-console.log("Deployment test successful!");
+```typescript
+// Simple and elegant
+const blog = await createBlog({
+  template: "itzpapa",
+  features: ["wikilink", "callout", "mark"]
+});
 ```
 
-## Summary
+> [!note] Note
+> All code blocks support syntax highlighting with your preferred theme.
 
-If you can see this article, the deployment was successful!
+### Quick Start
+
+1. Clone the repository
+2. Run `npm install`
+3. Start with `npm run dev`
+
+That's it! Your blog is ready.
