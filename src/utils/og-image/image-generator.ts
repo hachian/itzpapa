@@ -255,6 +255,13 @@ export async function generateDefaultOgImage(): Promise<Buffer> {
   const fonts = await loadFonts();
   const backgroundImageBase64 = await loadBackgroundImage("light");
 
+  // 言語設定に基づいてサブタイトルを切り替え
+  const language = siteConfig.site?.language || "ja";
+  const subtitle =
+    language === "ja"
+      ? "Obsidian × Astro ブログテンプレート"
+      : "Obsidian × Astro Blog Template";
+
   const template = {
     type: "div",
     props: {
@@ -328,7 +335,7 @@ export async function generateDefaultOgImage(): Promise<Buffer> {
                     color: "#4a4a6a",
                     marginTop: "20px",
                   },
-                  children: "Obsidian × Astro ブログテンプレート",
+                  children: subtitle,
                 },
               },
             ],
