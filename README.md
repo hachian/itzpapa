@@ -1,5 +1,7 @@
 # itzpapa - Astro Blog with Obsidian-style Features
 
+![itzpapa screenshot](./screenshot-blog-combined-hd.png)
+
 [日本語版はこちら / Japanese](./README.ja.md)
 
 An Astro-based blog site that supports Obsidian-style syntax (WikiLink, Callout, Inline Tags, Mark Highlight) with powerful customization options.

@@ -1,5 +1,7 @@
 # itzpapa - Obsidian風機能を備えたAstroブログ
 
+![itzpapa スクリーンショット](./screenshot-blog-combined-hd.png)
+
 Astroをベースにしたブログサイトで、Obsidian風の記法（WikiLink、Callout、インラインタグ、マークハイライト）と豊富なカスタマイズ機能をサポートしています。
 
 ## 特徴
