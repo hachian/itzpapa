@@ -8,80 +8,65 @@ An Astro-based blog site that supports Obsidian-style syntax (WikiLink, Callout,
 
 ## Features
 
-### Core Features
-- Markdown & MDX support
-- Fast static site generation (Astro v5)
-- Simple, customizable design with centralized configuration (`site.config.ts`)
-- High performance architecture
-- SEO optimized (canonical URLs, OpenGraph)
-- **Dynamic OG image generation** - Auto-generates OG images with article titles (WebP optimized)
-- **Auto-generated logo/favicon** - Colors adapt to your primaryHue setting
-- Auto-generated sitemap
-- RSS feed support
-- **Multilingual support (i18n)** - Japanese and English
-- **giscus comment system** - GitHub Discussions-based comments
-- **Google AdSense integration** - Automatic ad placement
-- **Breadcrumb navigation** - For blog and tag pages
-- **Monthly archive** - Organize posts by month
-- **Pagination** - Split blog listing across pages
-- **Category system** - Categorize articles with dedicated listing page
-- **Image lightbox** - Click to enlarge images
-- **Clean URLs** - Auto-removes date prefixes from URLs
+- **Astro v5** - Fast static site generation with Markdown/MDX
+- **Obsidian syntax** - WikiLink (`[[page]]`), Callout, Mark highlight (`==text==`), Inline tags (`#tag`)
+- **SEO** - OG images, sitemap, RSS, canonical URLs
+- **i18n** - Japanese and English
+- **Integrations** - giscus comments, Google AdSense
+- **Theme** - Customizable via `primaryHue` (0-360) in `site.config.ts`
 
-### Obsidian-style Features
-- **WikiLink syntax** - Support for `[[page name]]` link format
-  - Handles file names with spaces
-  - Anchor links (`[[page#heading]]`)
-  - Image embeds (`![[image.jpg]]`)
-- **Callout blocks** - Obsidian-style emphasis blocks
-  - 13 official types + 14 aliases (note, tip, warning, danger, abstract, summary, info, todo, success, question, failure, bug, example, quote, etc.)
-  - Foldable and nestable
-- **Mark highlight** - Highlight text with `==text==` syntax
-- **Inline tags** - `#tag` format auto-linked to tag pages
-  - Hierarchical tags: `#parent/child`
-  - Japanese tag support
-- **Single line breaks** - Single newline creates a line break (remark-breaks)
-
-### Theme Customization
-Customize your site's color scheme using `primaryHue` in `site.config.ts`:
-
-```typescript
-theme: {
-  // Use preset names or numeric values (0-360)
-  primaryHue: 'purple'  // or 293
-}
-```
-
-**Presets:**
-- `purple` (293) - Creativity and elegance
-- `ocean` (200) - Trust and calm
-- `forest` (145) - Nature and growth
-- `sunset` (25) - Warmth and energy
-- `mono` (240) - Simple and refined
-
-## Installation
+## Getting Started
 
 ```bash
-# Install dependencies
+git clone https://github.com/hachian/itzpapa.git
+cd itzpapa
+
+# Linux/macOS
 npm install
 
-# Start development server
-npm run dev
+# Windows (pnpm recommended)
+pnpm install
 ```
+
+Edit `site.config.ts`:
+
+```typescript
+site: {
+  title: 'Your Site Title',
+  author: 'Your Name',
+  baseUrl: 'https://your-domain.com',
+},
+features: {
+  comments: {
+    enabled: false,  // Disable giscus (or configure your own)
+  },
+},
+```
+
+Start development server:
+
+```bash
+npm run dev   # Linux/macOS
+pnpm dev      # Windows
+```
+
+Open http://localhost:4321 to view your site.
 
 ## Commands
 
-| Command | Description |
-|---------|-------------|
-| `npm install` | Install dependencies |
-| `npm run dev` | Start dev server (localhost:4321) |
-| `npm run build` | Build for production (./dist/) |
-| `npm run preview` | Preview build locally |
-| `npm run test` | Run all tests |
+| npm | pnpm | Description |
+|-----|------|-------------|
+| `npm install` | `pnpm install` | Install dependencies |
+| `npm run dev` | `pnpm dev` | Start dev server (localhost:4321) |
+| `npm run build` | `pnpm build` | Build for production (./dist/) |
+| `npm run build:ci` | `pnpm build:ci` | Build for CI (no image optimization) |
+| `npm run preview` | `pnpm preview` | Preview build locally |
+| `npm run test` | `pnpm test` | Run all tests |
 
 ## Configuration
 
-All site settings are centralized in `site.config.ts` at the project root:
+All site settings are centralized in `site.config.ts` at the project root.
+For detailed documentation, see: https://itzpapa.hachian.com/blog/site-config-guide/
 
 ```typescript
 export const siteConfig = {
@@ -93,22 +78,31 @@ export const siteConfig = {
     language: 'en',  // 'ja' or 'en'
   },
   theme: {
-    primaryHue: 'purple',  // Preset or 0-360
+    primaryHue: 293,  // 0-360
   },
   navigation: [...],
   social: { github: {...}, twitter: {...}, ... },
-  features: {
-    tableOfContents: true,
-    tagCloud: true,
-    relatedPosts: true,
-    comments: { enabled: true, provider: 'giscus', config: {...} },
+  footer: {
+    copyrightText: 'All rights reserved.',
+    startYear: 2024,
   },
   seo: {
     googleAnalyticsId: 'G-XXXXXXXXXX',
     googleAdsenseId: 'ca-pub-XXXXXXXXXXXXXXXX',
   },
+  features: {
+    tableOfContents: true,
+    tagCloud: true,
+    relatedPosts: true,
+    comments: { enabled: false, provider: 'giscus', config: {...} },
+  },
+  ogImage: {
+    lightBackground: 'itzpapa-light_16_9.png',
+    darkBackground: 'itzpapa-dark_16_9.png',
+  },
+  imageHosting: {...},  // Optional: S3/R2 external hosting
   pagination: {
-    postsPerPage: 24,  // Posts per page
+    postsPerPage: 24,
   },
 };
 ```
@@ -124,6 +118,8 @@ export const siteConfig = {
 │   ├── components/     # Astro components
 │   ├── content/        # Blog posts (Markdown/MDX)
 │   │   └── blog/      # Blog entries
+│   ├── i18n/           # Internationalization
+│   ├── integrations/   # Astro integrations
 │   ├── layouts/        # Layout templates
 │   ├── pages/          # Page components
 │   ├── plugins/        # Custom plugins
@@ -131,7 +127,11 @@ export const siteConfig = {
 │   │   ├── remark-mark-highlight/ # Mark highlight
 │   │   ├── remark-tags/          # Inline tag support
 │   │   └── rehype-callout/       # Callout blocks
-│   └── styles/         # Global styles
+│   ├── styles/         # Global styles
+│   ├── theme/          # Theme utilities
+│   ├── types/          # TypeScript types
+│   └── utils/          # Utility functions
+├── scripts/            # Build scripts
 ├── tests/              # Test files
 ├── site.config.ts      # Centralized site configuration
 ├── astro.config.mjs    # Astro configuration
@@ -147,6 +147,8 @@ export const siteConfig = {
 - **@astrojs/rss** - RSS feed generation
 - **@astrojs/sitemap** - Sitemap generation
 - **sharp** - Image processing
+- **satori** - OG image generation
+- **remark-breaks** - Single line break support
 
 ### Dev Dependencies
 - **remark** - Markdown processor
@@ -174,77 +176,34 @@ Plugin supporting inline tag syntax (`#tag`).
 
 ## Usage
 
+For syntax examples, see:
+- Markdown: https://itzpapa.hachian.com/blog/markdown-demo/
+- Obsidian syntax: https://itzpapa.hachian.com/blog/obsidian-syntax-demo/
+
 ### Creating Blog Posts
 
 1. Create a new folder in `src/content/blog/`
 2. Create an `index.md` or `index.mdx` file
 3. Add frontmatter and content
 
-#### Frontmatter (Article Metadata)
-
 ```markdown
 ---
-title: 'Article Title'           # Required: Page title
-description: 'Article summary'   # Required: For SEO and RSS
-pubDate: '2024-07-08'           # Required: Publish date (YYYY-MM-DD)
-heroImage: './image.jpg'         # Optional: Hero image path
-tags:                            # Optional: Tags (array)
-  - 'Astro'
-  - 'Blog'
-draft: false                     # Optional: Draft flag (true = unpublished)
-updateDate: '2024-07-09'         # Optional: Update date (YYYY-MM-DD)
+title: 'Article Title'           # Required
+description: 'Article summary'   # Required
+pubDate: '2024-07-08'           # Required (YYYY-MM-DD)
+heroImage: './image.jpg'         # Optional
+tags: ['Astro', 'Blog']          # Optional
+draft: false                     # Optional
 ---
-
-Article content here...
 ```
-
-### WikiLink Syntax
-
-```markdown
-# Basic link
-[[other-page]]
-
-# Anchor link
-[[page#heading]]
-
-# Image embed
-![[image.jpg]]
-```
-
-### Inline Tags
-
-```markdown
-This is a #tutorial about #astro/blog development.
-
-Use #日本語タグ for Japanese tags.
-```
-
-### Callout Blocks
-
-```markdown
-> [!note]
-> This is a note callout.
-
-> [!warning]
-> This is a warning callout.
-
-> [!tip]
-> This is a tip callout.
-
-> [!abstract]
-> This is an abstract/summary callout.
-```
-
-**Available callout types:** note, abstract, summary, tldr, info, todo, tip, hint, important, success, check, done, question, help, faq, warning, caution, attention, failure, fail, missing, danger, error, bug, example, quote, cite
 
 ## Deployment
 
 ### Cloudflare Pages
 
 This project includes configuration for Cloudflare Pages deployment:
-- `wrangler.toml` - Cloudflare configuration
-- Security headers configured in `_headers`
+- Security headers configured in `public/_headers`
 
 ## License
 
-MIT
+[MIT](https://github.com/hachian/itzpapa/blob/main/LICENSE)
