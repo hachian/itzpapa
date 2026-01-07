@@ -5,7 +5,8 @@
       "url": [
         "http://localhost/",
         "http://localhost/blog/",
-        "http://localhost/tags/"
+        "http://localhost/tags/",
+        "http://localhost/blog/markdown-demo/"
       ]
     },
     "assert": {
