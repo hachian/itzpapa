@@ -127,9 +127,10 @@ const enabledSocialLinks = Object.entries(social)
 			}
 		});
 
-		// グローバルイベントは一度だけ登録（documentにフラグを設定）
-		if (!(document as any).__mobileMenuGlobalListeners) {
-			(document as any).__mobileMenuGlobalListeners = true;
+		// グローバルイベントは一度だけ登録（document.body.datasetでフラグ管理）
+		// View Transitions後もdocument.bodyは維持されるため、フラグも保持される
+		if (!document.body.dataset.mobileMenuGlobalInit) {
+			document.body.dataset.mobileMenuGlobalInit = 'true';
 
 			// メニュー外クリックで閉じる
 			document.addEventListener('click', (e) => {

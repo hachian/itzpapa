@@ -313,7 +313,16 @@ hr {
 
 /* =========================================
    Dark Mode Overrides
+   =========================================
+
+   ダークモードスタイルの統合設計:
+   - html.dark: ユーザーが明示的にダークモードを選択した場合
+   - @media (prefers-color-scheme: dark) :root:not(.light): OS設定に従う場合
+
+   重複削減のため、共通スタイルを統合しています。
    ========================================= */
+
+/* --- Body Background --- */
 html.dark body {
 	background-color: var(--color-background);
 	background-image: linear-gradient(
@@ -323,6 +332,18 @@ html.dark body {
 	);
 }
 
+@media (prefers-color-scheme: dark) {
+	:root:not(.light) body {
+		background-color: var(--color-background);
+		background-image: linear-gradient(
+			to bottom,
+			var(--color-gray-800),
+			var(--color-background) 600px
+		);
+	}
+}
+
+/* --- Text Selection --- */
 html.dark ::selection {
 	background-color: oklch(50% 0.15 var(--primary-hue) / 0.85);
 	color: oklch(95% 0.02 var(--primary-hue));
@@ -333,27 +354,69 @@ html.dark ::-moz-selection {
 	color: oklch(95% 0.02 var(--primary-hue));
 }
 
-/* インラインコード専用 - pre内のcodeは最初から除外 */
+@media (prefers-color-scheme: dark) {
+	:root:not(.light) ::selection {
+		background-color: oklch(50% 0.15 var(--primary-hue) / 0.85);
+		color: oklch(95% 0.02 var(--primary-hue));
+	}
+
+	:root:not(.light) ::-moz-selection {
+		background-color: oklch(50% 0.15 var(--primary-hue) / 0.85);
+		color: oklch(95% 0.02 var(--primary-hue));
+	}
+}
+
+/* --- Inline Code (pre内のcodeは除外) --- */
 html.dark :not(pre) > code {
 	background-color: var(--color-gray-700);
 	color: var(--color-gray-100);
 }
 
+@media (prefers-color-scheme: dark) {
+	:root:not(.light) :not(pre) > code {
+		background-color: var(--color-gray-700);
+		color: var(--color-gray-100);
+	}
+}
+
+/* --- Horizontal Rule --- */
 html.dark hr {
 	border-top-color: var(--color-gray-700);
 }
 
-/* ダークモード用の強調スタイル */
+@media (prefers-color-scheme: dark) {
+	:root:not(.light) hr {
+		border-top-color: var(--color-gray-700);
+	}
+}
+
+/* --- 強調スタイル (strong/b) --- */
 html.dark strong,
 html.dark b {
 	background-color: oklch(50% 0.18 var(--primary-hue) / 0.7);
 }
 
+@media (prefers-color-scheme: dark) {
+	:root:not(.light) strong,
+	:root:not(.light) b {
+		background-color: oklch(50% 0.18 var(--primary-hue) / 0.7);
+	}
+}
+
+/* --- 強調スタイル (em/i) --- */
 html.dark em,
 html.dark i {
 	color: var(--color-text-accent);
 }
 
+@media (prefers-color-scheme: dark) {
+	:root:not(.light) em,
+	:root:not(.light) i {
+		color: var(--color-text-accent);
+	}
+}
+
+/* --- em/i内のstrong/b (アクセシビリティ対応) --- */
 html.dark em strong,
 html.dark em b,
 html.dark i strong,
@@ -361,49 +424,22 @@ html.dark i b {
 	color: var(--color-text-accent-muted);
 }
 
-html.dark blockquote:not(.callout) {
-	border-left-color: var(--color-primary-500);
-	color: var(--color-text-secondary);
-}
-
-/* OS Dark Mode Preference */
 @media (prefers-color-scheme: dark) {
-	:root:not(.light) body {
-		background-color: var(--color-background);
-		background-image: linear-gradient(
-			to bottom,
-			var(--color-gray-800),
-			var(--color-background) 600px
-		);
-	}
-
-	:root:not(.light) :not(pre) > code {
-		background-color: var(--color-gray-700);
-		color: var(--color-gray-100);
-	}
-
-	:root:not(.light) hr {
-		border-top-color: var(--color-gray-700);
-	}
-
-	/* OS Dark Mode用の強調スタイル */
-	:root:not(.light) strong,
-	:root:not(.light) b {
-		background-color: oklch(50% 0.18 var(--primary-hue) / 0.7);
-	}
-
-	:root:not(.light) em,
-	:root:not(.light) i {
-		color: var(--color-text-accent);
-	}
-
 	:root:not(.light) em strong,
 	:root:not(.light) em b,
 	:root:not(.light) i strong,
 	:root:not(.light) i b {
 		color: var(--color-text-accent-muted);
 	}
+}
 
+/* --- Blockquote (callout以外) --- */
+html.dark blockquote:not(.callout) {
+	border-left-color: var(--color-primary-500);
+	color: var(--color-text-secondary);
+}
+
+@media (prefers-color-scheme: dark) {
 	:root:not(.light) blockquote:not(.callout) {
 		border-left-color: var(--color-primary-500);
 		color: var(--color-text-secondary);

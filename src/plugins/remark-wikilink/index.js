@@ -1,6 +1,24 @@
 import { visit } from 'unist-util-visit';
 import { buildInternalLinkUrl, normalizeAnchor } from '../utils/index.js';
 
+// モジュールスコープで正規表現を事前コンパイル（パフォーマンス最適化）
+// WikiLink URLパターン: [[path]] または [[path|alias]]
+const WIKILINK_URL_PATTERN = /^\[\[([^\]]+?)(?:(?:\\\||<<<PIPE>>>|\|)([^\]]+?))?\]\]$/;
+// 分断WikiLinkの開始パターン: [[path|
+const FRAGMENTED_WIKILINK_START_PATTERN = /\[\[([^\]|]+)\|$/;
+// 分断WikiLinkの完全パターン: 前のテキスト + [[path|
+const FRAGMENTED_WIKILINK_FULL_PATTERN = /^(.*?)\[\[([^\]|]+)\|$/;
+// パイプ文字置換パターン: [[path|alias]]
+const WIKILINK_PIPE_REPLACE_PATTERN = /\[\[([^\]|]+)\|((?:[^\]]|\](?!\]))+)\]\]/g;
+// メインWikiLinkパターン: 画像(![[]])とリンク([[]])
+const WIKILINK_MAIN_PATTERN = /(!?)\[\[([^\]|]+?)(?:(?:\\\||<<<PIPE>>>|\|)((?:[^\]]|\](?!\]))+?))?\]\]/g;
+// エイリアス内のMarkdown画像パターン
+const IMAGE_IN_ALIAS_PATTERN = /^!\[([^\]]*)\]\(([^)]+)\)$/;
+// ファイル拡張子パターン
+const FILE_EXTENSION_PATTERN = /\.(md|mdx|png|jpg|jpeg|gif|svg|webp)$/i;
+// インデックスサフィックスパターン
+const INDEX_SUFFIX_PATTERN = /\/index$/;
+
 export default function remarkWikilink() {
   // プラグインの実行順序を早めるために優先度を設定
   const plugin = function transformer(tree, file) {
@@ -9,7 +27,7 @@ export default function remarkWikilink() {
     visit(tree, 'link', (node) => {
       if (node.url && node.url.includes('[[') && node.url.includes(']]')) {
         // WikiLink形式のURLを解決
-        const wikilinkMatch = node.url.match(/^\[\[([^\]]+?)(?:(?:\\\||<<<PIPE>>>|\|)([^\]]+?))?\]\]$/);
+        const wikilinkMatch = node.url.match(WIKILINK_URL_PATTERN);
         if (wikilinkMatch) {
           const linkPath = wikilinkMatch[1].trim();
 
@@ -41,10 +59,10 @@ export default function remarkWikilink() {
           first.type === 'text' &&
           second.type === 'image' &&
           third.type === 'text' &&
-          first.value.match(/\[\[([^\]|]+)\|$/) &&
+          FRAGMENTED_WIKILINK_START_PATTERN.test(first.value) &&
           third.value.startsWith(']]')
         ) {
-          const pathMatch = first.value.match(/^(.*?)\[\[([^\]|]+)\|$/);
+          const pathMatch = first.value.match(FRAGMENTED_WIKILINK_FULL_PATTERN);
           if (pathMatch) {
             const beforeText = pathMatch[1];
             const linkPath = pathMatch[2].trim();
@@ -101,14 +119,17 @@ export default function remarkWikilink() {
       // テーブル内のWikilinkパイプ文字を一時的に置換（必要な場合のみ）
       // エイリアス内に]が含まれる場合（例：![alt](url)）も処理できるよう正規表現を改善
       if (text.includes('|') && text.includes('[[')) {
-        text = text.replace(/\[\[([^\]|]+)\|((?:[^\]]|\](?!\]))+)\]\]/g, (match, path, alias) => {
+        WIKILINK_PIPE_REPLACE_PATTERN.lastIndex = 0; // グローバル正規表現のリセット
+        text = text.replace(WIKILINK_PIPE_REPLACE_PATTERN, (match, path, alias) => {
           return `[[${path}<<<PIPE>>>${alias}]]`;
         });
       }
-      
+
       // 画像とリンクの両方のパターンを処理（画像は!で始まる）
       // パスは]と|を含まない、エイリアスは]]以外の]を許容（Markdown画像等に対応）
-      const wikilinkRegex = /(!?)\[\[([^\]|]+?)(?:(?:\\\||<<<PIPE>>>|\|)((?:[^\]]|\](?!\]))+?))?\]\]/g;
+      // モジュールスコープの正規表現を使用
+      WIKILINK_MAIN_PATTERN.lastIndex = 0; // グローバル正規表現のリセット
+      const wikilinkRegex = WIKILINK_MAIN_PATTERN;
       
       // 最適化: Wikilinkが含まれていない場合は早期リターン
       if (!wikilinkRegex.test(text)) {
@@ -189,7 +210,7 @@ export default function remarkWikilink() {
           }
 
           // エイリアスがMarkdown画像構文かどうかをチェック
-          const imageInAliasMatch = linkText.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
+          const imageInAliasMatch = linkText.match(IMAGE_IN_ALIAS_PATTERN);
 
           let children;
           if (imageInAliasMatch) {
@@ -254,10 +275,10 @@ export default function remarkWikilink() {
 }
 
 function getDisplayName(path) {
-  // 画像拡張子も含めて削除
+  // 画像拡張子も含めて削除（モジュールスコープの正規表現を使用）
   const cleanPath = path
-    .replace(/\.(md|mdx|png|jpg|jpeg|gif|svg|webp)$/i, '')
-    .replace(/\/index$/, '');
+    .replace(FILE_EXTENSION_PATTERN, '')
+    .replace(INDEX_SUFFIX_PATTERN, '');
   const parts = cleanPath.split('/');
   return parts[parts.length - 1];
 }

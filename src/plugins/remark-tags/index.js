@@ -1,5 +1,9 @@
 import { visit } from 'unist-util-visit';
 
+// モジュールスコープで正規表現を事前コンパイル（パフォーマンス最適化）
+// 正規表現特殊文字のエスケープパターン
+const ESCAPE_REGEX_SPECIAL_CHARS = /[.*+?^${}()|[\]\\]/g;
+
 /**
  * Remarkプラグイン - タグ処理
  * Obsidianスタイルのタグ（#tag, #parent/child）をサポート
@@ -228,8 +232,8 @@ function tagToSlug(tag, config) {
 }
 
 /**
- * 正規表現の特殊文字をエスケープ
+ * 正規表現の特殊文字をエスケープ（モジュールスコープの正規表現を使用）
  */
 function escapeRegExp(string) {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return string.replace(ESCAPE_REGEX_SPECIAL_CHARS, '\\$&');
 }
