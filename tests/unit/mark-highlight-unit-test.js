@@ -17,7 +17,7 @@ async function processToAst(markdown, options = {}) {
   return processor.runSync(processor.parse(markdown));
 }
 
-// Helper: Find html nodes in AST
+// Helper: Find html nodes in AST (legacy, for backward compatibility tests)
 function findHtmlNodes(ast) {
   const results = [];
   function walk(node) {
@@ -32,6 +32,31 @@ function findHtmlNodes(ast) {
   }
   walk(ast);
   return results;
+}
+
+// Helper: Find mark nodes in AST (new custom MDAT nodes)
+function findMarkNodes(ast) {
+  const results = [];
+  function walk(node) {
+    if (node.type === 'mark') {
+      results.push(node);
+    }
+    if (node.children) {
+      for (const child of node.children) {
+        walk(child);
+      }
+    }
+  }
+  walk(ast);
+  return results;
+}
+
+// Helper: Get text content from mark node
+function getMarkText(markNode) {
+  if (markNode.children && markNode.children[0]) {
+    return markNode.children[0].value || '';
+  }
+  return '';
 }
 
 // Helper: Find text nodes in AST
@@ -59,43 +84,63 @@ describe('remark-mark-highlight Plugin', () => {
   // Issue: Markdownパーサーが**を先に処理し、ASTが分断されるため
   // ============================================================
   describe('Bold and Highlight Combination (Future Implementation)', () => {
-    test.todo('highlight outside bold: ==**text**== should work like Obsidian');
-
-    test('documents current limitation: ==**text**== does not work', async () => {
-      // 現在の制限を文書化するテスト
-      // 将来の実装でこのテストは「動作する」ことを確認するテストに変更する
+    test('highlight outside bold: ==**text**== works correctly', async () => {
       const input = '==**太字のハイライト**==';
       const ast = await processToAst(input);
-      const htmlNodes = findHtmlNodes(ast);
+      const markNodes = findMarkNodes(ast);
 
-      // 現在は変換されない（将来は変換されるべき）
-      assert.strictEqual(htmlNodes.length, 0, 'Currently ==**text**== is not converted (future fix needed)');
+      // Now this pattern works - mark wraps strong
+      assert.strictEqual(markNodes.length, 1, '==**text**== should be converted');
+      assert.strictEqual(markNodes[0].data?.hName, 'mark', 'Should have hName mark');
     });
 
     test('bold outside highlight: **==text==** works correctly', async () => {
       const input = '**==太字のハイライト==**';
       const ast = await processToAst(input);
-      const htmlNodes = findHtmlNodes(ast);
+      const markNodes = findMarkNodes(ast);
 
       // このパターンは動作する
-      assert(htmlNodes.length > 0, '**==text==** should be converted');
-      assert(htmlNodes[0].value.includes('<mark'), 'Should contain mark element');
+      assert(markNodes.length > 0, '**==text==** should be converted');
+      assert.strictEqual(markNodes[0].data?.hName, 'mark', 'Should have hName mark');
+      assert(getMarkText(markNodes[0]).includes('太字のハイライト'), 'Should contain highlighted text');
     });
 
-    test.todo('mixed patterns: **==a==** and ==**b**== in same line should all work');
+    test('mixed patterns: **==a==** and ==**b**== in same line should all work', async () => {
+      const input = '**==パターンA==**と==**パターンB**==';
+      const ast = await processToAst(input);
+      const markNodes = findMarkNodes(ast);
 
-    test.todo('italic variants: ==*text*== and *==text==* should both work');
+      assert.strictEqual(markNodes.length, 2, 'Should find 2 mark nodes');
+    });
+
+    test('italic variants: ==*text*== works correctly', async () => {
+      const input = '==*斜体テキスト*==';
+      const ast = await processToAst(input);
+      const markNodes = findMarkNodes(ast);
+
+      assert.strictEqual(markNodes.length, 1, 'Should find 1 mark node');
+      assert.strictEqual(markNodes[0].data?.hName, 'mark', 'Should have hName mark');
+    });
+
+    test('italic variants: *==text==* works correctly', async () => {
+      const input = '*==斜体テキスト==*';
+      const ast = await processToAst(input);
+      const markNodes = findMarkNodes(ast);
+
+      assert.strictEqual(markNodes.length, 1, 'Should find 1 mark node');
+      assert.strictEqual(markNodes[0].data?.hName, 'mark', 'Should have hName mark');
+    });
   });
 
   describe('Basic Highlight Detection', () => {
     test('converts basic highlight syntax to <mark>', async () => {
       const input = await loadInput('mark-highlight', 'basic');
       const ast = await processToAst(input);
-      const htmlNodes = findHtmlNodes(ast);
+      const markNodes = findMarkNodes(ast);
 
-      assert(htmlNodes.length > 0, 'Should find HTML nodes');
-      assert(htmlNodes[0].value.includes('<mark'), 'Should contain <mark> element');
-      assert(htmlNodes[0].value.includes('ハイライトされたテキスト'), 'Should contain highlighted text');
+      assert(markNodes.length > 0, 'Should find mark nodes');
+      assert.strictEqual(markNodes[0].data?.hName, 'mark', 'Should have hName mark');
+      assert(getMarkText(markNodes[0]).includes('ハイライトされたテキスト'), 'Should contain highlighted text');
     });
 
     test('preserves surrounding text', async () => {
@@ -113,9 +158,9 @@ describe('remark-mark-highlight Plugin', () => {
     test('handles text without highlights unchanged', async () => {
       const input = 'No highlights here.';
       const ast = await processToAst(input);
-      const htmlNodes = findHtmlNodes(ast);
+      const markNodes = findMarkNodes(ast);
 
-      assert.strictEqual(htmlNodes.length, 0, 'Should not create HTML nodes');
+      assert.strictEqual(markNodes.length, 0, 'Should not create mark nodes');
     });
   });
 
@@ -123,12 +168,12 @@ describe('remark-mark-highlight Plugin', () => {
     test('handles multiple highlights in one line', async () => {
       const input = await loadInput('mark-highlight', 'multiple');
       const ast = await processToAst(input);
-      const htmlNodes = findHtmlNodes(ast);
+      const markNodes = findMarkNodes(ast);
 
-      assert.strictEqual(htmlNodes.length, 3, 'Should find 3 highlights');
-      assert(htmlNodes[0].value.includes('最初'), 'First highlight');
-      assert(htmlNodes[1].value.includes('2番目'), 'Second highlight');
-      assert(htmlNodes[2].value.includes('3番目'), 'Third highlight');
+      assert.strictEqual(markNodes.length, 3, 'Should find 3 highlights');
+      assert(getMarkText(markNodes[0]).includes('最初'), 'First highlight');
+      assert(getMarkText(markNodes[1]).includes('2番目'), 'Second highlight');
+      assert(getMarkText(markNodes[2]).includes('3番目'), 'Third highlight');
     });
   });
 
@@ -148,12 +193,12 @@ describe('remark-mark-highlight Plugin', () => {
     test('processes fixture with both escaped and real highlights', async () => {
       const input = await loadInput('mark-highlight', 'escaped');
       const ast = await processToAst(input);
-      const htmlNodes = findHtmlNodes(ast);
+      const markNodes = findMarkNodes(ast);
 
       // Fixture behavior - documents current implementation
       // The fixture may be processed differently due to markdown parsing
-      assert(htmlNodes.length >= 1, 'Should have at least one highlight');
-      assert(htmlNodes.some(n => n.value.includes('実際のハイライト')), 'Should contain actual highlight');
+      assert(markNodes.length >= 1, 'Should have at least one highlight');
+      assert(markNodes.some(n => getMarkText(n).includes('実際のハイライト')), 'Should contain actual highlight');
     });
   });
 
@@ -161,18 +206,18 @@ describe('remark-mark-highlight Plugin', () => {
     test('handles custom class attribute', async () => {
       const input = await loadInput('mark-highlight', 'custom-class');
       const ast = await processToAst(input);
-      const htmlNodes = findHtmlNodes(ast);
+      const markNodes = findMarkNodes(ast);
 
-      assert(htmlNodes.length > 0, 'Should find HTML node');
-      assert(htmlNodes[0].value.includes('class="important"'), 'Should have custom class');
+      assert(markNodes.length > 0, 'Should find mark node');
+      assert.strictEqual(markNodes[0].data?.hProperties?.className, 'important', 'Should have custom class');
     });
 
     test('applies plugin className option', async () => {
       const input = '==test==';
       const ast = await processToAst(input, { className: 'highlight' });
-      const htmlNodes = findHtmlNodes(ast);
+      const markNodes = findMarkNodes(ast);
 
-      assert(htmlNodes[0].value.includes('class="highlight"'), 'Should apply class');
+      assert.strictEqual(markNodes[0].data?.hProperties?.className, 'highlight', 'Should apply class');
     });
   });
 
@@ -180,25 +225,25 @@ describe('remark-mark-highlight Plugin', () => {
     test('adds role="mark" by default', async () => {
       const input = '==accessible text==';
       const ast = await processToAst(input);
-      const htmlNodes = findHtmlNodes(ast);
+      const markNodes = findMarkNodes(ast);
 
-      assert(htmlNodes[0].value.includes('role="mark"'), 'Should have role attribute');
+      assert.strictEqual(markNodes[0].data?.hProperties?.role, 'mark', 'Should have role attribute');
     });
 
     test('adds tabindex when focusable option is true', async () => {
       const input = '==focusable==';
       const ast = await processToAst(input, { focusable: true });
-      const htmlNodes = findHtmlNodes(ast);
+      const markNodes = findMarkNodes(ast);
 
-      assert(htmlNodes[0].value.includes('tabindex="0"'), 'Should have tabindex');
+      assert.strictEqual(markNodes[0].data?.hProperties?.tabIndex, 0, 'Should have tabindex');
     });
 
     test('no role when accessibility is disabled', async () => {
       const input = '==no role==';
       const ast = await processToAst(input, { accessibility: false });
-      const htmlNodes = findHtmlNodes(ast);
+      const markNodes = findMarkNodes(ast);
 
-      assert(!htmlNodes[0].value.includes('role='), 'Should not have role');
+      assert.strictEqual(markNodes[0].data?.hProperties?.role, undefined, 'Should not have role');
     });
   });
 
@@ -207,10 +252,10 @@ describe('remark-mark-highlight Plugin', () => {
       // Test with direct input that won't be parsed as HTML by remark
       const input = '==test&value==';
       const ast = await processToAst(input);
-      const htmlNodes = findHtmlNodes(ast);
+      const markNodes = findMarkNodes(ast);
 
-      assert(htmlNodes.length > 0, 'Should find HTML node');
-      assert(htmlNodes[0].value.includes('&amp;'), 'Should escape ampersand');
+      assert(markNodes.length > 0, 'Should find mark node');
+      assert(getMarkText(markNodes[0]).includes('&amp;'), 'Should escape ampersand');
     });
 
     test('processes fixture with angle brackets', async () => {
@@ -225,17 +270,17 @@ describe('remark-mark-highlight Plugin', () => {
     test('escapes ampersands', async () => {
       const input = '==Tom & Jerry==';
       const ast = await processToAst(input);
-      const htmlNodes = findHtmlNodes(ast);
+      const markNodes = findMarkNodes(ast);
 
-      assert(htmlNodes[0].value.includes('&amp;'), 'Should escape ampersand');
+      assert(getMarkText(markNodes[0]).includes('&amp;'), 'Should escape ampersand');
     });
 
     test('escapes quotes', async () => {
       const input = '==text with "quotes"==';
       const ast = await processToAst(input);
-      const htmlNodes = findHtmlNodes(ast);
+      const markNodes = findMarkNodes(ast);
 
-      assert(htmlNodes[0].value.includes('&quot;'), 'Should escape quotes');
+      assert(getMarkText(markNodes[0]).includes('&quot;'), 'Should escape quotes');
     });
   });
 
@@ -244,7 +289,7 @@ describe('remark-mark-highlight Plugin', () => {
       const input = '====';
       const ast = await processToAst(input);
       // Empty highlights should be left as-is or ignored
-      const htmlNodes = findHtmlNodes(ast);
+      const markNodes = findMarkNodes(ast);
       // Should not crash and should handle gracefully
       assert(ast, 'Should produce valid AST');
     });
@@ -252,18 +297,18 @@ describe('remark-mark-highlight Plugin', () => {
     test('handles unmatched == gracefully', async () => {
       const input = '==unmatched';
       const ast = await processToAst(input);
-      const htmlNodes = findHtmlNodes(ast);
+      const markNodes = findMarkNodes(ast);
 
-      assert.strictEqual(htmlNodes.length, 0, 'Should not create highlight without closing ==');
+      assert.strictEqual(markNodes.length, 0, 'Should not create highlight without closing ==');
     });
 
     test('handles spaces inside highlight', async () => {
       const input = '==  spaced  ==';
       const ast = await processToAst(input);
-      const htmlNodes = findHtmlNodes(ast);
+      const markNodes = findMarkNodes(ast);
 
-      assert(htmlNodes.length > 0, 'Should find highlight');
-      assert(htmlNodes[0].value.includes('spaced'), 'Should preserve spaces');
+      assert(markNodes.length > 0, 'Should find highlight');
+      assert(getMarkText(markNodes[0]).includes('spaced'), 'Should preserve spaces');
     });
 
     test('handles newline between == markers', async () => {
@@ -276,19 +321,19 @@ describe('remark-mark-highlight Plugin', () => {
     test('skips highlights inside code blocks', async () => {
       const input = '`==not highlighted==`';
       const ast = await processToAst(input);
-      const htmlNodes = findHtmlNodes(ast);
+      const markNodes = findMarkNodes(ast);
 
       // Should not process highlights inside inline code
-      assert.strictEqual(htmlNodes.length, 0, 'Should not highlight inside code');
+      assert.strictEqual(markNodes.length, 0, 'Should not highlight inside code');
     });
 
     test('handles Japanese text', async () => {
       const input = '==日本語のテキスト==';
       const ast = await processToAst(input);
-      const htmlNodes = findHtmlNodes(ast);
+      const markNodes = findMarkNodes(ast);
 
-      assert(htmlNodes.length > 0, 'Should find highlight');
-      assert(htmlNodes[0].value.includes('日本語のテキスト'), 'Should preserve Japanese');
+      assert(markNodes.length > 0, 'Should find highlight');
+      assert(getMarkText(markNodes[0]).includes('日本語のテキスト'), 'Should preserve Japanese');
     });
   });
 
@@ -296,9 +341,9 @@ describe('remark-mark-highlight Plugin', () => {
     test('disabled option skips processing', async () => {
       const input = '==should not highlight==';
       const ast = await processToAst(input, { enabled: false });
-      const htmlNodes = findHtmlNodes(ast);
+      const markNodes = findMarkNodes(ast);
 
-      assert.strictEqual(htmlNodes.length, 0, 'Should not highlight when disabled');
+      assert.strictEqual(markNodes.length, 0, 'Should not highlight when disabled');
     });
 
     test('cache option works without error', async () => {
@@ -313,11 +358,11 @@ describe('remark-mark-highlight Plugin', () => {
     test('strict security mode removes control characters', async () => {
       const input = '==text\x00with\x08control==';
       const ast = await processToAst(input, { securityMode: 'strict' });
-      const htmlNodes = findHtmlNodes(ast);
+      const markNodes = findMarkNodes(ast);
 
-      assert(htmlNodes.length > 0, 'Should find highlight');
-      assert(!htmlNodes[0].value.includes('\x00'), 'Should remove null');
-      assert(!htmlNodes[0].value.includes('\x08'), 'Should remove backspace');
+      assert(markNodes.length > 0, 'Should find highlight');
+      assert(!getMarkText(markNodes[0]).includes('\x00'), 'Should remove null');
+      assert(!getMarkText(markNodes[0]).includes('\x08'), 'Should remove backspace');
     });
   });
 

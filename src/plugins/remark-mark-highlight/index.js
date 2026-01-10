@@ -59,7 +59,102 @@ export default function remarkMarkHighlight(options = {}) {
     return (tree) => tree;
   }
 
+  // Helper: Create mark node with hProperties
+  function createMarkNode(children) {
+    const hProperties = {};
+
+    if (className) {
+      hProperties.className = className;
+    }
+
+    if (accessibility) {
+      hProperties.role = 'mark';
+    }
+
+    if (focusable) {
+      hProperties.tabIndex = 0;
+    }
+
+    return {
+      type: 'mark',
+      children: children,
+      data: {
+        hName: 'mark',
+        hProperties: Object.keys(hProperties).length > 0 ? hProperties : undefined
+      }
+    };
+  }
+
+  // Helper: Process split mark patterns like ==**text**==
+  // Where == is split across multiple nodes due to Markdown parsing
+  function processSplitMarkPatterns(parent) {
+    if (!parent.children || parent.children.length < 3) return;
+
+    const children = parent.children;
+    let i = 0;
+
+    while (i < children.length) {
+      const child = children[i];
+
+      // Look for text node ending with ==
+      if (child.type === 'text' && child.value.endsWith('==')) {
+        // Search for matching == in subsequent nodes
+        for (let j = i + 1; j < children.length; j++) {
+          const endChild = children[j];
+
+          // Found text node starting with ==
+          if (endChild.type === 'text' && endChild.value.startsWith('==')) {
+            // Extract content before == in start node
+            const beforeMark = child.value.slice(0, -2);
+            // Extract content after == in end node
+            const afterMark = endChild.value.slice(2);
+
+            // Collect nodes between start and end
+            const markChildren = [];
+            for (let k = i + 1; k < j; k++) {
+              markChildren.push(children[k]);
+            }
+
+            // Build new children array
+            const newChildren = [];
+
+            // Add text before mark if exists
+            if (beforeMark) {
+              newChildren.push({ type: 'text', value: beforeMark });
+            }
+
+            // Add mark node wrapping the middle content
+            if (markChildren.length > 0) {
+              newChildren.push(createMarkNode(markChildren));
+            }
+
+            // Add text after mark if exists
+            if (afterMark) {
+              newChildren.push({ type: 'text', value: afterMark });
+            }
+
+            // Replace the range [i, j] with new children
+            const deleteCount = j - i + 1;
+            children.splice(i, deleteCount, ...newChildren);
+
+            // Continue from current position (may have new patterns)
+            i = 0;
+            break;
+          }
+
+          // If we hit another == ending, stop searching (nested not supported yet)
+          if (endChild.type === 'text' && endChild.value.includes('==')) {
+            break;
+          }
+        }
+      }
+
+      i++;
+    }
+  }
+
   return function transformer(tree) {
+    // First pass: Process text nodes with ==text== pattern
     visit(tree, 'text', (node, index, parent) => {
       if (!parent || index === null) return;
 
@@ -156,9 +251,6 @@ export default function remarkMarkHighlight(options = {}) {
             value: match[0]
           });
         } else {
-          // エスケープ済みコンテンツとアクセシビリティ属性を持つ<mark>要素用のHTMLノードを作成
-          const attributes = [];
-
           // カスタム属性をパース（最適化済み）
           let customClass = '';
           let customAriaLabel = '';
@@ -186,32 +278,38 @@ export default function remarkMarkHighlight(options = {}) {
             }
           }
 
+          // Build hProperties for mdast-util-to-hast conversion
+          const hProperties = {};
+
           // class属性を追加（カスタムクラスを優先、なければプラグインオプション）
           const finalClass = customClass || className;
           if (finalClass) {
-            attributes.push(`class="${finalClass}"`);
+            hProperties.className = finalClass;
           }
 
           // アクセシビリティ属性を追加（有効な場合）
           if (accessibility) {
-            attributes.push('role="mark"');
+            hProperties.role = 'mark';
 
             // 指定されている場合はカスタムaria-labelを追加
             if (customAriaLabel) {
-              attributes.push(`aria-label="${escapeHtml(customAriaLabel, securityMode)}"`);
+              hProperties['aria-label'] = escapeHtml(customAriaLabel, securityMode);
             }
           }
 
           // フォーカス可能属性を追加（有効な場合）
           if (focusable) {
-            attributes.push('tabindex="0"');
+            hProperties.tabIndex = 0;
           }
 
-          const attributeString = attributes.length > 0 ? ` ${attributes.join(' ')}` : '';
-
+          // Create custom MDAT node with data.hName for remark-rehype
           const markNode = {
-            type: 'html',
-            value: `<mark${attributeString}>${escapeHtml(highlightedText, securityMode)}</mark>`
+            type: 'mark',
+            children: [{ type: 'text', value: escapeHtml(highlightedText, securityMode) }],
+            data: {
+              hName: 'mark',
+              hProperties: Object.keys(hProperties).length > 0 ? hProperties : undefined
+            }
           };
           parts.push(markNode);
         }
@@ -250,6 +348,15 @@ export default function remarkMarkHighlight(options = {}) {
         parent.children.splice(index, 1, ...parts);
         // 新しく挿入されたノードをスキップするためにインデックスを調整
         return index + parts.length;
+      }
+    });
+
+    // Second pass: Process split mark patterns like ==**text**==
+    // These patterns have == split across multiple nodes due to Markdown parsing
+    const parentTypes = ['paragraph', 'heading', 'tableCell', 'listItem', 'blockquote'];
+    visit(tree, (node) => {
+      if (parentTypes.includes(node.type) || node.type === 'strong' || node.type === 'emphasis') {
+        processSplitMarkPatterns(node);
       }
     });
   };
