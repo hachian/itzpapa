@@ -10,6 +10,7 @@ An Astro-based blog site that supports Obsidian-style syntax (WikiLink, Callout,
 
 - **Astro v5** - Fast static site generation with Markdown/MDX
 - **Obsidian syntax** - WikiLink (`[[page]]`), Callout, Mark highlight (`==text==`), Inline tags (`#tag`)
+- **Search** - Full-text search with keyword highlighting
 - **SEO** - OG images, sitemap, RSS, canonical URLs
 - **i18n** - Japanese and English
 - **Integrations** - giscus comments, Google AdSense

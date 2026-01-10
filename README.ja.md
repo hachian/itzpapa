@@ -8,6 +8,7 @@ Astroをベースにしたブログサイトで、Obsidian風の記法（WikiLin
 
 - **Astro v5** - Markdown/MDX対応の高速な静的サイト生成
 - **Obsidian記法** - WikiLink (`[[page]]`)、Callout、マークハイライト (`==text==`)、インラインタグ (`#tag`)
+- **検索** - キーワードハイライト付き全文検索
 - **SEO** - OG画像、サイトマップ、RSS、canonical URLs
 - **多言語対応** - 日本語と英語
 - **統合機能** - giscusコメント、Google AdSense
