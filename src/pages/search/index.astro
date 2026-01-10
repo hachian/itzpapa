@@ -1,0 +1,543 @@
+---
+/**
+ * 検索ページ
+ * ブログ記事を部分一致検索し、結果を表示する
+ */
+import BaseHead from '../../components/BaseHead.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+import { SITE_TITLE, siteConfig } from '../../../site.config';
+import { t, getLanguage } from '../../i18n';
+
+const lang = getLanguage();
+const pageTitle = `${t('search.title')} | ${SITE_TITLE}`;
+const resultsPerPage = siteConfig.pagination?.postsPerPage ?? 24;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <BaseHead title={pageTitle} description={t('search.placeholder')} />
+    <style>
+      main {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: var(--space-8) var(--space-4);
+      }
+
+      .page-header {
+        text-align: center;
+        margin-bottom: var(--space-8);
+      }
+
+      .page-header h1 {
+        font-size: var(--font-size-4xl);
+        font-weight: var(--font-weight-bold);
+        color: var(--color-text-primary);
+        margin: 0 0 var(--space-4) 0;
+      }
+
+      /* 検索フォーム */
+      .search-form {
+        display: flex;
+        gap: var(--space-3);
+        margin-bottom: var(--space-8);
+      }
+
+      .search-input {
+        flex: 1;
+        padding: var(--space-3) var(--space-4);
+        font-size: var(--font-size-base);
+        border: 2px solid var(--color-border);
+        border-radius: var(--radius-lg);
+        background: var(--color-surface);
+        color: var(--color-text-primary);
+        transition: border-color var(--duration-fast) var(--easing-default);
+      }
+
+      .search-input:focus {
+        outline: none;
+        border-color: var(--color-primary-500);
+      }
+
+      .search-button {
+        padding: var(--space-3) var(--space-6);
+        font-size: var(--font-size-base);
+        font-weight: var(--font-weight-medium);
+        color: white;
+        background: var(--color-primary-500);
+        border: none;
+        border-radius: var(--radius-lg);
+        cursor: pointer;
+        transition: background var(--duration-fast) var(--easing-default);
+      }
+
+      .search-button:hover {
+        background: var(--color-primary-600);
+      }
+
+      .search-button:focus-visible {
+        outline: var(--focus-ring-width) solid var(--focus-ring-color);
+        outline-offset: var(--focus-ring-offset);
+      }
+
+      /* 検索状態メッセージ */
+      .search-status {
+        text-align: center;
+        padding: var(--space-8);
+        color: var(--color-text-secondary);
+      }
+
+      .search-status--loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--space-2);
+      }
+
+      .spinner {
+        width: 20px;
+        height: 20px;
+        border: 2px solid var(--color-border);
+        border-top-color: var(--color-primary-500);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+      }
+
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+
+      /* 検索結果カウント */
+      .results-count {
+        margin-bottom: var(--space-6);
+        font-size: var(--font-size-sm);
+        color: var(--color-text-secondary);
+      }
+
+      /* 検索結果リスト */
+      .search-results {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      /* 動的に生成される要素には :global() を使用 */
+      :global(.search-result-item) {
+        margin-bottom: var(--space-6);
+        padding: var(--space-5);
+        background: var(--color-surface);
+        border: 2px solid var(--color-border);
+        border-radius: var(--radius-lg);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        transition: all var(--duration-fast) var(--easing-default);
+      }
+
+      :global(.search-result-item:hover) {
+        border-color: var(--color-primary-400);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+      }
+
+      :global(.search-result-link) {
+        text-decoration: none;
+        display: block;
+      }
+
+      :global(.search-result-title) {
+        font-size: var(--font-size-lg);
+        font-weight: var(--font-weight-semibold);
+        color: var(--color-primary-600);
+        margin: 0 0 var(--space-2) 0;
+      }
+
+      :global(.search-result-link:hover .search-result-title) {
+        text-decoration: underline;
+      }
+
+      :global(.search-result-context) {
+        font-size: var(--font-size-sm);
+        color: var(--color-text-secondary);
+        line-height: var(--line-height-relaxed);
+        margin: 0;
+      }
+
+      :global(.search-result-context mark) {
+        background-color: var(--mark-bg, oklch(90% 0.20 calc(var(--primary-hue) + 180) / 0.6));
+        color: var(--color-text-primary);
+        padding: 0.1em 0.2em;
+        border-radius: 0.2em;
+      }
+
+      /* ページネーション */
+      .pagination {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--space-2);
+        margin-top: var(--space-8);
+        padding: var(--space-4) 0;
+      }
+
+      .pagination-button {
+        display: flex;
+        align-items: center;
+        gap: var(--space-1);
+        padding: var(--space-2) var(--space-3);
+        font-size: var(--font-size-sm);
+        font-weight: var(--font-weight-medium);
+        color: var(--color-text-primary);
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-lg);
+        cursor: pointer;
+        transition: all var(--duration-fast) var(--easing-default);
+      }
+
+      .pagination-button:hover:not(:disabled) {
+        background: var(--color-primary-100);
+        border-color: var(--color-primary-300);
+        color: var(--color-primary-700);
+      }
+
+      .pagination-button:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+
+      .pagination-info {
+        font-size: var(--font-size-sm);
+        color: var(--color-text-secondary);
+        padding: 0 var(--space-4);
+      }
+
+      /* レスポンシブ */
+      @media (max-width: 639px) {
+        main {
+          padding: var(--space-6) var(--space-4);
+        }
+
+        .page-header h1 {
+          font-size: var(--font-size-2xl);
+        }
+
+        .search-form {
+          flex-direction: column;
+        }
+
+        .search-button {
+          width: 100%;
+        }
+      }
+
+      /* ダークモード */
+      html.dark .search-input {
+        background: var(--color-gray-800);
+        border-color: var(--color-gray-700);
+      }
+
+      html.dark .search-input:focus {
+        border-color: var(--color-primary-400);
+      }
+
+      :global(html.dark .search-result-item) {
+        background: var(--color-gray-800);
+        border: 2px solid var(--color-gray-600);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      }
+
+      :global(html.dark .search-result-item:hover) {
+        border-color: var(--color-primary-400);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+      }
+
+      :global(html.dark .search-result-title) {
+        color: var(--color-primary-400);
+      }
+
+      :global(html.dark .search-result-context mark) {
+        background-color: var(--mark-bg-dark, oklch(85% 0.18 calc(var(--primary-hue) + 180) / 0.4));
+      }
+
+      html.dark .pagination-button {
+        background: var(--color-gray-800);
+        border-color: var(--color-gray-700);
+      }
+
+      html.dark .pagination-button:hover:not(:disabled) {
+        background: var(--color-primary-900);
+        border-color: var(--color-primary-700);
+        color: var(--color-primary-300);
+      }
+    </style>
+  </head>
+  <body>
+    <Header />
+    <main style="view-transition-name: main-content;" data-results-per-page={resultsPerPage}>
+      <Breadcrumb items={[
+        { label: t('breadcrumb.home'), href: '/' },
+        { label: t('breadcrumb.search') }
+      ]} />
+
+      <header class="page-header">
+        <h1>{t('search.title')}</h1>
+      </header>
+
+      <form class="search-form" id="search-form" role="search">
+        <input
+          type="search"
+          id="search-input"
+          class="search-input"
+          placeholder={t('search.placeholder')}
+          autocomplete="off"
+          aria-label={t('search.placeholder')}
+        />
+        <button type="submit" class="search-button">
+          {t('search.button')}
+        </button>
+      </form>
+
+      <div id="search-status" class="search-status" style="display: none;"></div>
+
+      <div id="results-count" class="results-count" style="display: none;"></div>
+
+      <ul id="search-results" class="search-results" aria-live="polite"></ul>
+
+      <nav id="pagination" class="pagination" style="display: none;" aria-label={t('pagination.ariaLabel')}>
+        <button type="button" class="pagination-button" id="prev-page" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+          {t('pagination.prev')}
+        </button>
+        <span id="pagination-info" class="pagination-info"></span>
+        <button type="button" class="pagination-button" id="next-page" disabled>
+          {t('pagination.next')}
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </nav>
+    </main>
+    <Footer />
+
+    <script>
+      import { SearchEngine } from '../../utils/search/search-engine.js';
+
+      // サーバーサイドの設定値を取得（site.config.tsのpagination.postsPerPageと統一）
+      const mainEl = document.querySelector('main');
+      const RESULTS_PER_PAGE = parseInt(mainEl?.dataset.resultsPerPage || '24', 10);
+
+      // 検索エンジン（グローバルで1インスタンス）
+      const searchEngine = new SearchEngine();
+
+      // 現在の状態（グローバル）
+      let currentQuery = '';
+      let currentPage = 1;
+      let currentResults = [];
+
+      // DOM要素への参照（init時に設定）
+      let form, input, statusEl, resultsCountEl, resultsEl, paginationEl, paginationInfo, prevButton, nextButton;
+      let translations;
+
+
+      // URLパラメータを読み取り
+      function getQueryParams() {
+        const params = new URLSearchParams(window.location.search);
+        return {
+          q: params.get('q') || '',
+          page: parseInt(params.get('page')) || 1
+        };
+      }
+
+      // URLパラメータを更新
+      function updateUrl(query, page) {
+        const params = new URLSearchParams();
+        if (query) params.set('q', query);
+        if (page > 1) params.set('page', String(page));
+        const newUrl = params.toString() ? `?${params.toString()}` : window.location.pathname;
+        history.replaceState(null, '', newUrl);
+      }
+
+      // ステータス表示
+      function showStatus(message, isLoading = false) {
+        statusEl.style.display = 'block';
+        if (isLoading) {
+          statusEl.className = 'search-status search-status--loading';
+          statusEl.innerHTML = `<span class="spinner"></span><span>${message}</span>`;
+        } else {
+          statusEl.className = 'search-status';
+          statusEl.textContent = message;
+        }
+        resultsCountEl.style.display = 'none';
+        resultsEl.innerHTML = '';
+        paginationEl.style.display = 'none';
+      }
+
+      // 結果表示
+      function showResults(results, query, page) {
+        statusEl.style.display = 'none';
+
+        if (results.length === 0) {
+          showStatus(translations.noResults);
+          return;
+        }
+
+        // ページネーション計算
+        const totalPages = Math.ceil(results.length / RESULTS_PER_PAGE);
+        const startIndex = (page - 1) * RESULTS_PER_PAGE;
+        const endIndex = Math.min(startIndex + RESULTS_PER_PAGE, results.length);
+        const pageResults = results.slice(startIndex, endIndex);
+
+        // 結果カウント
+        resultsCountEl.style.display = 'block';
+        resultsCountEl.textContent = translations.resultsCount.replace('{count}', String(results.length));
+
+        // 結果リスト
+        resultsEl.innerHTML = pageResults.map(hit => {
+          // コンテキスト内のハイライト位置でmarkタグを挿入
+          const before = escapeHtml(hit.context.slice(0, hit.highlightStart));
+          const match = escapeHtml(hit.context.slice(hit.highlightStart, hit.highlightEnd));
+          const after = escapeHtml(hit.context.slice(hit.highlightEnd));
+          const highlightedContext = `${before}<mark>${match}</mark>${after}`;
+
+          return `
+            <li class="search-result-item">
+              <a href="/blog/${hit.slug}/?highlight=${encodeURIComponent(query)}" class="search-result-link" data-astro-reload>
+                <h2 class="search-result-title">${escapeHtml(hit.title)}</h2>
+                <p class="search-result-context">${highlightedContext}</p>
+              </a>
+            </li>
+          `;
+        }).join('');
+
+        // ページネーション
+        if (totalPages > 1) {
+          paginationEl.style.display = 'flex';
+          paginationInfo.textContent = translations.page
+            .replace('{current}', String(page))
+            .replace('{total}', String(totalPages));
+          prevButton.disabled = page <= 1;
+          nextButton.disabled = page >= totalPages;
+        } else {
+          paginationEl.style.display = 'none';
+        }
+      }
+
+      // HTMLエスケープ
+      function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      // 検索実行
+      async function performSearch(query, page = 1) {
+        if (!query.trim()) {
+          showStatus(translations.enterQuery);
+          return;
+        }
+
+        currentQuery = query;
+        currentPage = page;
+        updateUrl(query, page);
+
+        showStatus('Loading...', true);
+
+        try {
+          await searchEngine.loadIndex();
+          const result = searchEngine.search(query);
+          currentResults = result.hits;
+          showResults(currentResults, query, page);
+        } catch (error) {
+          console.error('Search error:', error);
+          showStatus(translations.error);
+        }
+      }
+
+      // 初期化
+      function init() {
+        // このページでない場合は何もしない
+        if (!window.location.pathname.startsWith('/search')) {
+          return;
+        }
+
+        // DOM要素を取得（View Transitions対応のため毎回取得）
+        form = document.getElementById('search-form');
+        input = document.getElementById('search-input');
+        statusEl = document.getElementById('search-status');
+        resultsCountEl = document.getElementById('results-count');
+        resultsEl = document.getElementById('search-results');
+        paginationEl = document.getElementById('pagination');
+        paginationInfo = document.getElementById('pagination-info');
+        prevButton = document.getElementById('prev-page');
+        nextButton = document.getElementById('next-page');
+
+        // DOM要素が存在しない場合は終了
+        if (!form || !input) {
+          console.error('Search: Required DOM elements not found');
+          return;
+        }
+
+        // 翻訳テキストを設定
+        translations = {
+          noResults: document.documentElement.lang === 'ja' ? '検索結果が見つかりませんでした' : 'No results found',
+          enterQuery: document.documentElement.lang === 'ja' ? '検索キーワードを入力してください' : 'Please enter a search keyword',
+          error: document.documentElement.lang === 'ja' ? '検索を実行できませんでした' : 'Search failed',
+          resultsCount: document.documentElement.lang === 'ja' ? '{count}件の結果' : '{count} results',
+          page: document.documentElement.lang === 'ja' ? 'ページ {current} / {total}' : 'Page {current} / {total}'
+        };
+
+        // イベントリスナーは各DOM要素に対して初回のみ設定（View Transitions対応）
+        if (!form.dataset.searchInitialized) {
+          form.dataset.searchInitialized = 'true';
+
+          form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            performSearch(input.value, 1);
+          });
+
+          prevButton.addEventListener('click', () => {
+            if (currentPage > 1) {
+              performSearch(currentQuery, currentPage - 1);
+            }
+          });
+
+          nextButton.addEventListener('click', () => {
+            const totalPages = Math.ceil(currentResults.length / RESULTS_PER_PAGE);
+            if (currentPage < totalPages) {
+              performSearch(currentQuery, currentPage + 1);
+            }
+          });
+        }
+
+        // 検索実行
+        const { q, page } = getQueryParams();
+        if (q) {
+          input.value = q;
+          performSearch(q, page);
+        } else {
+          showStatus(translations.enterQuery);
+        }
+      }
+
+      // View Transitions対応
+      document.addEventListener('astro:page-load', init);
+
+      // ブラウザの戻る/進むボタン対応（popstate）
+      window.addEventListener('popstate', (event) => {
+        if (window.location.pathname === '/search/' || window.location.pathname === '/search') {
+          init();
+        }
+      });
+
+      // 初回ロード時のみ実行（View Transitions経由でない場合）
+      if (document.readyState === 'complete') {
+        init();
+      } else {
+        window.addEventListener('load', init);
+      }
+    </script>
+  </body>
+</html>

@@ -109,6 +109,32 @@ const showTableOfContents = features.tableOfContents;
 		/>
 		<JsonLd type="breadcrumb" breadcrumbs={breadcrumbItems} />
 		<style>
+			/* 検索ハイライト（動的に作成されるため :global() が必要） */
+			:global(.search-highlight) {
+				background-color: var(--mark-bg, oklch(90% 0.20 calc(var(--primary-hue) + 180) / 0.6));
+				color: var(--color-text-primary);
+				padding: 0.1em 0.2em;
+				border-radius: 0.2em;
+			}
+
+			/* アニメーションは別クラスで適用（スクロール完了後に付与） */
+			:global(.search-highlight.animate) {
+				animation: highlight-pulse 1s ease-out;
+			}
+
+			@keyframes highlight-pulse {
+				0% {
+					background-color: oklch(80% 0.30 calc(var(--primary-hue) + 180));
+				}
+				100% {
+					background-color: var(--mark-bg, oklch(90% 0.20 calc(var(--primary-hue) + 180) / 0.6));
+				}
+			}
+
+			:global(html.dark .search-highlight) {
+				background-color: var(--mark-bg-dark, oklch(85% 0.18 calc(var(--primary-hue) + 180) / 0.4));
+			}
+
 			/* メインコンテナ */
 			main {
 				width: 100%;
@@ -480,6 +506,118 @@ const showTableOfContents = features.tableOfContents;
 
 		<!-- Image Lightbox -->
 		<ImageLightbox />
+
+		<!-- Search highlight and scroll functionality -->
+		<script>
+			function initSearchHighlight() {
+				// URLパラメータからハイライト対象を取得
+				const params = new URLSearchParams(window.location.search);
+				const highlightQuery = params.get('highlight');
+
+				if (!highlightQuery || !highlightQuery.trim()) return;
+
+				const query = highlightQuery.trim();
+				const content = document.querySelector('.prose.blog-content');
+				if (!content) return;
+
+				// 既存のハイライトをクリア
+				const existingHighlights = content.querySelectorAll('.search-highlight');
+				existingHighlights.forEach(el => {
+					const parent = el.parentNode;
+					if (parent) {
+						parent.replaceChild(document.createTextNode(el.textContent || ''), el);
+						parent.normalize();
+					}
+				});
+
+				// テキストノードを走査してハイライト
+				const walker = document.createTreeWalker(
+					content,
+					NodeFilter.SHOW_TEXT,
+					{
+						acceptNode: (node) => {
+							// スクリプトやスタイル、コードブロック内のテキストは除外
+							const parent = node.parentElement;
+							if (!parent) return NodeFilter.FILTER_REJECT;
+							// 祖先要素にscript/style/code/preがあれば除外（Shikiのspan対応）
+							if (parent.closest('script, style, code, pre')) {
+								return NodeFilter.FILTER_REJECT;
+							}
+							return NodeFilter.FILTER_ACCEPT;
+						}
+					}
+				);
+
+				const textNodes = [];
+				let node;
+				while ((node = walker.nextNode())) {
+					textNodes.push(node);
+				}
+
+				let firstHighlight = null;
+				const queryLower = query.toLowerCase();
+
+				for (const textNode of textNodes) {
+					const text = textNode.textContent || '';
+					const textLower = text.toLowerCase();
+					const index = textLower.indexOf(queryLower);
+
+					if (index !== -1) {
+						// テキストノードを分割してハイライト
+						const before = text.slice(0, index);
+						const match = text.slice(index, index + query.length);
+						const after = text.slice(index + query.length);
+
+						const span = document.createElement('span');
+						span.className = 'search-highlight';
+						span.textContent = match;
+
+						const fragment = document.createDocumentFragment();
+						if (before) fragment.appendChild(document.createTextNode(before));
+						fragment.appendChild(span);
+						if (after) fragment.appendChild(document.createTextNode(after));
+
+						const parent = textNode.parentNode;
+						if (parent) {
+							parent.replaceChild(fragment, textNode);
+						}
+
+						if (!firstHighlight) {
+							firstHighlight = span;
+						}
+					}
+				}
+
+				// 最初のハイライト箇所にスクロール
+				if (firstHighlight) {
+					// 少し遅延してスクロール（レンダリング完了を待つ）
+					setTimeout(() => {
+						// スクロール完了後にアニメーションを開始
+						const onScrollEnd = () => {
+							firstHighlight.classList.add('animate');
+							window.removeEventListener('scrollend', onScrollEnd);
+						};
+						window.addEventListener('scrollend', onScrollEnd, { once: true });
+
+						firstHighlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+						// フォールバック: scrollendがサポートされていない場合や、スクロール不要な場合
+						setTimeout(() => {
+							if (!firstHighlight.classList.contains('animate')) {
+								firstHighlight.classList.add('animate');
+								window.removeEventListener('scrollend', onScrollEnd);
+							}
+						}, 1000);
+					}, 100);
+				}
+			}
+
+			// Run on initial load
+			initSearchHighlight();
+
+			// Re-run after View Transitions (Astro)
+			document.addEventListener('astro:page-load', initSearchHighlight);
+		</script>
 
 		<!-- Callout folding functionality -->
 		<script>

@@ -60,6 +60,12 @@ const enabledSocialLinks = Object.entries(social)
 				</HeaderLink>
 			))}
 			<div class="header__mobile-actions">
+				<a href="/search/" class="header__mobile-search-link" aria-label={t('search.title')}>
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<circle cx="11" cy="11" r="8"></circle>
+						<path d="m21 21-4.3-4.3"></path>
+					</svg>
+				</a>
 				<ThemeToggle />
 				{enabledSocialLinks.map(({ type, url }) => (
 					<a href={url} target="_blank" rel="noopener noreferrer" class="header__mobile-social-link">
@@ -71,6 +77,12 @@ const enabledSocialLinks = Object.entries(social)
 		</div>
 
 		<div class="header__actions">
+			<a href="/search/" class="header__search-link" aria-label={t('search.title')}>
+				<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<circle cx="11" cy="11" r="8"></circle>
+					<path d="m21 21-4.3-4.3"></path>
+				</svg>
+			</a>
 			<ThemeToggle />
 			{enabledSocialLinks.map(({ type, url }) => (
 				<a href={url} target="_blank" rel="noopener noreferrer" class="header__social-link">
@@ -221,6 +233,23 @@ const enabledSocialLinks = Object.entries(social)
 		gap: var(--space-1);
 	}
 
+	.header__search-link {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 28px;
+		height: 28px;
+		color: var(--color-text-secondary);
+		border-radius: var(--radius-full);
+		transition: color var(--duration-fast) var(--easing-default),
+					background-color var(--duration-fast) var(--easing-default);
+	}
+
+	.header__search-link:hover {
+		color: var(--color-primary-500);
+		background-color: var(--color-primary-50);
+	}
+
 	.header__social-link {
 		display: flex;
 		align-items: center;
@@ -316,6 +345,23 @@ const enabledSocialLinks = Object.entries(social)
 		border-top: 1px solid var(--color-gray-200);
 	}
 
+	.header__mobile-search-link {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: var(--touch-target-min);
+		height: var(--touch-target-min);
+		color: var(--color-text-secondary);
+		border-radius: var(--radius-full);
+		transition: color var(--duration-fast) var(--easing-default),
+					background-color var(--duration-fast) var(--easing-default);
+	}
+
+	.header__mobile-search-link:hover {
+		color: var(--color-primary-500);
+		background-color: var(--color-primary-50);
+	}
+
 	.header__mobile-social-link {
 		display: flex;
 		align-items: center;
@@ -407,12 +453,20 @@ const enabledSocialLinks = Object.entries(social)
 		background-color: var(--color-gray-800);
 	}
 
+	html.dark .header__search-link:hover {
+		background-color: var(--color-primary-hover-dark);
+	}
+
 	html.dark .header__social-link:hover {
 		background-color: var(--color-primary-hover-dark);
 	}
 
 	html.dark .header__mobile-actions {
 		border-top-color: var(--color-gray-700);
+	}
+
+	html.dark .header__mobile-search-link:hover {
+		background-color: var(--color-primary-hover-dark);
 	}
 
 	html.dark .header__mobile-social-link:hover {

@@ -117,6 +117,16 @@ export interface TranslationKeys {
   'archive.backToYear': string;
   'breadcrumb.archive': string;
 
+  // 検索関連
+  'search.title': string;
+  'search.placeholder': string;
+  'search.button': string;
+  'search.noResults': string;
+  'search.resultsCount': string;
+  'search.enterQuery': string;
+  'search.error': string;
+  'breadcrumb.search': string;
+
   // Aboutページ
   'about.title': string;
   'about.description': string;
@@ -243,6 +253,15 @@ export const translations: Translations = {
     'archive.backToArchive': 'アーカイブ一覧に戻る',
     'archive.backToYear': '{year}年のアーカイブに戻る',
     'breadcrumb.archive': 'アーカイブ',
+    // 検索関連
+    'search.title': '検索',
+    'search.placeholder': '検索キーワードを入力...',
+    'search.button': '検索',
+    'search.noResults': '検索結果が見つかりませんでした',
+    'search.resultsCount': '{count}件の結果',
+    'search.enterQuery': '検索キーワードを入力してください',
+    'search.error': '検索を実行できませんでした',
+    'breadcrumb.search': '検索',
     // Aboutページ
     'about.title': 'About itzpapa',
     'about.description': 'Obsidian記事をそのまま公開できるAstroブログテンプレート',
@@ -365,6 +384,15 @@ export const translations: Translations = {
     'archive.backToArchive': 'Back to Archive',
     'archive.backToYear': 'Back to {year} Archive',
     'breadcrumb.archive': 'Archive',
+    // Search
+    'search.title': 'Search',
+    'search.placeholder': 'Enter search keyword...',
+    'search.button': 'Search',
+    'search.noResults': 'No results found',
+    'search.resultsCount': '{count} results',
+    'search.enterQuery': 'Please enter a search keyword',
+    'search.error': 'Search failed',
+    'breadcrumb.search': 'Search',
     // About page
     'about.title': 'About itzpapa',
     'about.description': 'An Astro blog template for publishing Obsidian articles',
