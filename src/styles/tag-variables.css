@@ -63,11 +63,7 @@
 
   /* アクセシビリティ - design-tokensを参照 */
   --tag-min-tap-size: var(--touch-target-min, 44px);
-  
-  /* Mark要素用グラデーション変数 */
-  --mark-bg: oklch(90% 0.20 100 / 0.6);
-  --mark-bg-dark: oklch(85% 0.18 85 / 0.4);
-  
+
   /* tag-more要素用変数 */
   --tag-more-bg: oklch(98% 0.005 280);
   --tag-more-color: oklch(55% 0.015 280);

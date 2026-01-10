@@ -102,12 +102,12 @@ describe('TASK-201: グローバルCSS整理と統一テスト', () => {
       assert.strictEqual(checkCssVariables(tagVariablesCss, 'accent-dark'), true);
     });
 
-    test('グラデーション定義が変数化されている', async () => {
-      const globalCss = await readCssFile('global.css');
-      
-      // 修正後はグラデーション定義が変数化される
-      assert.strictEqual(checkCssVariables(globalCss, 'mark-bg'), true);
-      assert.strictEqual(checkCssVariables(globalCss, 'mark-bg-dark'), true);
+    test('mark.cssでmark-bg変数が使用されている', async () => {
+      const markCss = await readCssFile('mark.css');
+
+      // mark.cssでvar(--mark-bg)が使用されている（フォールバック付き）
+      assert.strictEqual(markCss.includes('var(--mark-bg'), true);
+      assert.strictEqual(markCss.includes('var(--mark-bg-dark'), true);
     });
   });
 

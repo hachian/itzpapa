@@ -266,7 +266,7 @@ const result = processMarkdown('==example==');
   await runTest('TC-301-009: Functional completeness test', async () => {
     const functionalTests = [
       { input: '==basic==', expected: '<mark role="mark">basic</mark>' },
-      { input: '==custom=={.highlight-yellow aria-label="test"}', expected: 'class="highlight-yellow"' },
+      { input: '==custom=={.custom-class aria-label="test"}', expected: 'class="custom-class"' },
       { input: '==test==', options: { accessibility: false }, expected: '<mark>test</mark>' },
     ];
 

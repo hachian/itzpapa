@@ -55,12 +55,12 @@ async function runTests() {
   });
 
   await runTest('TC-202-002: Should support aria-label with custom classes', async () => {
-    const input = '==important note=={.highlight-yellow aria-label="重要な注意事項"}';
+    const input = '==important note=={.custom-class aria-label="重要な注意事項"}';
     const output = await processMarkdown(input);
     console.log('  Output:', output.trim());
 
     assert(output.includes('<mark'), 'Should generate mark element');
-    assert(output.includes('class="highlight-yellow"'), 'Should have custom class');
+    assert(output.includes('class="custom-class"'), 'Should have custom class');
     assert(output.includes('role="mark"'), 'Should have role="mark" attribute');
     assert(output.includes('aria-label="重要な注意事項"'), 'Should have aria-label attribute');
     assert(output.includes('>important note</mark>'), 'Should contain correct text content');
