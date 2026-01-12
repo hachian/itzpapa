@@ -2,12 +2,10 @@
 
 /* ブログ記事のグリッドコンテナ */
 .blog-layout-with-toc {
-  box-sizing: border-box;
   display: grid;
   grid-template-columns: 1fr minmax(200px, 300px);
   gap: var(--space-12);
   max-width: 1200px;
-  width: 100%;
   margin: 0 auto;
   padding: var(--space-8);
   align-items: start;
