@@ -130,26 +130,37 @@ const mostActiveText = mostActiveMonth.count > 0
 
       .stat-item {
         text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        min-height: 4rem;
+      }
+
+      .stat-number,
+      .stat-text {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 1;
       }
 
       .stat-number {
         font-size: var(--font-size-3xl);
         font-weight: var(--font-weight-bold);
         color: oklch(55% 0.24 var(--archive-hue));
-        display: block;
-      }
-
-      .stat-label {
-        font-size: var(--font-size-sm);
-        color: var(--color-text-secondary);
-        margin-top: var(--space-1);
       }
 
       .stat-text {
         font-size: var(--font-size-lg);
         font-weight: var(--font-weight-semibold);
         color: oklch(55% 0.24 var(--archive-hue));
-        display: block;
+      }
+
+      .stat-label {
+        font-size: var(--font-size-sm);
+        color: var(--color-text-secondary);
+        flex-shrink: 0;
       }
 
       .empty-state {
