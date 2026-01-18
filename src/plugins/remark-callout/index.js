@@ -151,7 +151,7 @@ function isCallout(node) {
   }
 
   // ヘッダーのパースを試みる
-  const firstLine = firstTextNode.value.split('\n')[0].trimStart();
+  const firstLine = firstTextNode.value.split(/\r?\n/)[0].trimStart();
   return parseCalloutHeader(firstLine) !== null;
 }
 
@@ -166,8 +166,8 @@ function processCallout(node, depth = 0, maxDepth = 3) {
   const firstChild = node.children[0];
   const firstTextNode = firstChild.children[0];
 
-  // 最初の行を取得してヘッダーをパース
-  const lines = firstTextNode.value.split('\n');
+  // 最初の行を取得してヘッダーをパース（CRLF対応）
+  const lines = firstTextNode.value.split(/\r?\n/);
   const firstLine = lines[0].trimStart();
   const header = parseCalloutHeader(firstLine);
 

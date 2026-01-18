@@ -347,6 +347,65 @@ describe('remark-callout Plugin', () => {
     });
   });
 
+  describe('CRLF Line Endings', () => {
+    test('parses callout with CRLF line endings', async () => {
+      // CRLF改行コードでコールアウトをテスト
+      const input = '> [!note]\r\n> Content with CRLF';
+      const ast = await processToAst(input);
+      const blockquote = findBlockquote(ast);
+
+      assert.strictEqual(
+        blockquote.data?.hProperties?.['data-callout'],
+        'note',
+        'Should detect callout with CRLF line endings'
+      );
+    });
+
+    test('parses foldable callout with CRLF', async () => {
+      const input = '> [!warning]-\r\n> Foldable content';
+      const ast = await processToAst(input);
+      const blockquote = findBlockquote(ast);
+
+      assert.strictEqual(
+        blockquote.data?.hProperties?.['data-callout'],
+        'warning',
+        'Should detect warning callout with CRLF'
+      );
+      assert.strictEqual(
+        blockquote.data?.hProperties?.['data-callout-foldable'],
+        'true',
+        'Should be foldable with CRLF'
+      );
+    });
+
+    test('parses callout with custom title and CRLF', async () => {
+      const input = '> [!tip] Custom Title\r\n> Content line 1\r\n> Content line 2';
+      const ast = await processToAst(input);
+      const blockquote = findBlockquote(ast);
+
+      assert.strictEqual(
+        blockquote.data?.hProperties?.['data-callout'],
+        'tip',
+        'Should detect tip callout'
+      );
+      assert.strictEqual(
+        blockquote.data?.hProperties?.['data-callout-title'],
+        'Custom Title',
+        'Should have custom title without \\r'
+      );
+    });
+
+    test('multi-line content preserved with CRLF', async () => {
+      const input = '> [!note]\r\n> Line 1\r\n> Line 2\r\n> Line 3';
+      const ast = await processToAst(input);
+      const content = JSON.stringify(ast);
+
+      assert(content.includes('Line 1'), 'Should contain Line 1');
+      assert(content.includes('Line 2'), 'Should contain Line 2');
+      assert(content.includes('Line 3'), 'Should contain Line 3');
+    });
+  });
+
   describe('Edge Cases', () => {
     test('empty callout header type is ignored', async () => {
       const input = '> [!]\n> Content';
