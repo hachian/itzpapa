@@ -180,9 +180,9 @@ export const siteConfig: SiteConfig = {
       config: {
         // 必須: giscus.appで生成した値を設定
         repo: 'hachian/itzpapa',
-        repoId: 'R_kgDOPfX1yA',
-        category: 'Announcements',
-        categoryId: 'DIC_kwDOPfX1yM4C0CxI',
+        repoId: 'R_kgDOQ8Pwmg',
+        category: 'Comments',
+        categoryId: 'DIC_kwDOQ8Pwms4C1HJg',
         // オプション: 必要に応じて設定
         // mapping: 'pathname',
         // strict: false,
