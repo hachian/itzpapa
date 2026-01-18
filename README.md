@@ -200,10 +200,13 @@ draft: false                     # Optional
 
 ## Deployment
 
-### Cloudflare Pages
+### Cloudflare Workers
 
-This project includes configuration for Cloudflare Pages deployment:
+This project includes configuration for Cloudflare Workers deployment:
+- `wrangler.jsonc` - Wrangler configuration for Workers deployment
 - Security headers configured in `public/_headers`
+
+For detailed deployment instructions, see: https://itzpapa.hachian.com/blog/deploy-guide/
 
 ## License
 
