@@ -5,6 +5,7 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import { defineConfig } from 'astro/config';
 import remarkBreaks from 'remark-breaks';
+import remarkCjkFriendly from 'remark-cjk-friendly';
 import remarkWikilink from './src/plugins/remark-wikilink/index.js';
 import remarkTaskStatus from './src/plugins/remark-task-status/index.js';
 import remarkTags from './src/plugins/remark-tags/index.js';
@@ -20,6 +21,8 @@ import { siteConfig } from './site.config.ts';
 // 共通remarkプラグイン設定
 // markdownとMDXで同一の処理を適用
 const commonRemarkPlugins = [
+	// CJK文字を単語境界として認識させる（micromarkパース層で動作）
+	remarkCjkFriendly,
 	// Wikilinkを最初に処理（最高優先度）
 	[remarkWikilink, { priority: 'high' }],
 	// コールアウトパース（remarkBreaksより前に処理して、ヘッダー行の改行が<br>にならないようにする）
