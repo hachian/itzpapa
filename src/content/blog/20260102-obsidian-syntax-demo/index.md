@@ -468,6 +468,68 @@ Hierarchical tags allow you to search articles by parent tag or filter by child 
 | `tools/obsidian` | Obsidian tool |
 | `project/itzpapa` | itzpapa project |
 
+## CJK Brackets with Emphasis
+
+Japanese brackets (full-width parentheses, quotation marks, etc.) can be used with emphasis markup. This is a common pattern in Japanese writing.
+
+### Full-width Parentheses
+
+#### Syntax
+
+```markdown
+テスト*（補足説明）*です
+**（重要）**な情報
+```
+
+#### Output
+
+テスト*（補足説明）*です
+**（重要）**な情報
+
+### Japanese Quotation Marks
+
+#### Syntax
+
+```markdown
+*「引用文」*を強調
+**『書籍タイトル』**を太字に
+```
+
+#### Output
+
+*「引用文」*を強調
+**『書籍タイトル』**を太字に
+
+### Other CJK Brackets
+
+#### Syntax
+
+```markdown
+*【注意】*マーク
+*〈参考〉*情報
+==*（ハイライト内強調）*==
+```
+
+#### Output
+
+*【注意】*マーク
+*〈参考〉*情報
+==*（ハイライト内強調）*==
+
+### Supported Brackets
+
+| Bracket | Name |
+|---------|------|
+| `（）` | Full-width parentheses |
+| `「」` | Corner brackets |
+| `『』` | Double corner brackets |
+| `【】` | Lenticular brackets |
+| `〈〉` | Angle brackets |
+| `《》` | Double angle brackets |
+| `〔〕` | Tortoise shell brackets |
+| `［］` | Full-width square brackets |
+| `｛｝` | Full-width curly brackets |
+
 ## Summary
 
 This page covered the Obsidian-compatible syntax available in itzpapa blog:
@@ -477,6 +539,7 @@ This page covered the Obsidian-compatible syntax available in itzpapa blog:
 - **Callouts**: Displaying notes and warnings
 - **Task Status**: 22 extended checkbox types for tracking
 - **Tags**: Inline tags and frontmatter tags for categorization
+- **CJK Brackets**: Japanese brackets with emphasis markup
 
 Using these features, you can publish your Obsidian notes directly as blog posts.
 
