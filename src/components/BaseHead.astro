@@ -171,8 +171,8 @@ const googleAdsenseId = seo.googleAdsenseId || '';
 <meta name="twitter:description" content={truncatedDescription} />
 <meta name="twitter:image" content={new URL(imageSrc, Astro.url)} />
 
-<!-- View Transitions -->
-<ClientRouter />
+<!-- View Transitions (viewport prefetch for faster navigation) -->
+<ClientRouter prefetch="viewport" />
 
 <!-- Dark Mode Detection Script (inline to prevent FOUC) -->
 <script is:inline>
