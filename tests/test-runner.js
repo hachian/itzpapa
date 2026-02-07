@@ -25,6 +25,12 @@ const testSuites = [
   },
   // Unit Tests
   {
+    name: 'Rehype Trailing Slash Unit Tests',
+    command: 'node',
+    args: ['--test', 'tests/unit/rehype-trailing-slash-test.js'],
+    timeout: 30000
+  },
+  {
     name: 'Wikilink Unit Tests',
     command: 'node',
     args: ['--test', 'tests/unit/wikilink-unit-test.js'],
