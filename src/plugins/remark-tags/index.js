@@ -5,6 +5,51 @@ import { visit } from 'unist-util-visit';
 const ESCAPE_REGEX_SPECIAL_CHARS = /[.*+?^${}()|[\]\\]/g;
 
 /**
+ * 正規表現キャッシュ
+ */
+const TAG_REGEX_CACHE = new Map();
+const SEPARATOR_REGEX_CACHE = new Map();
+
+/**
+ * タグ検出用の正規表現を取得（キャッシュ対応）
+ */
+function getTagRegex(prefix, separator) {
+  const cacheKey = `${prefix}|${separator}`;
+  let regex = TAG_REGEX_CACHE.get(cacheKey);
+
+  if (!regex) {
+    const escapedPrefix = escapeRegExp(prefix);
+    const escapedSeparator = escapeRegExp(separator);
+    const pattern = `[a-zA-Z0-9\\-_\\u3040-\\u309F\\u30A0-\\u30FF\\u4E00-\\u9FAF\\u3400-\\u4DBF]+`;
+
+    regex = new RegExp(
+      `${escapedPrefix}(${pattern}(?:${escapedSeparator}${pattern})*)(?=\\s|$|[,.!?;:）」』】）])`,
+      'g'
+    );
+    TAG_REGEX_CACHE.set(cacheKey, regex);
+  }
+
+  return regex;
+}
+
+/**
+ * セパレーター処理用の正規表現を取得（キャッシュ対応）
+ */
+function getSeparatorRegexes(separator) {
+  let cached = SEPARATOR_REGEX_CACHE.get(separator);
+  if (!cached) {
+    const escaped = escapeRegExp(separator);
+    cached = {
+      repeat: new RegExp(`${escaped}+`, 'g'),
+      start: new RegExp(`^${escaped}+`),
+      end: new RegExp(`${escaped}+$`)
+    };
+    SEPARATOR_REGEX_CACHE.set(separator, cached);
+  }
+  return cached;
+}
+
+/**
  * Remarkプラグイン - タグ処理
  * Obsidianスタイルのタグ（#tag, #parent/child）をサポート
  */
@@ -67,10 +112,7 @@ export default function remarkTags(options = {}) {
       
       // タグパターン: #で始まり、スペースまたは句読点で終わる
       // 日本語、英数字、ハイフン、アンダースコア、スラッシュを含む
-      const tagRegex = new RegExp(
-        `${escapeRegExp(config.tagPrefix)}([a-zA-Z0-9\\-_\\u3040-\\u309F\\u30A0-\\u30FF\\u4E00-\\u9FAF\\u3400-\\u4DBF]+(?:${escapeRegExp(config.hierarchySeparator)}[a-zA-Z0-9\\-_\\u3040-\\u309F\\u30A0-\\u30FF\\u4E00-\\u9FAF\\u3400-\\u4DBF]+)*)(?=\\s|$|[,.!?;:）」』】）])`,
-        'g'
-      );
+      const tagRegex = getTagRegex(config.tagPrefix, config.hierarchySeparator);
       
       // タグが含まれていない場合は早期リターン
       if (!tagRegex.test(text)) {
@@ -196,16 +238,18 @@ function normalizeTag(tag, config) {
   // トリミング
   normalized = normalized.trim();
   
+  const regexes = getSeparatorRegexes(config.hierarchySeparator);
+
   // 連続するスラッシュを単一に
   normalized = normalized.replace(
-    new RegExp(`${escapeRegExp(config.hierarchySeparator)}+`, 'g'),
+    regexes.repeat,
     config.hierarchySeparator
   );
   
   // 先頭と末尾のスラッシュを除去
   normalized = normalized
-    .replace(new RegExp(`^${escapeRegExp(config.hierarchySeparator)}+`), '')
-    .replace(new RegExp(`${escapeRegExp(config.hierarchySeparator)}+$`), '');
+    .replace(regexes.start, '')
+    .replace(regexes.end, '');
   
   // 大文字小文字の処理
   if (!config.caseSensitive) {

@@ -12,6 +12,32 @@ import { DEFAULT_TAG_OPTIONS } from '../../types/tag';
 const VALID_TAG_PATTERN = /^[a-zA-Z0-9\-_\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF\u3400-\u4DBF]+$/;
 
 /**
+ * 階層セパレーター用の正規表現キャッシュ
+ */
+const SEPARATOR_REGEX_CACHE = new Map<string, {
+  repeat: RegExp;
+  start: RegExp;
+  end: RegExp;
+}>();
+
+/**
+ * 階層セパレーター用の正規表現を取得する（キャッシュ対応）
+ */
+function getSeparatorRegexes(separator: string) {
+  let cached = SEPARATOR_REGEX_CACHE.get(separator);
+  if (!cached) {
+    const escaped = escapeRegExp(separator);
+    cached = {
+      repeat: new RegExp(`${escaped}+`, 'g'),
+      start: new RegExp(`^${escaped}+`),
+      end: new RegExp(`${escaped}+$`)
+    };
+    SEPARATOR_REGEX_CACHE.set(separator, cached);
+  }
+  return cached;
+}
+
+/**
  * タグ名をバリデートする
  */
 export function validateTagName(
@@ -102,16 +128,18 @@ export function normalizeTag(tagName: string, options: TagOptions = {}): string 
     ? tagName.slice(opts.tagPrefix.length)
     : tagName;
   
+  const regexes = getSeparatorRegexes(opts.hierarchySeparator);
+
   // 連続するスラッシュを単一に正規化
   normalized = normalized.replace(
-    new RegExp(`${escapeRegExp(opts.hierarchySeparator)}+`, 'g'),
+    regexes.repeat,
     opts.hierarchySeparator
   );
   
   // 先頭と末尾のスラッシュを除去
   normalized = normalized
-    .replace(new RegExp(`^${escapeRegExp(opts.hierarchySeparator)}+`), '')
-    .replace(new RegExp(`${escapeRegExp(opts.hierarchySeparator)}+$`), '');
+    .replace(regexes.start, '')
+    .replace(regexes.end, '');
   
   // 大文字小文字の処理
   if (!opts.caseSensitive) {
