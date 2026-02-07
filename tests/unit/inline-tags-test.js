@@ -38,14 +38,14 @@ describe('インラインタグユーティリティ', () => {
       assert.strictEqual(url, '/tags/test/');
     });
 
-    test('階層タグURLを生成する（/を-に置換）', () => {
+    test('階層タグURLを生成する（/を保持）', () => {
       const url = generateTagUrl('parent/child');
-      assert.strictEqual(url, '/tags/parent-child/');
+      assert.strictEqual(url, '/tags/parent/child/');
     });
 
     test('深くネストされた階層タグURLを生成する', () => {
       const url = generateTagUrl('a/b/c/d');
-      assert.strictEqual(url, '/tags/a-b-c-d/');
+      assert.strictEqual(url, '/tags/a/b/c/d/');
     });
 
     test('URIコンポーネントをエンコードする', () => {
@@ -57,9 +57,16 @@ describe('インラインタグユーティリティ', () => {
     test('混合文字を処理する', () => {
       const url = generateTagUrl('tag with space');
       // encodeURIComponent('tag with space') -> tag%20with%20space
-      // generateTagUrlは空白をハイフンに置換しない実装になっているため、
-      // エンコードされたスペースが含まれることを確認
+      // スペースはそのままエンコードされる
       assert.strictEqual(url, '/tags/tag%20with%20space/');
+    });
+
+    test('日本語を含む階層タグを正しくエンコードする', () => {
+      const url = generateTagUrl('親/子');
+      // 各部分が個別にエンコードされる
+      const parent = encodeURIComponent('親');
+      const child = encodeURIComponent('子');
+      assert.strictEqual(url, `/tags/${parent}/${child}/`);
     });
   });
 
@@ -91,7 +98,7 @@ describe('インラインタグユーティリティ', () => {
 
       assert.strictEqual(tags.length, 1);
       assert.strictEqual(tags[0], 'dev/web/astro');
-      assert(html.includes('/tags/dev-web-astro/'));
+      assert(html.includes('/tags/dev/web/astro/'));
     });
 
     test('tags配列から重複を除去するが、全ての出現箇所をリンク化する', () => {
