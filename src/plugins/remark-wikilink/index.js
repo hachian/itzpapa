@@ -107,8 +107,7 @@ export default function remarkWikilink() {
     };
 
     // パラグラフとリストアイテムの両方で分断されたWikiLinkを処理
-    visit(tree, 'paragraph', processFragmentedWikilinks);
-    visit(tree, 'listItem', processFragmentedWikilinks);
+    visit(tree, ['paragraph', 'listItem'], processFragmentedWikilinks);
 
     // 最適化: 単一パスでテーブル処理とWikilink変換を同時実行
     visit(tree, 'text', (node, index, parent) => {
