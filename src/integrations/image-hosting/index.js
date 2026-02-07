@@ -193,38 +193,51 @@ async function rewriteHtmlImageUrls(htmlPath, urlMap) {
   let content = await fs.readFile(htmlPath, 'utf-8');
   let replacements = 0;
 
-  for (const [localPath, externalUrl] of urlMap) {
-    // ローカルパスをエスケープ
-    const escapedPath = localPath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  // Regex to match attributes: src, srcset, href, content
+  // Captures: 1=attr, 2=quote, 3=value
+  const attrRegex = /(src|srcset|href|content)=(["'])(.*?)\2/g;
 
-    // src="/_astro/..." や srcset="/_astro/..." などを置換
-    // http/https で始まるURLは除外（既に置換済みを避ける）
-    // 属性値の開始（"/ または '/）にマッチさせる
-    const patterns = [
-      // src="/_astro/xxx" 形式
-      new RegExp(`(src=["'])/(${escapedPath})(["'])`, 'g'),
-      // srcset="/_astro/xxx 1x" 形式（スペースや,が続く）
-      new RegExp(`(srcset=["'][^"']*?)/(${escapedPath})(\\s|,)`, 'g'),
-      // href="/xxx" 形式（preload等 - 相対パス）
-      new RegExp(`(href=["'])/(${escapedPath})(["'])`, 'g'),
-      // content="/og/xxx" 形式（OGメタタグ用 - 相対パス）
-      new RegExp(`(content=["'])/(${escapedPath})(["'])`, 'g'),
-      // content="https://domain/og/xxx" 形式（OGメタタグ用 - 絶対URL）
-      new RegExp(`(content=["'])https?://[^/]+/(${escapedPath})(["'])`, 'g'),
-      // href="https://domain/og/xxx" 形式（hero preload等 - 絶対URL）
-      new RegExp(`(href=["'])https?://[^/]+/(${escapedPath})(["'])`, 'g'),
-    ];
+  content = content.replace(attrRegex, (match, attr, quote, value) => {
+    let newValue = value;
+    let modified = false;
 
-    for (const pattern of patterns) {
-      const before = content;
-      content = content.replace(pattern, (match, prefix, path, suffix) => {
-        return `${prefix}${externalUrl}${suffix}`;
+    if (attr === 'srcset') {
+      // Handle srcset: match paths starting with /
+      newValue = value.replace(/(\s|,|^)\/([^\s,]+)/g, (m, prefix, key) => {
+        if (urlMap.has(key)) {
+          return `${prefix}${urlMap.get(key)}`;
+        }
+        return m;
       });
-      if (content !== before) {
-        replacements++;
+      if (newValue !== value) modified = true;
+
+    } else {
+      // src, href, content
+      if (value.startsWith('/')) {
+        const key = value.slice(1);
+        if (urlMap.has(key)) {
+          newValue = urlMap.get(key);
+          modified = true;
+        }
+      } else if (value.startsWith('http')) {
+        const httpMatch = value.match(/^https?:\/\/[^\/]+\/(.+)$/);
+        if (httpMatch) {
+          const key = httpMatch[1];
+          if (urlMap.has(key)) {
+            newValue = urlMap.get(key);
+            modified = true;
+          }
+        }
       }
     }
-  }
+
+    if (modified) {
+      replacements++;
+      return `${attr}=${quote}${newValue}${quote}`;
+    }
+
+    return match;
+  });
 
   if (replacements > 0) {
     await fs.writeFile(htmlPath, content, 'utf-8');
