@@ -73,6 +73,12 @@ describe('rehype-trailing-slash Plugin', () => {
       assert.strictEqual(getHref(output), 'https://example.com');
     });
 
+    test('ignores production domain links (absolute URLs)', async () => {
+      const input = '<a href="https://itzpapa.hachian.com/blog">Link</a>';
+      const output = await processHtml(input);
+      assert.strictEqual(getHref(output), 'https://itzpapa.hachian.com/blog');
+    });
+
     test('ignores mailto links', async () => {
       const input = '<a href="mailto:user@example.com">Link</a>';
       const output = await processHtml(input);
