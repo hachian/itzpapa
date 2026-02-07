@@ -20,6 +20,8 @@ test/
 ├── E2Eテスト (End-to-End Tests)
 │   ├── e2e-test.js                 # 完全な処理パイプライン
 │   └── html-validator-test.js      # HTMLバリデータ
+├── マニュアルテスト (Manual Pages)
+│   └── manual-pages/               # 手動テスト用Astroページ
 ├── ユーティリティ (Utilities)
 │   ├── utils/html-validator.js     # cheerioベースのHTMLバリデータ
 │   └── fixtures/                   # テストフィクスチャ
