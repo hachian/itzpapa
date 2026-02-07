@@ -20,13 +20,10 @@ const INLINE_TAG_PATTERN = /#([a-zA-Z0-9\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]
  * タグ名をURLスラッグに変換
  */
 export function generateTagUrl(tagName: string): string {
-  // 階層区切りをハイフンに変換
-  const slug = tagName.replace(/\//g, '-');
+  // 階層区切り（/）で分割し、各要素をエンコードして / で結合
+  const slug = tagName.split('/').map(part => encodeURIComponent(part)).join('/');
   
-  // URLエンコード
-  const encoded = encodeURIComponent(slug);
-  
-  return `/tags/${encoded}/`;
+  return `/tags/${slug}/`;
 }
 
 /**
