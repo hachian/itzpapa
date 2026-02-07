@@ -3,7 +3,7 @@
  */
 import { describe, it, beforeEach } from 'node:test';
 import assert from 'node:assert';
-import { getRelatedPosts } from './index.js';
+import { getRelatedPosts } from './index.ts';
 import type { CollectionEntry } from 'astro:content';
 
 // テスト用のモックデータ型

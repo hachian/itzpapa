@@ -3,6 +3,7 @@
  * タグベースで関連記事をスコアリングして取得する
  */
 import type { CollectionEntry } from 'astro:content';
+import { removeDatePrefix } from '../../plugins/utils/index.js';
 
 /**
  * 関連記事の型定義
@@ -48,9 +49,6 @@ export function getRelatedPosts(options: GetRelatedPostsOptions): RelatedPost[] 
   if (!currentTags || currentTags.length === 0) {
     return [];
   }
-
-  // YYYYMMDD-プレフィックスを除去するヘルパー
-  const removeDatePrefix = (id: string): string => id.replace(/^\d{8}-/, '');
 
   // 現在のタグをSetに変換（高速な検索のため）
   const currentTagSet = new Set(currentTags);
