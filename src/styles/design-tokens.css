@@ -198,6 +198,7 @@
   --duration-normal: 300ms;
   --duration-slow: 500ms;
   --duration-slower: 700ms;
+  --duration-view-transition: 100ms; /* View Transitions専用: 高速なページ遷移体験のため */
 
   --easing-default: cubic-bezier(0.4, 0, 0.2, 1);
   --easing-in: cubic-bezier(0.4, 0, 1, 1);
@@ -407,18 +408,18 @@ html.theme-transitioning *::after {
 
 /* View Transition: ページ全体のフェード */
 ::view-transition-old(root) {
-  animation: var(--duration-normal) var(--easing-out) both fade-out;
+  animation: var(--duration-view-transition) var(--easing-out) both fade-out;
 }
 
 ::view-transition-new(root) {
-  animation: var(--duration-normal) var(--easing-out) both fade-in;
+  animation: var(--duration-view-transition) var(--easing-out) both fade-in;
 }
 
 /* View Transition: メインコンテンツのフェード */
 ::view-transition-old(main-content) {
-  animation: var(--duration-normal) var(--easing-out) both fade-out;
+  animation: var(--duration-view-transition) var(--easing-out) both fade-out;
 }
 
 ::view-transition-new(main-content) {
-  animation: var(--duration-normal) var(--easing-out) both fade-in;
+  animation: var(--duration-view-transition) var(--easing-out) both fade-in;
 }
