@@ -214,6 +214,12 @@ export interface FeatureFlags {
   relatedPosts: boolean;
   /** コメントシステム設定 */
   comments?: CommentsConfig;
+  /**
+   * OG画像を自動生成するか
+   * true の場合、ビルド時にOG画像（/og/*.png）を生成します
+   * @default true
+   */
+  ogImageGeneration?: boolean;
 }
 
 /**

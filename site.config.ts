@@ -148,6 +148,8 @@ export const siteConfig: SiteConfig = {
     tagCloud: true,
     /** 関連記事を表示するか */
     relatedPosts: true,
+    /** OG画像を自動生成するか (デフォルト: true) */
+    ogImageGeneration: true,
     /**
      * コメントシステム設定
      * enabled: true にして provider を設定すると、記事ページにコメント欄が表示されます

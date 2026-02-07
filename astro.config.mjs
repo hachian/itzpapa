@@ -16,6 +16,7 @@ import rehypeTaskStatus from './src/plugins/rehype-task-status/index.js';
 import rehypeTrailingSlash from './src/plugins/rehype-trailing-slash/index.js';
 import astroImageHosting from './src/integrations/image-hosting/index.js';
 import astroSearchIndex from './src/integrations/search-index/index.js';
+import astroOgImageGeneration from './src/integrations/og-image-generation/index.js';
 import { siteConfig } from './site.config.ts';
 
 // 共通remarkプラグイン設定
@@ -81,6 +82,8 @@ export default defineConfig({
 		},
 	},
 	integrations: [
+		// OG画像自動生成インテグレーション
+		astroOgImageGeneration({ enabled: siteConfig.features.ogImageGeneration ?? true }),
 		// 検索インデックス生成インテグレーション（ビルド開始時に実行）
 		astroSearchIndex(),
 		// 画像外部ホスティングインテグレーション（ビルド後にS3/R2にアップロード）
