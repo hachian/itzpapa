@@ -107,6 +107,23 @@ function buildSubHierarchy(
 }
 
 /**
+ * スラッグ変換用のセパレーター正規表現キャッシュ
+ */
+const SLUG_SEPARATOR_REGEX_CACHE = new Map<string, RegExp>();
+
+/**
+ * スラッグ変換用のセパレーター正規表現を取得する（キャッシュ対応）
+ */
+function getSlugSeparatorRegex(separator: string): RegExp {
+  let cached = SLUG_SEPARATOR_REGEX_CACHE.get(separator);
+  if (!cached) {
+    cached = new RegExp(escapeRegExp(separator), 'g');
+    SLUG_SEPARATOR_REGEX_CACHE.set(separator, cached);
+  }
+  return cached;
+}
+
+/**
  * タグ名をスラッグに変換
  */
 function tagNameToSlug(tagName: string, options: TagOptions = {}): string {
@@ -114,7 +131,7 @@ function tagNameToSlug(tagName: string, options: TagOptions = {}): string {
   
   // 階層セパレーターをハイフンに置換
   let slug = tagName.replace(
-    new RegExp(escapeRegExp(opts.hierarchySeparator), 'g'),
+    getSlugSeparatorRegex(opts.hierarchySeparator),
     '-'
   );
   
