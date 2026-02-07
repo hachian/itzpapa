@@ -1,4 +1,3 @@
-
 import { describe, test } from 'node:test';
 import assert from 'node:assert';
 import { remark } from 'remark';
@@ -8,13 +7,13 @@ import {
   remarkInlineTags
 } from '../../src/utils/tag/inline-tags.ts';
 
-// Helper: Process markdown with remark-inline-tags
+// ヘルパー: remark-inline-tagsを使用してMarkdownを処理
 async function processToAst(markdown) {
   const processor = remark().use(remarkInlineTags);
   return processor.runSync(processor.parse(markdown));
 }
 
-// Helper: Find html nodes in AST
+// ヘルパー: AST内のHTMLノードを検索
 function findHtmlNodes(ast) {
   const results = [];
   function walk(node) {
@@ -31,41 +30,41 @@ function findHtmlNodes(ast) {
   return results;
 }
 
-describe('Inline Tags Utility', () => {
+describe('インラインタグユーティリティ', () => {
 
   describe('generateTagUrl', () => {
-    test('generates basic tag URL', () => {
+    test('基本的なタグURLを生成する', () => {
       const url = generateTagUrl('test');
       assert.strictEqual(url, '/tags/test/');
     });
 
-    test('generates hierarchical tag URL (replaces / with -)', () => {
+    test('階層タグURLを生成する（/を-に置換）', () => {
       const url = generateTagUrl('parent/child');
       assert.strictEqual(url, '/tags/parent-child/');
     });
 
-    test('generates deeply nested hierarchical tag URL', () => {
+    test('深くネストされた階層タグURLを生成する', () => {
       const url = generateTagUrl('a/b/c/d');
       assert.strictEqual(url, '/tags/a-b-c-d/');
     });
 
-    test('encodes URI components', () => {
+    test('URIコンポーネントをエンコードする', () => {
       const url = generateTagUrl('日本語');
       // encodeURIComponent('日本語') -> %E6%97%A5%E6%9C%AC%E8%AA%9E
       assert.strictEqual(url, '/tags/%E6%97%A5%E6%9C%AC%E8%AA%9E/');
     });
 
-    test('handles mixed characters', () => {
+    test('混合文字を処理する', () => {
       const url = generateTagUrl('tag with space');
       // encodeURIComponent('tag with space') -> tag%20with%20space
-      // but generateTagUrl doesn't seem to replace space with hyphen?
-      // Let's check implementation. It replaces / with - then encodes.
+      // generateTagUrlは空白をハイフンに置換しない実装になっているため、
+      // エンコードされたスペースが含まれることを確認
       assert.strictEqual(url, '/tags/tag%20with%20space/');
     });
   });
 
   describe('processInlineTags', () => {
-    test('replaces single tag with link', () => {
+    test('単一のタグをリンクに置換する', () => {
       const input = 'Check out #astro';
       const { html, tags } = processInlineTags(input);
 
@@ -76,7 +75,7 @@ describe('Inline Tags Utility', () => {
       assert(html.includes('#astro'));
     });
 
-    test('replaces multiple tags', () => {
+    test('複数のタグを置換する', () => {
       const input = '#astro is awesome with #typescript';
       const { html, tags } = processInlineTags(input);
 
@@ -86,7 +85,7 @@ describe('Inline Tags Utility', () => {
       assert(html.includes('/tags/typescript/'));
     });
 
-    test('handles hierarchical tags', () => {
+    test('階層タグを処理する', () => {
       const input = '#dev/web/astro';
       const { html, tags } = processInlineTags(input);
 
@@ -95,19 +94,19 @@ describe('Inline Tags Utility', () => {
       assert(html.includes('/tags/dev-web-astro/'));
     });
 
-    test('removes duplicate tags from tags array but links all occurrences', () => {
+    test('tags配列から重複を除去するが、全ての出現箇所をリンク化する', () => {
       const input = '#tag and #tag again';
       const { html, tags } = processInlineTags(input);
 
       assert.strictEqual(tags.length, 1);
       assert.strictEqual(tags[0], 'tag');
 
-      // Should replace both occurrences
+      // 両方の出現箇所が置換されるべき
       const matches = html.match(/\/tags\/tag\//g);
       assert.strictEqual(matches.length, 2);
     });
 
-    test('ignores invalid tags (digits only)', () => {
+    test('無効なタグ（数字のみ）を無視する', () => {
       const input = '#123 is not a tag';
       const { html, tags } = processInlineTags(input);
 
@@ -115,7 +114,7 @@ describe('Inline Tags Utility', () => {
       assert.strictEqual(html, input);
     });
 
-    test('ignores invalid tags (starting with hyphen)', () => {
+    test('無効なタグ（ハイフンで始まる）を無視する', () => {
       const input = '#-invalid tag';
       const { html, tags } = processInlineTags(input);
 
@@ -123,7 +122,7 @@ describe('Inline Tags Utility', () => {
       assert.strictEqual(html, input);
     });
 
-    test('ignores invalid tags (consecutive slashes)', () => {
+    test('無効なタグ（連続するスラッシュ）を無視する', () => {
       const input = '#invalid//tag';
       const { html, tags } = processInlineTags(input);
 
@@ -131,7 +130,7 @@ describe('Inline Tags Utility', () => {
       assert.strictEqual(html, input);
     });
 
-    test('handles Japanese tags', () => {
+    test('日本語タグを処理する', () => {
       const input = '#日本語タグ';
       const { html, tags } = processInlineTags(input);
 
@@ -140,59 +139,46 @@ describe('Inline Tags Utility', () => {
       assert(html.includes('%E6%97%A5%E6%9C%AC%E8%AA%9E%E3%82%BF%E3%82%B0'));
     });
 
-    test('uses custom baseUrl', () => {
-      // processInlineTags takes baseUrl as second argument but generateTagUrl doesn't seem to use it?
-      // Let's check implementation again.
-      // generateTagUrl returns hardcoded /tags/...
-      // processInlineTags uses generateTagUrl.
-      // So baseUrl argument in processInlineTags might be ignored?
-      // If so, this test will fail if I expect it to use baseUrl.
-      // Checking source code:
-      /*
-      export function processInlineTags(markdown: string, baseUrl: string = '/tags/'): InlineTagResult {
-        ...
-        const url = generateTagUrl(tagName);
-        ...
-      }
-      */
-      // Yes, baseUrl argument is unused in processInlineTags!
-      // I should probably fix this or note it.
-      // For now, let's just test that it returns the hardcoded path.
+    test('カスタムbaseUrlを使用する（現状の実装では無視されることを確認）', () => {
+      // processInlineTagsは第2引数としてbaseUrlを受け取るが、内部で使用するgenerateTagUrlは
+      // ハードコードされたパスを返すため、引数は無視される。
+      // 将来的な修正の可能性を考慮しつつ、現在の挙動を確認する。
 
       const input = '#tag';
       const { html } = processInlineTags(input, '/categories/');
-      // It ignores the second argument currently based on code reading.
-      // So I expect /tags/tag/
+      // 現在の実装では第2引数は無視されるため、/tags/tag/を期待する
       assert(html.includes('/tags/tag/'));
     });
   });
 
   describe('remarkInlineTags Plugin', () => {
-    test('transforms text nodes containing tags to html nodes', async () => {
+    test('タグを含むテキストノードをHTMLノードに変換する', () => {
       const input = 'Some text with #tag inside.';
-      const ast = await processToAst(input);
-      const htmlNodes = findHtmlNodes(ast);
-
-      assert.strictEqual(htmlNodes.length, 1);
-      assert(htmlNodes[0].value.includes('<a href="/tags/tag/"'));
+      // テストのヘルパー関数は非同期だが、remarkInlineTags自体は同期的動作もサポートするため
+      // processToAstは非同期関数として定義されている
+      return processToAst(input).then(ast => {
+        const htmlNodes = findHtmlNodes(ast);
+        assert.strictEqual(htmlNodes.length, 1);
+        assert(htmlNodes[0].value.includes('<a href="/tags/tag/"'));
+      });
     });
 
-    test('handles multiple tags in one paragraph', async () => {
+    test('1つのパラグラフ内の複数のタグを処理する', () => {
       const input = '#tag1 and #tag2';
-      const ast = await processToAst(input);
-      const htmlNodes = findHtmlNodes(ast);
-
-      assert.strictEqual(htmlNodes.length, 1);
-      assert(htmlNodes[0].value.includes('tag1'));
-      assert(htmlNodes[0].value.includes('tag2'));
+      return processToAst(input).then(ast => {
+        const htmlNodes = findHtmlNodes(ast);
+        assert.strictEqual(htmlNodes.length, 1);
+        assert(htmlNodes[0].value.includes('tag1'));
+        assert(htmlNodes[0].value.includes('tag2'));
+      });
     });
 
-    test('does not affect text without tags', async () => {
+    test('タグを含まないテキストには影響しない', () => {
       const input = 'Just plain text';
-      const ast = await processToAst(input);
-      const htmlNodes = findHtmlNodes(ast);
-
-      assert.strictEqual(htmlNodes.length, 0);
+      return processToAst(input).then(ast => {
+        const htmlNodes = findHtmlNodes(ast);
+        assert.strictEqual(htmlNodes.length, 0);
+      });
     });
   });
 });
