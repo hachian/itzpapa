@@ -48,6 +48,12 @@ const testSuites = [
     args: ['--test', 'tests/unit/callout-test.js'],
     timeout: 30000
   },
+  {
+    name: 'TOC Unit Tests',
+    command: 'node',
+    args: ['--experimental-transform-types', '--test', 'tests/unit/toc-unit-test.ts'],
+    timeout: 30000
+  },
   // Integration Tests
   {
     name: 'Integration Tests',
