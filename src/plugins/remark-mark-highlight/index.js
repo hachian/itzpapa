@@ -331,7 +331,7 @@ export default function remarkMarkHighlight(options = {}) {
           if (part.type === 'text') {
             escapedSequences.forEach((sequence, index) => {
               const token = `${escapeToken}${index}${escapeToken}`;
-              part.value = part.value.replace(new RegExp(token, 'g'), sequence);
+              part.value = part.value.replaceAll(token, sequence);
             });
           }
         });
