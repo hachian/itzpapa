@@ -19,6 +19,7 @@
   "license": "MIT",
   "scripts": {
     "generate:logo": "node scripts/generate-logo.js",
+    "migrate:frontmatter": "node scripts/migrate-frontmatter.mjs",
     "dev": "npm run generate:logo && astro dev",
     "build": "npm run generate:logo && node --env-file=.env node_modules/.bin/astro build",
     "build:ci": "npm run generate:logo && astro build",
