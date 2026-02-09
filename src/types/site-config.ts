@@ -235,6 +235,18 @@ export interface PaginationConfig {
 }
 
 /**
+ * ブログ設定
+ */
+export interface BlogConfig {
+  /**
+   * 記事のslugから日付（YYYYMMDD-）を削除するかどうか
+   * true: 削除する (デフォルト)
+   * false: 削除しない
+   */
+  removeDateFromSlug?: boolean;
+}
+
+/**
  * サイト設定全体の型
  * site.config.ts でエクスポートするオブジェクトの型
  */
@@ -259,4 +271,6 @@ export interface SiteConfig {
   imageHosting?: ImageHostingConfig;
   /** ページネーション設定（オプション） */
   pagination?: PaginationConfig;
+  /** ブログ設定（オプション） */
+  blog?: BlogConfig;
 }

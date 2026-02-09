@@ -25,7 +25,10 @@ const commonRemarkPlugins = [
 	// CJK文字を単語境界として認識させる（micromarkパース層で動作）
 	remarkCjkFriendly,
 	// Wikilinkを最初に処理（最高優先度）
-	[remarkWikilink, { priority: 'high' }],
+	[remarkWikilink, {
+		priority: 'high',
+		removeDateFromSlug: siteConfig.blog?.removeDateFromSlug
+	}],
 	// コールアウトパース（remarkBreaksより前に処理して、ヘッダー行の改行が<br>にならないようにする）
 	[remarkCallout, { maxNestingDepth: 3 }],
 	// 単一改行を<br>に変換（コールアウト処理後に実行）

@@ -8,6 +8,7 @@ import type { CollectionEntry } from 'astro:content';
 import FormattedDate from './FormattedDate.astro';
 import CategoryBadge from './CategoryBadge.astro';
 import { removeDatePrefix } from '../plugins/utils/index.js';
+import { siteConfig } from '../../site.config.ts';
 
 // フォールバック用のデフォルトhero画像
 import defaultHeroLight from '../assets/itzpapa-light_16_9.png';
@@ -18,7 +19,7 @@ interface Props {
 }
 
 const { post } = Astro.props;
-const postUrl = `/blog/${removeDatePrefix(post.id)}/`;
+const postUrl = `/blog/${removeDatePrefix(post.id, siteConfig.blog?.removeDateFromSlug)}/`;
 ---
 
 <article class="post-card">
@@ -65,7 +66,7 @@ const postUrl = `/blog/${removeDatePrefix(post.id)}/`;
           <img
             width="720"
             height="360"
-            src={`/hero/${removeDatePrefix(post.id)}-light.png`}
+            src={`/hero/${removeDatePrefix(post.id, siteConfig.blog?.removeDateFromSlug)}-light.png`}
             alt=""
             class="post-card__image post-card__image--light"
             loading="lazy"
@@ -74,7 +75,7 @@ const postUrl = `/blog/${removeDatePrefix(post.id)}/`;
           <img
             width="720"
             height="360"
-            src={`/hero/${removeDatePrefix(post.id)}-dark.png`}
+            src={`/hero/${removeDatePrefix(post.id, siteConfig.blog?.removeDateFromSlug)}-dark.png`}
             alt=""
             class="post-card__image post-card__image--dark"
             loading="lazy"
