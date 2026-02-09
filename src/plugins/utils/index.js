@@ -43,9 +43,15 @@ export function escapeHtml(text, securityMode = 'auto') {
 /**
  * YYYYMMDD-プレフィックスを除去
  * @param {string} slug - 処理するスラッグ
+ * @param {boolean} shouldRemove - 日付を削除するかどうか（デフォルト: true）
  * @returns {string} プレフィックス除去後のスラッグ
  */
-export function removeDatePrefix(slug) {
+export function removeDatePrefix(slug, shouldRemove = true) {
+  // 設定で日付削除が無効化されている場合はそのまま返す
+  if (shouldRemove === false) {
+    return slug;
+  }
+
   // 8桁の数字 + ハイフンで始まる場合、そのプレフィックスを除去
   return slug.replace(/^\d{8}-/, '');
 }
@@ -53,9 +59,10 @@ export function removeDatePrefix(slug) {
 /**
  * ファイルパスを正規化（URL用）
  * @param {string} filePath - 正規化するファイルパス（../で始まる相対パス）
+ * @param {boolean} shouldRemoveDate - 日付を削除するかどうか（デフォルト: true）
  * @returns {string} 正規化されたパス
  */
-export function normalizeFilePath(filePath) {
+export function normalizeFilePath(filePath, shouldRemoveDate = true) {
   const normalized = filePath
     .replace(/^\.\.\//, '')
     .replace(/\.md$/, '')
@@ -64,7 +71,7 @@ export function normalizeFilePath(filePath) {
     .toLowerCase();
 
   // YYYYMMDD-プレフィックスを除去
-  return removeDatePrefix(normalized);
+  return removeDatePrefix(normalized, shouldRemoveDate);
 }
 
 /**
@@ -92,9 +99,10 @@ export function normalizeAnchor(hash) {
 /**
  * 内部リンクURLを構築
  * @param {string} linkPath - リンクパス（../で始まる相対パス）
+ * @param {boolean} shouldRemoveDate - 日付を削除するかどうか（デフォルト: true）
  * @returns {string} 構築されたURL（/blog/path/ または /blog/path/#hash）
  */
-export function buildInternalLinkUrl(linkPath) {
+export function buildInternalLinkUrl(linkPath, shouldRemoveDate = true) {
   const hashIndex = linkPath.indexOf('#');
   let filePath = linkPath;
   let hash = '';
@@ -104,7 +112,7 @@ export function buildInternalLinkUrl(linkPath) {
     hash = linkPath.slice(hashIndex);
   }
 
-  const cleanPath = normalizeFilePath(filePath);
+  const cleanPath = normalizeFilePath(filePath, shouldRemoveDate);
   const cleanHash = normalizeAnchor(hash);
 
   return cleanHash ? `/blog/${cleanPath}/${cleanHash}` : `/blog/${cleanPath}/`;

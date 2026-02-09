@@ -19,7 +19,12 @@ const FILE_EXTENSION_PATTERN = /\.(md|mdx|png|jpg|jpeg|gif|svg|webp)$/i;
 // インデックスサフィックスパターン
 const INDEX_SUFFIX_PATTERN = /\/index$/;
 
-export default function remarkWikilink() {
+export default function remarkWikilink(options = {}) {
+  // 日付削除の設定を取得（デフォルトはtrue）
+  // オプションが直接渡される場合と、配列の2番目の要素として渡される場合を考慮
+  // astro.config.mjsでは [plugin, options] の形式だが、remarkがoptionsを展開して渡してくれるはず
+  const removeDateFromSlug = options.removeDateFromSlug ?? true;
+
   // プラグインの実行順序を早めるために優先度を設定
   const plugin = function transformer(tree, file) {
 
@@ -33,12 +38,12 @@ export default function remarkWikilink() {
 
           if (linkPath && linkPath.startsWith('../')) {
             // 内部リンクの処理
-            node.url = buildInternalLinkUrl(linkPath);
+            node.url = buildInternalLinkUrl(linkPath, removeDateFromSlug);
           }
         }
       } else if (node.url && node.url.startsWith('../')) {
         // 通常のMarkdownリンク（../で始まる相対リンク）も日付プレフィックス除去を適用
-        node.url = buildInternalLinkUrl(node.url);
+        node.url = buildInternalLinkUrl(node.url, removeDateFromSlug);
       }
     });
 
@@ -70,7 +75,7 @@ export default function remarkWikilink() {
 
             // リンクURLを構築
             const url = linkPath.startsWith('../')
-              ? buildInternalLinkUrl(linkPath)
+              ? buildInternalLinkUrl(linkPath, removeDateFromSlug)
               : linkPath;
 
             // 新しいノードを構築
@@ -199,7 +204,7 @@ export default function remarkWikilink() {
           
           // 内部リンクの処理（../で始まる）
           if (linkPath.startsWith('../')) {
-            url = buildInternalLinkUrl(linkPath);
+            url = buildInternalLinkUrl(linkPath, removeDateFromSlug);
           } else if (linkPath.startsWith('#')) {
             // 同一ページ内アンカーリンクの処理
             url = normalizeAnchor(linkPath);
