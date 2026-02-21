@@ -56,43 +56,47 @@ export function getRelatedPosts(options: GetRelatedPostsOptions): RelatedPost[] 
   const currentTagSet = new Set(currentTags);
 
   // 関連記事を計算
-  const relatedPosts: RelatedPost[] = allPosts
-    .filter((post) => {
-      // 現在の記事自身を除外（日付プレフィックスを除去して比較）
-      if (removeDatePrefix(post.id) === currentPostId) {
-        return false;
+  const relatedPosts: RelatedPost[] = [];
+
+  for (const post of allPosts) {
+    // 現在の記事自身を除外（日付プレフィックスを除去して比較）
+    if (removeDatePrefix(post.id) === currentPostId) {
+      continue;
+    }
+
+    // draft記事を除外
+    if (post.data.draft === true) {
+      continue;
+    }
+
+    // タグが設定されていない記事を除外
+    const postTags = post.data.tags;
+    if (!postTags || postTags.length === 0) {
+      continue;
+    }
+
+    // 共通タグ数をスコアとして計算
+    let score = 0;
+    for (const tag of postTags) {
+      if (currentTagSet.has(tag)) {
+        score++;
       }
+    }
 
-      // draft記事を除外
-      if (post.data.draft === true) {
-        return false;
-      }
+    // 同じカテゴリなら+1ポイント
+    if (currentCategory && post.data.category === currentCategory) {
+      score += 1;
+    }
 
-      // タグが設定されていない記事を除外
-      const postTags = post.data.tags;
-      if (!postTags || postTags.length === 0) {
-        return false;
-      }
-
-      return true;
-    })
-    .map((post) => {
-      // 共通タグ数をスコアとして計算
-      const postTags = post.data.tags || [];
-      let score = postTags.filter((tag) => currentTagSet.has(tag)).length;
-
-      // 同じカテゴリなら+1ポイント
-      if (currentCategory && post.data.category === currentCategory) {
-        score += 1;
-      }
-
-      return {
+    // 共通タグが0の記事を除外
+    if (score > 0) {
+      relatedPosts.push({
         id: post.id,
         data: post.data,
         score,
-      };
-    })
-    .filter((post) => post.score > 0); // 共通タグが0の記事を除外
+      });
+    }
+  }
 
   // ソート: スコア降順、同スコアは更新日（なければ公開日）降順
   relatedPosts.sort((a, b) => {
