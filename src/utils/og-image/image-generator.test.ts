@@ -10,7 +10,7 @@ import {
   generateDefaultOgImage,
   getOgImageContentType,
   getOgImageFormat,
-} from "./image-generator";
+} from "./image-generator.ts";
 
 describe("OG画像生成", () => {
   describe("getOgImageContentType", () => {
@@ -41,6 +41,36 @@ describe("OG画像生成", () => {
 
       assert.strictEqual(riff, "RIFF", "WebP RIFFヘッダーが存在すること");
       assert.strictEqual(webp, "WEBP", "WebP識別子が存在すること");
+    });
+  });
+
+  describe("generateOgImage - バリデーション", () => {
+    it("タイトルが空の場合はエラーをスローする", async () => {
+      await assert.rejects(
+        async () => {
+          await generateOgImage({
+            title: "",
+            slug: "test-slug",
+          });
+        },
+        {
+          message: "タイトルは空文字列であってはなりません",
+        }
+      );
+    });
+
+    it("タイトルがスペースのみの場合はエラーをスローする", async () => {
+      await assert.rejects(
+        async () => {
+          await generateOgImage({
+            title: "   ",
+            slug: "test-slug",
+          });
+        },
+        {
+          message: "タイトルは空文字列であってはなりません",
+        }
+      );
     });
   });
 

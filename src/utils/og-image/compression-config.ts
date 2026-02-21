@@ -2,7 +2,7 @@
  * OG画像圧縮設定
  * WebP/PNGの圧縮パラメータを管理
  */
-import type { OgImageCompressionConfig, OgImageFormat } from "../../types/site-config";
+import type { OgImageCompressionConfig, OgImageFormat } from "../../types/site-config.ts";
 
 export type { OgImageCompressionConfig, OgImageFormat };
 

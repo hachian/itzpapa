@@ -66,6 +66,12 @@ const testSuites = [
     args: ['--experimental-transform-types', '--test', 'tests/unit/toc-unit-test.ts'],
     timeout: 30000
   },
+  {
+    name: 'OG Image Generator Tests',
+    command: 'node',
+    args: ['--experimental-transform-types', '--test', 'src/utils/og-image/image-generator.test.ts'],
+    timeout: 30000
+  },
   // Integration Tests
   {
     name: 'Integration Tests',
