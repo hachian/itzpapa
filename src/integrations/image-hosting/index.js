@@ -251,14 +251,18 @@ async function rewriteHtmlImageUrls(htmlPath, urlMap) {
  * @param {ImageInfo[]} images - 削除する画像のリスト
  */
 export async function deleteImages(images) {
-  for (const image of images) {
-    try {
-      await fs.unlink(image.filePath);
-    } catch (error) {
-      if (error.code !== 'ENOENT') {
-        throw error;
+  const concurrency = 50;
+  for (let i = 0; i < images.length; i += concurrency) {
+    const batch = images.slice(i, i + concurrency);
+    await Promise.all(batch.map(async (image) => {
+      try {
+        await fs.unlink(image.filePath);
+      } catch (error) {
+        if (error.code !== 'ENOENT') {
+          throw error;
+        }
       }
-    }
+    }));
   }
 }
 

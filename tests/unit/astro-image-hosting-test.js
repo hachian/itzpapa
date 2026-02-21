@@ -109,7 +109,7 @@ describe('astroImageHosting', () => {
       // 各画像にfilePath情報があることを確認
       for (const image of images) {
         assert.ok(image.filePath);
-        assert.ok(image.slug);
+        assert.ok(image.key);
         assert.ok(image.fileName);
       }
     });
