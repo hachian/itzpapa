@@ -74,7 +74,7 @@ export interface ThemeConfig {
    * - 数値: 0-360（色相値を直接指定）
    * デフォルト: 'purple'（293）
    */
-  primaryHue: import('../theme/color-presets').ThemeColorInput;
+  primaryHue: import('../theme/color-presets.ts').ThemeColorInput;
 }
 
 /**

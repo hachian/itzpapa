@@ -2,14 +2,14 @@ import satori from "satori";
 import sharp from "sharp";
 import { readFile } from "fs/promises";
 import { join } from "path";
-import { loadFonts } from "./font-loader";
-import { siteConfig } from "../../../site.config";
+import { loadFonts } from "./font-loader.ts";
+import { siteConfig } from "../../../site.config.ts";
 import {
   getCompressionConfig,
   getOgImageContentType as getContentType,
   getOgImageFormat as getFormat,
   type OgImageFormat,
-} from "./compression-config";
+} from "./compression-config.ts";
 
 // プロジェクトルートからの絶対パスを使用
 const ASSETS_DIR = join(process.cwd(), "src/assets");
