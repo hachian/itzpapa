@@ -26,7 +26,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "test": "node tests/test-runner.js",
-    "test:unit": "node --test tests/unit/wikilink-unit-test.js tests/unit/mark-highlight-unit-test.js tests/unit/tags-unit-test.js tests/unit/callout-test.js",
+    "test:unit": "node --test tests/unit/wikilink-unit-test.js tests/unit/mark-highlight-unit-test.js tests/unit/tags-unit-test.js tests/unit/callout-test.js tests/unit/plugins-utils-test.js",
     "test:integration": "node --test tests/integration/integration-test.js",
     "test:e2e": "node --test tests/e2e/e2e-test.js tests/e2e/html-validator-test.js",
     "test:image": "node --test tests/integration/image-wikilink-test.js",
