@@ -98,17 +98,23 @@ export default function rehypeTaskStatus(options = {}) {
           }
 
           // 親のliにtask-list-itemクラスを追加
-          const grandparent = findParentLi(tree, parent);
-          if (grandparent && grandparent.tagName === 'li') {
-            if (!grandparent.properties) {
-              grandparent.properties = {};
+          let containingLi = null;
+          if (parent.tagName === 'li') {
+            containingLi = parent;
+          } else {
+            containingLi = findParentLi(tree, parent);
+          }
+
+          if (containingLi && containingLi.tagName === 'li') {
+            if (!containingLi.properties) {
+              containingLi.properties = {};
             }
-            const existingClass = grandparent.properties.className || [];
+            const existingClass = containingLi.properties.className || [];
             const classArray = Array.isArray(existingClass) ? existingClass : [existingClass];
             if (!classArray.includes('task-list-item')) {
-              grandparent.properties.className = [...classArray, 'task-list-item'];
+              containingLi.properties.className = [...classArray, 'task-list-item'];
             }
-            grandparent.properties['data-task'] = statusName;
+            containingLi.properties['data-task'] = statusName;
           }
         }
       }
