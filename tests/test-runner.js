@@ -31,6 +31,12 @@ const testSuites = [
     timeout: 30000
   },
   {
+    name: 'Rehype Table Wrapper Unit Tests',
+    command: 'node',
+    args: ['--test', 'tests/unit/rehype-table-wrapper-test.js'],
+    timeout: 30000
+  },
+  {
     name: 'Wikilink Unit Tests',
     command: 'node',
     args: ['--test', 'tests/unit/wikilink-unit-test.js'],
