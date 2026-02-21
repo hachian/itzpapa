@@ -1,13 +1,9 @@
 ---
 import { type CollectionEntry, getCollection, render } from 'astro:content';
 import BlogPost from '../../layouts/BlogPost.astro';
+import { removeDatePrefix } from '../../plugins/utils/index.js';
 
 export async function getStaticPaths() {
-	// YYYYMMDD-プレフィックスを除去してslugを生成
-	const removeDatePrefix = (id: string): string => {
-		return id.replace(/^\d{8}-/, '');
-	};
-
 	const posts = await getCollection('blog', ({ data }) => {
 		// 本番環境ではdraft: trueの記事を除外
 		return import.meta.env.PROD ? data.draft !== true : true;
