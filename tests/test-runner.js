@@ -66,6 +66,12 @@ const testSuites = [
     args: ['--experimental-transform-types', '--test', 'tests/unit/toc-unit-test.ts'],
     timeout: 30000
   },
+  {
+    name: 'Related Posts Unit Tests',
+    command: 'node',
+    args: ['--experimental-transform-types', '--test', 'src/utils/related-posts/related-posts.test.ts'],
+    timeout: 30000
+  },
   // Integration Tests
   {
     name: 'Integration Tests',
