@@ -35,8 +35,8 @@ export async function collectBlogPosts(blogDir) {
   try {
     const dirs = await fs.readdir(blogDir, { withFileTypes: true });
 
-    for (const dir of dirs) {
-      if (!dir.isDirectory()) continue;
+    const results = await Promise.all(dirs.map(async (dir) => {
+      if (!dir.isDirectory()) return null;
 
       const indexPath = path.join(blogDir, dir.name, 'index.md');
 
@@ -46,12 +46,12 @@ export async function collectBlogPosts(blogDir) {
 
         // draft記事はスキップ
         if (frontmatter.draft === true) {
-          continue;
+          return null;
         }
 
         // タイトルがない場合はスキップ
         if (!frontmatter.title) {
-          continue;
+          return null;
         }
 
         const slug = removeDatePrefix(dir.name);
@@ -59,21 +59,24 @@ export async function collectBlogPosts(blogDir) {
 
         // 空の本文はスキップ
         if (!plainBody.trim()) {
-          continue;
+          return null;
         }
 
-        entries.push({
+        return {
           slug,
           title: frontmatter.title,
           body: plainBody
-        });
+        };
       } catch (error) {
         // index.mdが存在しない場合はスキップ
         if (error.code !== 'ENOENT') {
           throw error;
         }
+        return null;
       }
-    }
+    }));
+
+    entries.push(...results.filter(entry => entry !== null));
   } catch (error) {
     if (error.code !== 'ENOENT') {
       throw error;
