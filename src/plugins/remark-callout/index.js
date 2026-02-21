@@ -1,4 +1,4 @@
-import { visit } from 'unist-util-visit';
+import { visit, SKIP } from 'unist-util-visit';
 
 /**
  * remark-callout - Obsidianスタイルのコールアウト用remarkプラグイン
@@ -222,11 +222,17 @@ function processCallout(node, depth = 0, maxDepth = 3) {
  * @param {number} maxDepth - 最大ネスト深度
  */
 function processNestedCallouts(nodes, depth, maxDepth) {
-  for (const node of nodes) {
+  const stack = [...nodes].reverse();
+
+  while (stack.length > 0) {
+    const node = stack.pop();
+
     if (node.type === 'blockquote' && depth < maxDepth && isCallout(node)) {
       processCallout(node, depth + 1, maxDepth);
     } else if (node.children) {
-      processNestedCallouts(node.children, depth, maxDepth);
+      for (let i = node.children.length - 1; i >= 0; i--) {
+        stack.push(node.children[i]);
+      }
     }
   }
 }
@@ -247,6 +253,8 @@ export default function remarkCallout(options = {}) {
 
       // コールアウトを処理（データを追加、構造は変換しない）
       processCallout(node, 0, maxNestingDepth);
+
+      return SKIP;
     });
   };
 }
