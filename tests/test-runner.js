@@ -25,6 +25,12 @@ const testSuites = [
   },
   // Unit Tests
   {
+    name: 'Plugins Utils Unit Tests',
+    command: 'node',
+    args: ['--test', 'tests/unit/plugins-utils-test.js'],
+    timeout: 30000
+  },
+  {
     name: 'Rehype Trailing Slash Unit Tests',
     command: 'node',
     args: ['--test', 'tests/unit/rehype-trailing-slash-test.js'],
