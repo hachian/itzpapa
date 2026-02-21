@@ -2,9 +2,10 @@
  * タグの階層構造処理ユーティリティ
  */
 
-import type { Tag, TagHierarchy, TagOptions } from '../../types/tag';
-import { DEFAULT_TAG_OPTIONS } from '../../types/tag';
-import { normalizeTag, parseTagHierarchy } from './validation';
+import type { Tag, TagHierarchy, TagOptions } from '../../types/tag.ts';
+import { DEFAULT_TAG_OPTIONS } from '../../types/tag.ts';
+import { normalizeTag, parseTagHierarchy } from './validation.ts';
+import { escapeRegExp } from './utils.ts';
 
 /**
  * タグの配列から階層構造を構築する
@@ -266,11 +267,4 @@ export function hasCircularReference(
   }
   
   return checkNode(hierarchy, path);
-}
-
-/**
- * 正規表現の特殊文字をエスケープ
- */
-function escapeRegExp(string: string): string {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }

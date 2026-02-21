@@ -49,6 +49,12 @@ const testSuites = [
     timeout: 30000
   },
   {
+    name: 'Tag Utils Unit Tests',
+    command: 'node',
+    args: ['--experimental-transform-types', '--test', 'tests/unit/tag-utils-test.ts'],
+    timeout: 30000
+  },
+  {
     name: 'Inline Tags Unit Tests',
     command: 'node',
     args: ['--experimental-transform-types', '--test', 'tests/unit/inline-tags-test.js'],

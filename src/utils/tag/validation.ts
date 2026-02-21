@@ -2,8 +2,9 @@
  * タグのバリデーション関連ユーティリティ
  */
 
-import type { TagOptions, TagValidationResult, TagErrorCode } from '../../types/tag';
-import { DEFAULT_TAG_OPTIONS } from '../../types/tag';
+import type { TagOptions, TagValidationResult, TagErrorCode } from '../../types/tag.ts';
+import { DEFAULT_TAG_OPTIONS } from '../../types/tag.ts';
+import { escapeRegExp } from './utils.ts';
 
 /**
  * タグ名の有効な文字パターン
@@ -229,11 +230,4 @@ export function isDescendantTag(
   const normalizedParent = normalizeTag(parentTag, opts);
   
   return normalizedChild.startsWith(normalizedParent + opts.hierarchySeparator);
-}
-
-/**
- * 正規表現の特殊文字をエスケープする
- */
-function escapeRegExp(string: string): string {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
